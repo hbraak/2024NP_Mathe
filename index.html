@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Lernliste Mathematik Q2 – Analysis</title>
+    <!-- KaTeX für Formelsatz -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #eee;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 1rem;
+        }
+        .progress-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            height: 24px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .progress-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            line-height: 24px;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .topic-section {
+            margin-bottom: 25px;
+        }
+        .topic-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px 20px;
+            border-radius: 10px 10px 0 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .topic-header .icon {
+            font-size: 1.3rem;
+        }
+        .competency-list {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            padding: 10px 0;
+        }
+        .competency-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.2s;
+        }
+        .competency-item:last-child {
+            border-bottom: none;
+        }
+        .competency-item:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .competency-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #4facfe;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        .competency-text {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+        .competency-text.checked {
+            text-decoration: line-through;
+            color: #666;
+        }
+        .task-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-left: 10px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            position: relative;
+            z-index: 10;
+        }
+        .task-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+        .reset-btn {
+            display: block;
+            margin: 30px auto;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .reset-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 15px;
+            max-width: 800px;
+            width: 100%;
+            margin: 40px auto;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 {
+            font-size: 1.2rem;
+        }
+        .close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .modal-body {
+            padding: 25px;
+        }
+        .task-section, .solution-section, .ai-section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title.task { color: #4facfe; }
+        .section-title.ai { color: #f093fb; }
+        
+        .task-box {
+            background: rgba(79, 172, 254, 0.1);
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        .solution-toggle {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .solution-toggle:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        }
+        .solution-toggle .arrow {
+            transition: transform 0.3s;
+            font-size: 0.8rem;
+        }
+        .solution-toggle.open .arrow {
+            transform: rotate(90deg);
+        }
+        .solution-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .solution-content.open {
+            max-height: 1000px;
+            opacity: 1;
+        }
+        .solution-box {
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        .solution-box .katex-display {
+            margin: 0.8em 0;
+        }
+        .task-box .katex-display {
+            margin: 0.8em 0;
+        }
+        .ai-prompt-box {
+            background: rgba(240, 147, 251, 0.1);
+            border: 1px solid rgba(240, 147, 251, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .ai-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .ai-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .ai-btn:hover {
+            transform: scale(1.05);
+        }
+        .ai-btn.copy {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            color: #333;
+        }
+        .ai-btn.google {
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            color: white;
+        }
+        .ai-btn.chatgpt {
+            background: linear-gradient(135deg, #10a37f, #1a7f5a);
+            color: white;
+        }
+        .ai-btn.claude {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            color: white;
+        }
+        
+        .formula {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+        }
+        
+        .copied-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4facfe;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 2000;
+        }
+        .copied-toast.show {
+            opacity: 1;
+        }
+        
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            .competency-item { flex-wrap: wrap; }
+            .task-btn { margin-top: 10px; margin-left: 35px; }
+            .ai-buttons { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📐 Mathematik Q2 – Analysis</h1>
+            <p class="subtitle">Lore-Lorentz-Schule | Klausurvorbereitung</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+                <div class="progress-text" id="progressText">0 / 0 Kompetenzen</div>
+            </div>
+        </header>
+
+        <!-- Thema 1: Ganzrationale Funktionen -->
+        <div class="topic-section">
+            <div class="topic-header">
+                <span class="icon">📊</span>
+                Ganzrationale Funktionen – Grundlagen
+            </div>
+            <div class="competency-list">
+                <div class="competency-item">
+                    <input type="checkbox" id="c1" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann den Grad und den Leitkoeffizienten einer GRF bestimmen.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m1')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c2" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann Nullstellen einer GRF bestimmen (Ausklammern, Substitution, Faktorisierung).</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m2')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c3" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann die Vielfachheit von Nullstellen bestimmen und am Graphen erkennen.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m3')">Üben</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thema 2: Fernverhalten und Graphen -->
+        <div class="topic-section">
+            <div class="topic-header">
+                <span class="icon">📈</span>
+                Fernverhalten und Graphen skizzieren
+            </div>
+            <div class="competency-list">
+                <div class="competency-item">
+                    <input type="checkbox" id="c4" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann das Fernverhalten aus Grad und Leitkoeffizient bestimmen.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m4')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c5" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann den Graphen einer GRF skizzieren (Nullstellen, Fernverhalten, y-Achsenabschnitt).</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m5')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c6" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann aus einem Graphen den Funktionsterm bestimmen.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m6')">Üben</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thema 3: Ableitung -->
+        <div class="topic-section">
+            <div class="topic-header">
+                <span class="icon">∂</span>
+                Ableitung – Begriff und Regeln
+            </div>
+            <div class="competency-list">
+                <div class="competency-item">
+                    <input type="checkbox" id="c7" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann die Tangentensteigung als Grenzwert des Differenzenquotienten erklären.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m7')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c8" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann die Sekantensteigung berechnen und die Annäherung an die Tangente beschreiben.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m8')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c9" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann die Potenzregel anwenden: (xⁿ)' = n·xⁿ⁻¹</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m9')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c10" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann die Summenregel anwenden: (f + g)' = f' + g'</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m10')">Üben</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thema 4: Extremstellen -->
+        <div class="topic-section">
+            <div class="topic-header">
+                <span class="icon">⛰️</span>
+                Extremstellen – Hoch- und Tiefpunkte
+            </div>
+            <div class="competency-list">
+                <div class="competency-item">
+                    <input type="checkbox" id="c11" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann die notwendige Bedingung f'(x₀) = 0 anwenden.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m11')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c12" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann mit der Vorzeichenwechsel-Methode Hoch- und Tiefpunkte klassifizieren.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m12')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c13" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann Sattelpunkte erkennen (f'(x₀) = 0, aber kein Vorzeichenwechsel).</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m13')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c14" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann Monotonie-Intervalle bestimmen.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m14')">Üben</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thema 5: Wendestellen -->
+        <div class="topic-section">
+            <div class="topic-header">
+                <span class="icon">🔄</span>
+                Wendestellen und Krümmung
+            </div>
+            <div class="competency-list">
+                <div class="competency-item">
+                    <input type="checkbox" id="c15" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann die notwendige Bedingung f''(x₀) = 0 anwenden.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m15')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c16" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann mit der Vorzeichenwechsel-Methode Wendepunkte bestätigen.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m16')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c17" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann das Krümmungsverhalten aus dem Vorzeichen von f'' bestimmen.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m17')">Üben</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thema 6: Kurvendiskussion -->
+        <div class="topic-section">
+            <div class="topic-header">
+                <span class="icon">📋</span>
+                Vollständige Kurvendiskussion
+            </div>
+            <div class="competency-list">
+                <div class="competency-item">
+                    <input type="checkbox" id="c18" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann eine vollständige Kurvendiskussion durchführen.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m18')">Üben</button>
+                </div>
+                <div class="competency-item">
+                    <input type="checkbox" id="c19" onchange="updateProgress()">
+                    <span class="competency-text">Ich kann Sachaufgaben mit Extremwertproblemen lösen.</span>
+                    <button class="task-btn" onclick="event.stopPropagation(); openModal('m19')">Üben</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="reset-btn" onclick="resetProgress()">🔄 Fortschritt zurücksetzen</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Aufgabe</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="task-section">
+                    <div class="section-title task">📝 Aufgabe (Klausurstil)</div>
+                    <div class="task-box" id="taskContent"></div>
+                </div>
+                <div class="solution-section">
+                    <button class="solution-toggle" id="solutionToggle" onclick="toggleSolution()">
+                        <span class="arrow">▶</span> Lösung anzeigen
+                    </button>
+                    <div class="solution-content" id="solutionWrapper">
+                        <div class="solution-box" id="solutionContent"></div>
+                    </div>
+                </div>
+                <div class="ai-section">
+                    <div class="section-title ai">🤖 KI-Lernhilfe</div>
+                    <div class="ai-prompt-box" id="aiPrompt"></div>
+                    <div class="ai-buttons">
+                        <button class="ai-btn copy" onclick="copyPrompt()">📋 Kopieren</button>
+                        <button class="ai-btn google" onclick="openGoogleAI()">🔍 Google AI</button>
+                        <button class="ai-btn chatgpt" onclick="openChatGPT()">💬 ChatGPT</button>
+                        <button class="ai-btn claude" onclick="openClaude()">🧠 Claude</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="copied-toast" id="toast">✓ In Zwischenablage kopiert!</div>
+
+    <script>
+        const tasks = {
+            m1: {
+                title: "Grad und Leitkoeffizient",
+                task: "Bestimmen Sie für die Funktion $f(x) = -2x^4 + 5x^3 - 3x + 7$ den Grad und den Leitkoeffizienten.",
+                solution: "**Grad:** $n = 4$ (höchste Potenz von $x$)\n\n**Leitkoeffizient:** $a_4 = -2$ (Faktor vor $x^4$)",
+                prompt: "Erkläre mir, wie ich den Grad und den Leitkoeffizienten einer ganzrationalen Funktion bestimme. Gib mir dann 3 Übungsaufgaben mit Lösungen."
+            },
+            m2: {
+                title: "Nullstellen bestimmen",
+                task: "Bestimmen Sie alle Nullstellen der Funktion $f(x) = x^3 - 4x^2 + 4x$.",
+                solution: "**Ausklammern:**\n$$f(x) = x^3 - 4x^2 + 4x = x(x^2 - 4x + 4) = x(x-2)^2$$\n\n**Nullstellen:**\n- $x_1 = 0$ (einfach)\n- $x_2 = 2$ (doppelt)",
+                prompt: "Erkläre mir verschiedene Methoden zur Nullstellenbestimmung bei ganzrationalen Funktionen (Ausklammern, Substitution, Faktorisierung). Gib mir dann eine Übungsaufgabe."
+            },
+            m3: {
+                title: "Vielfachheit von Nullstellen",
+                task: "Gegeben ist $f(x) = (x-1)^2(x+2)$.\n\na) Bestimmen Sie die Nullstellen mit Vielfachheit.\nb) Beschreiben Sie das Verhalten des Graphen an jeder Nullstelle.",
+                solution: "**a) Nullstellen:**\n- $x_1 = 1$ (Vielfachheit 2, doppelt)\n- $x_2 = -2$ (Vielfachheit 1, einfach)\n\n**b) Verhalten am Graphen:**\n- Bei $x = 1$: Graph **berührt** die $x$-Achse (kein VZW)\n- Bei $x = -2$: Graph **schneidet** die $x$-Achse (VZW)",
+                prompt: "Erkläre mir den Zusammenhang zwischen Vielfachheit einer Nullstelle und dem Verhalten des Graphen (schneiden vs. berühren, Vorzeichenwechsel). Gib mir Beispiele."
+            },
+            m4: {
+                title: "Fernverhalten",
+                task: "Bestimmen Sie das Fernverhalten der Funktion $f(x) = -3x^5 + 2x^3 - x + 4$.",
+                solution: "**Grad:** $n = 5$ (ungerade)\n**Leitkoeffizient:** $a_5 = -3 < 0$\n\n**Fernverhalten:**\n$$\\lim_{x \\to -\\infty} f(x) = +\\infty$$\n$$\\lim_{x \\to +\\infty} f(x) = -\\infty$$",
+                prompt: "Erkläre mir, wie das Fernverhalten einer ganzrationalen Funktion vom Grad und Leitkoeffizienten abhängt. Erstelle eine Übersichtstabelle."
+            },
+            m5: {
+                title: "Graph skizzieren",
+                task: "Skizzieren Sie den Graphen der Funktion $f(x) = (x-2)(x+1)^2$.\n\nBestimmen Sie dazu: Grad, Leitkoeffizient, Nullstellen (mit Vielfachheit), Fernverhalten, $y$-Achsenabschnitt.",
+                solution: "**Grad:** $n = 3$, **Leitkoeffizient:** $a_3 = +1$\n\n**Nullstellen:**\n- $x_1 = 2$ (einfach, VZW)\n- $x_2 = -1$ (doppelt, kein VZW)\n\n**Fernverhalten:**\n- $x \\to -\\infty$: $f(x) \\to -\\infty$\n- $x \\to +\\infty$: $f(x) \\to +\\infty$\n\n**$y$-Achsenabschnitt:**\n$$f(0) = (-2) \\cdot 1^2 = -2$$",
+                prompt: "Erkläre mir Schritt für Schritt, wie ich den Graphen einer ganzrationalen Funktion in faktorisierter Form skizziere. Welche Informationen brauche ich?"
+            },
+            m6: {
+                title: "Funktionsterm aus Graph",
+                task: "Der Graph einer ganzrationalen Funktion hat:\n- einfache Nullstelle bei $x = -2$\n- doppelte Nullstelle bei $x = 1$\n- $y$-Achsenabschnitt bei $y = 4$\n\nBestimmen Sie den Funktionsterm.",
+                solution: "**Ansatz:**\n$$f(x) = a(x+2)(x-1)^2$$\n\n**Bedingung** $f(0) = 4$:\n$$a \\cdot 2 \\cdot 1 = 4 \\quad \\Rightarrow \\quad a = 2$$\n\n**Ergebnis:**\n$$f(x) = 2(x+2)(x-1)^2$$",
+                prompt: "Erkläre mir, wie ich aus einem Graphen den Funktionsterm einer ganzrationalen Funktion bestimme. Wie nutze ich Nullstellen und den y-Achsenabschnitt?"
+            },
+            m7: {
+                title: "Tangentensteigung als Grenzwert",
+                task: "Erklären Sie, wie die Tangentensteigung als Grenzwert des Differenzenquotienten definiert ist.",
+                solution: "Die **Tangentensteigung** (Ableitung) an der Stelle $x_0$ ist:\n\n$$f'(x_0) = \\lim_{h \\to 0} \\frac{f(x_0+h) - f(x_0)}{h}$$\n\nDies ist der Grenzwert der **Sekantensteigungen**, wenn der zweite Punkt immer näher an $x_0$ rückt.",
+                prompt: "Erkläre mir den Übergang von der Sekante zur Tangente. Was passiert, wenn h immer kleiner wird? Veranschauliche es graphisch."
+            },
+            m8: {
+                title: "Sekantensteigung berechnen",
+                task: "Für $f(x) = x^2$ berechnen Sie die Sekantensteigung durch $P(1, f(1))$ und $Q$ für $h = 1$, $h = 0{,}5$, $h = 0{,}1$.\n\nWelchen Grenzwert vermuten Sie für $h \\to 0$?",
+                solution: "$f(1) = 1$, also $P(1, 1)$\n\n**Sekantensteigungen:**\n- $h = 1$: $m = \\frac{f(2)-f(1)}{1} = \\frac{4-1}{1} = 3$\n- $h = 0{,}5$: $m = \\frac{f(1{,}5)-f(1)}{0{,}5} = \\frac{2{,}25-1}{0{,}5} = 2{,}5$\n- $h = 0{,}1$: $m = \\frac{f(1{,}1)-f(1)}{0{,}1} = \\frac{1{,}21-1}{0{,}1} = 2{,}1$\n\n**Grenzwert:** $f'(1) = 2$",
+                prompt: "Gib mir eine Übungsaufgabe zur Berechnung von Sekantensteigungen und dem Grenzübergang zur Tangentensteigung."
+            },
+            m9: {
+                title: "Potenzregel",
+                task: "Bilden Sie die Ableitung:\n\na) $f(x) = x^5$\nb) $g(x) = 3x^4$\nc) $h(x) = -2x^7$",
+                solution: "**Potenzregel:** $(a \\cdot x^n)' = a \\cdot n \\cdot x^{n-1}$\n\n**a)** $f'(x) = 5x^4$\n\n**b)** $g'(x) = 3 \\cdot 4x^3 = 12x^3$\n\n**c)** $h'(x) = -2 \\cdot 7x^6 = -14x^6$",
+                prompt: "Erkläre mir die Potenzregel für Ableitungen und gib mir 5 Übungsaufgaben mit steigendem Schwierigkeitsgrad."
+            },
+            m10: {
+                title: "Summenregel",
+                task: "Bilden Sie die Ableitung der Funktion\n$$f(x) = 2x^4 - 5x^3 + 3x^2 - x + 7$$",
+                solution: "**Summenregel:** $(f + g)' = f' + g'$\n\n**Glied für Glied ableiten:**\n$$f'(x) = 2 \\cdot 4x^3 - 5 \\cdot 3x^2 + 3 \\cdot 2x - 1 + 0$$\n\n**Ergebnis:**\n$$f'(x) = 8x^3 - 15x^2 + 6x - 1$$",
+                prompt: "Erkläre mir die Summenregel für Ableitungen. Wie leite ich eine ganzrationale Funktion Glied für Glied ab?"
+            },
+            m11: {
+                title: "Notwendige Bedingung für Extrema",
+                task: "Bestimmen Sie alle Kandidaten für Extremstellen der Funktion\n$$f(x) = x^3 - 3x^2 - 9x + 5$$",
+                solution: "**1. Ableitung:**\n$$f'(x) = 3x^2 - 6x - 9$$\n\n**Notwendige Bedingung** $f'(x) = 0$:\n$$3x^2 - 6x - 9 = 0 \\quad |:3$$\n$$x^2 - 2x - 3 = 0$$\n$$(x-3)(x+1) = 0$$\n\n**Kandidaten:** $x_1 = 3$, $x_2 = -1$",
+                prompt: "Erkläre mir die notwendige Bedingung für Extremstellen. Warum muss f'(x₀) = 0 sein? Gib mir eine Übungsaufgabe."
+            },
+            m12: {
+                title: "Vorzeichenwechsel-Methode",
+                task: "Für $f(x) = x^3 - 3x^2 - 9x + 5$ mit $f'(x) = 3x^2 - 6x - 9$ und den Kandidaten $x = -1$ und $x = 3$:\n\nKlassifizieren Sie die Extremstellen mithilfe einer Vorzeichentabelle.",
+                solution: "**Vorzeichentabelle für $f'(x)$:**\n\n| $x$ | $-2$ | $-1$ | $0$ | $3$ | $4$ |\n|---|---|---|---|---|---|\n| $f'(x)$ | $+15$ | $0$ | $-9$ | $0$ | $+15$ |\n| VZ | $+$ | $0$ | $-$ | $0$ | $+$ |\n\n**Klassifikation:**\n- $x = -1$: VZW $+ \\to -$ $\\Rightarrow$ **Hochpunkt**\n- $x = 3$: VZW $- \\to +$ $\\Rightarrow$ **Tiefpunkt**\n\n**Koordinaten:**\n- $H(-1 \\mid 10)$\n- $T(3 \\mid -22)$",
+                prompt: "Erkläre mir die Vorzeichenwechsel-Methode zur Bestimmung von Hoch- und Tiefpunkten. Wie erstelle ich eine Vorzeichentabelle?"
+            },
+            m13: {
+                title: "Sattelpunkt",
+                task: "Untersuchen Sie die Funktion $f(x) = x^3$ auf Extremstellen.",
+                solution: "**Ableitung:**\n$$f'(x) = 3x^2$$\n\n**Notwendige Bedingung:**\n$$f'(x) = 0 \\quad \\Rightarrow \\quad x = 0$$\n\n**Vorzeichentabelle:**\n\n| $x$ | $-1$ | $0$ | $1$ |\n|---|---|---|---|\n| $f'(x)$ | $3$ | $0$ | $3$ |\n| VZ | $+$ | $0$ | $+$ |\n\n**Kein Vorzeichenwechsel!**\n$\\Rightarrow$ **Sattelpunkt** bei $x = 0$, kein Extremum",
+                prompt: "Erkläre mir den Unterschied zwischen Extremstellen und Sattelpunkten. Wann liegt trotz f'(x₀) = 0 kein Extremum vor?"
+            },
+            m14: {
+                title: "Monotonie-Intervalle",
+                task: "Bestimmen Sie die Monotonie-Intervalle der Funktion $f(x) = x^3 - 3x$.",
+                solution: "**Ableitung:**\n$$f'(x) = 3x^2 - 3 = 3(x^2-1) = 3(x-1)(x+1)$$\n\n$f'(x) = 0$ bei $x = -1$ und $x = 1$\n\n**Vorzeichentabelle:**\n\n| $x$ | $-2$ | $-1$ | $0$ | $1$ | $2$ |\n|---|---|---|---|---|---|\n| $f'(x)$ | $+9$ | $0$ | $-3$ | $0$ | $+9$ |\n\n**Monotonie:**\n- $]-\\infty, -1[$: $f'(x) > 0$ $\\Rightarrow$ $f$ **steigt**\n- $]-1, 1[$: $f'(x) < 0$ $\\Rightarrow$ $f$ **fällt**\n- $]1, \\infty[$: $f'(x) > 0$ $\\Rightarrow$ $f$ **steigt**",
+                prompt: "Erkläre mir den Zusammenhang zwischen dem Vorzeichen der Ableitung und dem Monotonieverhalten. Wie bestimme ich Monotonie-Intervalle?"
+            },
+            m15: {
+                title: "Notwendige Bedingung für Wendestellen",
+                task: "Bestimmen Sie alle Kandidaten für Wendestellen der Funktion\n$$f(x) = x^4 - 6x^2 + 4$$",
+                solution: "**Ableitungen:**\n$$f'(x) = 4x^3 - 12x$$\n$$f''(x) = 12x^2 - 12$$\n\n**Notwendige Bedingung** $f''(x) = 0$:\n$$12x^2 - 12 = 0$$\n$$x^2 = 1$$\n$$x = \\pm 1$$\n\n**Kandidaten:** $x_1 = -1$, $x_2 = 1$",
+                prompt: "Erkläre mir die notwendige Bedingung für Wendestellen. Was bedeutet f''(x₀) = 0 geometrisch?"
+            },
+            m16: {
+                title: "Wendepunkte bestätigen",
+                task: "Für $f(x) = x^4 - 6x^2 + 4$ mit $f''(x) = 12x^2 - 12$ und Kandidaten $x = \\pm 1$:\n\nBestätigen Sie die Wendepunkte mithilfe der Vorzeichenwechsel-Methode.",
+                solution: "**Vorzeichentabelle für $f''(x)$:**\n\n| $x$ | $-2$ | $-1$ | $0$ | $1$ | $2$ |\n|---|---|---|---|---|---|\n| $f''(x)$ | $+36$ | $0$ | $-12$ | $0$ | $+36$ |\n| VZ | $+$ | $0$ | $-$ | $0$ | $+$ |\n\n**Klassifikation:**\n- $x = -1$: VZW $+ \\to -$ $\\Rightarrow$ **Wendepunkt** ✓\n- $x = 1$: VZW $- \\to +$ $\\Rightarrow$ **Wendepunkt** ✓\n\n**Koordinaten:**\n- $W_1(-1 \\mid -1)$\n- $W_2(1 \\mid -1)$",
+                prompt: "Erkläre mir, wie ich mit der Vorzeichenwechsel-Methode Wendepunkte bestätige. Was bedeutet ein VZW von f''?"
+            },
+            m17: {
+                title: "Krümmungsverhalten",
+                task: "Bestimmen Sie das Krümmungsverhalten der Funktion $f(x) = x^4 - 6x^2 + 4$.",
+                solution: "**Zweite Ableitung:**\n$$f''(x) = 12x^2 - 12 = 12(x^2-1)$$\n\n**Krümmung:**\n- $f''(x) > 0$ für $|x| > 1$ $\\Rightarrow$ **linksgekrümmt** (konvex)\n- $f''(x) < 0$ für $|x| < 1$ $\\Rightarrow$ **rechtsgekrümmt** (konkav)\n\n**Intervalle:**\n- $]-\\infty, -1[$: linksgekrümmt\n- $]-1, 1[$: rechtsgekrümmt\n- $]1, \\infty[$: linksgekrümmt",
+                prompt: "Erkläre mir den Zusammenhang zwischen dem Vorzeichen der zweiten Ableitung und dem Krümmungsverhalten. Was bedeutet links-/rechtsgekrümmt?"
+            },
+            m18: {
+                title: "Vollständige Kurvendiskussion",
+                task: "Führen Sie eine vollständige Kurvendiskussion für\n$$f(x) = x^3 - 3x^2 + 4$$\ndurch.",
+                solution: "**1) Definitionsbereich:** $D = \\mathbb{R}$\n\n**2) Symmetrie:** keine (weder gerade noch ungerade)\n\n**3) Nullstellen:** $f(x) = (x+1)(x-2)^2$\n$\\Rightarrow x = -1$ (einfach), $x = 2$ (doppelt)\n\n**4) Fernverhalten:**\n- $x \\to -\\infty$: $f(x) \\to -\\infty$\n- $x \\to +\\infty$: $f(x) \\to +\\infty$\n\n**5) Extrema:** $f'(x) = 3x^2 - 6x = 3x(x-2) = 0$\n- $H(0 \\mid 4)$ (Hochpunkt)\n- $T(2 \\mid 0)$ (Tiefpunkt)\n\n**6) Wendepunkt:** $f''(x) = 6x - 6 = 0$\n$\\Rightarrow W(1 \\mid 2)$",
+                prompt: "Erstelle mir eine Checkliste für eine vollständige Kurvendiskussion. Welche Schritte muss ich in welcher Reihenfolge durchführen?"
+            },
+            m19: {
+                title: "Anwendungsaufgabe",
+                task: "Bei einem Temperierbad wird die Temperaturabweichung\n$$\\Delta T(t) = t^4 - 6t^2 + 5$$\nvom Sollwert gemessen ($t$ in Minuten, $\\Delta T$ in Kelvin).\n\na) Wann ist die Unterkühlung maximal?\nb) Wann wird der Sollwert erstmals erreicht?",
+                solution: "**a) Maximale Unterkühlung:**\n$$\\Delta T'(t) = 4t^3 - 12t = 4t(t^2-3) = 0$$\n$\\Rightarrow t = 0$ oder $t = \\sqrt{3} \\approx 1{,}73$ min\n\nVZW bei $t = \\sqrt{3}$: $- \\to +$ $\\Rightarrow$ **Minimum**\n\n$$\\Delta T(\\sqrt{3}) = 9 - 18 + 5 = -4 \\text{ K}$$\n\n**b) Sollwert erreicht** ($\\Delta T = 0$):\n$$t^4 - 6t^2 + 5 = 0$$\n\nSubstitution $u = t^2$:\n$$u^2 - 6u + 5 = 0 \\quad \\Rightarrow \\quad (u-1)(u-5) = 0$$\n\n$u = 1 \\Rightarrow t = 1$ min (erstmals)",
+                prompt: "Erkläre mir, wie ich Extremwertaufgaben aus der Physik/Technik mit Analysis löse. Wie übersetze ich die Fragestellung in Mathematik?"
+            }
+        };
+
+        let currentPrompt = '';
+
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const total = checkboxes.length;
+            let checked = 0;
+            
+            checkboxes.forEach((cb, index) => {
+                const label = cb.parentElement.querySelector('.competency-text');
+                if (cb.checked) {
+                    checked++;
+                    label.classList.add('checked');
+                    localStorage.setItem(`math_q2_c${index+1}`, 'true');
+                } else {
+                    label.classList.remove('checked');
+                    localStorage.setItem(`math_q2_c${index+1}`, 'false');
+                }
+            });
+
+            const percentage = Math.round((checked / total) * 100);
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${checked} / ${total} Kompetenzen (${percentage}%)`;
+        }
+
+        function loadProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((cb, index) => {
+                const saved = localStorage.getItem(`math_q2_c${index+1}`);
+                if (saved === 'true') {
+                    cb.checked = true;
+                }
+            });
+            updateProgress();
+        }
+
+        function resetProgress() {
+            if (confirm('Möchten Sie wirklich den gesamten Fortschritt zurücksetzen?')) {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach((cb, index) => {
+                    cb.checked = false;
+                    localStorage.removeItem(`math_q2_c${index+1}`);
+                });
+                updateProgress();
+            }
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.getElementById('modal'), {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        function formatText(text) {
+            // Markdown-ähnliche Formatierung für Fettdruck
+            return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        }
+
+        function openModal(id) {
+            const task = tasks[id];
+            document.getElementById('modalTitle').textContent = task.title;
+            document.getElementById('taskContent').innerHTML = formatText(task.task);
+            document.getElementById('solutionContent').innerHTML = formatText(task.solution);
+            document.getElementById('aiPrompt').textContent = task.prompt;
+            currentPrompt = task.prompt;
+            // Lösung beim Öffnen einklappen
+            document.getElementById('solutionToggle').classList.remove('open');
+            document.getElementById('solutionWrapper').classList.remove('open');
+            document.getElementById('solutionToggle').innerHTML = '<span class="arrow">▶</span> Lösung anzeigen';
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // KaTeX rendern
+            setTimeout(renderMath, 50);
+        }
+
+        function toggleSolution() {
+            const toggle = document.getElementById('solutionToggle');
+            const wrapper = document.getElementById('solutionWrapper');
+            toggle.classList.toggle('open');
+            wrapper.classList.toggle('open');
+            if (toggle.classList.contains('open')) {
+                toggle.innerHTML = '<span class="arrow">▶</span> Lösung verbergen';
+                // KaTeX für Lösung rendern
+                setTimeout(renderMath, 50);
+            } else {
+                toggle.innerHTML = '<span class="arrow">▶</span> Lösung anzeigen';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function copyPrompt() {
+            navigator.clipboard.writeText(currentPrompt).then(() => {
+                showToast('✓ Prompt in Zwischenablage kopiert!');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function openGoogleAI() {
+            navigator.clipboard.writeText(currentPrompt).then(() => {
+                showToast('✓ Prompt kopiert – öffne Google AI...');
+                setTimeout(() => window.open('https://gemini.google.com/', '_blank'), 500);
+            });
+        }
+
+        function openChatGPT() {
+            navigator.clipboard.writeText(currentPrompt).then(() => {
+                showToast('✓ Prompt kopiert – öffne ChatGPT...');
+                setTimeout(() => window.open('https://chat.openai.com/', '_blank'), 500);
+            });
+        }
+
+        function openClaude() {
+            navigator.clipboard.writeText(currentPrompt).then(() => {
+                showToast('✓ Prompt kopiert – öffne Claude...');
+                setTimeout(() => window.open('https://claude.ai/', '_blank'), 500);
+            });
+        }
+
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        window.onload = function() {
+            loadProgress();
+            
+            // iOS Touch-Fix für Buttons
+            document.querySelectorAll('.task-btn').forEach(function(btn) {
+                btn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.click();
+                }, {passive: false});
+            });
+        };
+    </script>
+</body>
+</html>
