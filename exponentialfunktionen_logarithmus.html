@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exponentialfunktionen & Logarithmus – Lernliste</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+        
+        header p {
+            opacity: 0.8;
+            font-size: 0.95em;
+        }
+        
+        .school-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .progress-section {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .progress-bar-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 25px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .rules-section {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d4edfc 100%);
+            border: 2px solid #3498db;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .rules-section h2 {
+            color: #2980b9;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .rules-section h2::before {
+            content: "📐";
+        }
+        
+        .rule-box {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .rule-box h3 {
+            color: #2c3e50;
+            font-size: 1em;
+            margin-bottom: 8px;
+        }
+        
+        .rule-box .formula {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2em;
+            color: #8e44ad;
+            background: #f9f0ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 8px 0;
+        }
+        
+        .rule-box .example {
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .task-item {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .task-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .task-item.completed {
+            background: #f0fff4;
+            border-color: #27ae60;
+        }
+        
+        .task-item.completed .task-text {
+            color: #27ae60;
+        }
+        
+        .checkbox-wrapper {
+            flex-shrink: 0;
+        }
+        
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: #27ae60;
+        }
+        
+        .task-content {
+            flex-grow: 1;
+        }
+        
+        .task-text {
+            font-size: 1em;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .task-text .math {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            color: #8e44ad;
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .difficulty.easy {
+            background: #d5f5e3;
+            color: #27ae60;
+        }
+        
+        .difficulty.medium {
+            background: #fef9e7;
+            color: #f39c12;
+        }
+        
+        .difficulty.hard {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+        
+        .btn-solution {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn-solution:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-hint {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            margin-right: 8px;
+        }
+        
+        .btn-hint:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+        }
+        
+        .hint-modal .modal-header {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        
+        .tipp-box {
+            background: #fff8e1;
+            border: 2px solid #f39c12;
+            border-radius: 12px;
+            padding: 18px;
+        }
+        
+        .tipp-box .tipp-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #f39c12;
+        }
+        
+        .tipp-box .tipp-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .tipp-box .tipp-icon {
+            font-size: 1.3em;
+            flex-shrink: 0;
+        }
+        
+        .tipp-box .tipp-text {
+            line-height: 1.5;
+        }
+        
+        .tipp-box .tipp-formula {
+            font-family: 'Times New Roman', serif;
+            background: #fffde7;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+            display: inline-block;
+            color: #8e44ad;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            font-size: 1.2em;
+        }
+        
+        .modal-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .modal-section {
+            margin-bottom: 20px;
+        }
+        
+        .modal-section h4 {
+            color: #2c3e50;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .aufgabe-box {
+            background: #fff8e1;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 18px;
+        }
+        
+        .loesung-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 12px;
+            padding: 18px;
+        }
+        
+        .loesung-box .step {
+            margin-bottom: 12px;
+            padding-left: 15px;
+            border-left: 3px solid #4caf50;
+        }
+        
+        .loesung-box .step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .loesung-box .result {
+            background: #c8e6c9;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .ki-section {
+            background: #f3e5f5;
+            border: 2px solid #9c27b0;
+            border-radius: 12px;
+            padding: 18px;
+        }
+        
+        .ki-prompt {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+        
+        .ki-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .ki-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .ki-btn.copy {
+            background: #607d8b;
+            color: white;
+        }
+        
+        .ki-btn.google {
+            background: #4285f4;
+            color: white;
+        }
+        
+        .ki-btn.chatgpt {
+            background: #10a37f;
+            color: white;
+        }
+        
+        .ki-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .copied-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            display: none;
+            z-index: 2000;
+        }
+        
+        .copied-toast.show {
+            display: block;
+            animation: fadeInOut 2s ease;
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            20%, 80% { opacity: 1; }
+        }
+        
+        .hint {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px 15px;
+            margin-top: 10px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9em;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.85em;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            header h1 {
+                font-size: 1.4em;
+            }
+            
+            .school-info {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .ki-buttons {
+                flex-direction: column;
+            }
+            
+            .ki-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Exponentialfunktionen & Logarithmus</h1>
+            <p>Interaktive Lernliste – Bearbeitung auf Papier</p>
+            <div class="school-info">
+                <span>Lore-Lorentz-Schule</span>
+                <span>Physik-LK 11NP</span>
+                <span>16.01.2026</span>
+            </div>
+        </header>
+        
+        <div class="progress-section">
+            <strong>Ihr Lernfortschritt:</strong>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Regeln zum Logarithmus -->
+            <div class="rules-section">
+                <h2>Logarithmusregeln</h2>
+                
+                <div class="rule-box">
+                    <h3>Definition des Logarithmus</h3>
+                    <div class="formula">log<sub>b</sub>(x) = y ⟺ b<sup>y</sup> = x</div>
+                    <p class="example">Beispiel: log<sub>2</sub>(8) = 3, denn 2³ = 8</p>
+                </div>
+                
+                <div class="rule-box">
+                    <h3>Produktregel</h3>
+                    <div class="formula">log<sub>b</sub>(u · v) = log<sub>b</sub>(u) + log<sub>b</sub>(v)</div>
+                    <p class="example">Beispiel: log(6) = log(2 · 3) = log(2) + log(3)</p>
+                </div>
+                
+                <div class="rule-box">
+                    <h3>Quotientenregel</h3>
+                    <div class="formula">log<sub>b</sub>(u / v) = log<sub>b</sub>(u) − log<sub>b</sub>(v)</div>
+                    <p class="example">Beispiel: log(5) = log(10/2) = log(10) − log(2)</p>
+                </div>
+                
+                <div class="rule-box">
+                    <h3>Potenzregel</h3>
+                    <div class="formula">log<sub>b</sub>(u<sup>n</sup>) = n · log<sub>b</sub>(u)</div>
+                    <p class="example">Beispiel: log(x³) = 3 · log(x)</p>
+                </div>
+                
+                <div class="rule-box">
+                    <h3>Basiswechsel</h3>
+                    <div class="formula">log<sub>b</sub>(x) = ln(x) / ln(b) = log(x) / log(b)</div>
+                    <p class="example">Beispiel: log<sub>2</sub>(5) = ln(5) / ln(2) ≈ 2,32</p>
+                </div>
+                
+                <div class="rule-box">
+                    <h3>Wichtige Spezialfälle</h3>
+                    <div class="formula">log<sub>b</sub>(1) = 0 &nbsp;&nbsp;&nbsp; log<sub>b</sub>(b) = 1 &nbsp;&nbsp;&nbsp; log<sub>b</sub>(b<sup>n</sup>) = n</div>
+                </div>
+            </div>
+            
+            <!-- Abschnitt 1: Grundlagen -->
+            <div class="section">
+                <h2>📝 Teil 1: Exponentialfunktionen aufstellen</h2>
+                
+                <div class="task-item" data-task="1">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="task1">
+                    </div>
+                    <div class="task-content">
+                        <div class="task-text">
+                            <strong>Aufgabe 1:</strong> Bestimmen Sie die Exponentialfunktion <span class="math">f(x) = a · b<sup>x</sup></span>, die durch die Punkte P(0|3) und Q(2|12) verläuft.
+                            <span class="difficulty easy">Basis</span>
+                        </div>
+                        <button class="btn-hint" onclick="openModal('hint1')">💡 Tipp</button>
+                        <button class="btn-solution" onclick="openModal('modal1')">Lösung anzeigen</button>
+                    </div>
+                </div>
+                
+                <div class="task-item" data-task="2">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="task2">
+                    </div>
+                    <div class="task-content">
+                        <div class="task-text">
+                            <strong>Aufgabe 2:</strong> Eine Bakterienkultur verdoppelt sich alle 4 Stunden. Zu Beginn sind 500 Bakterien vorhanden. Stellen Sie die Wachstumsfunktion <span class="math">N(t)</span> auf.
+                            <span class="difficulty easy">Basis</span>
+                        </div>
+                        <button class="btn-hint" onclick="openModal('hint2')">💡 Tipp</button>
+                        <button class="btn-solution" onclick="openModal('modal2')">Lösung anzeigen</button>
+                    </div>
+                </div>
+                
+                <div class="task-item" data-task="3">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="task3">
+                    </div>
+                    <div class="task-content">
+                        <div class="task-text">
+                            <strong>Aufgabe 3:</strong> Die Exponentialfunktion <span class="math">f(x) = a · b<sup>x</sup></span> verläuft durch P(1|6) und Q(3|54). Bestimmen Sie a und b.
+                            <span class="difficulty medium">Mittel</span>
+                        </div>
+                        <button class="btn-hint" onclick="openModal('hint3')">💡 Tipp</button>
+                        <button class="btn-solution" onclick="openModal('modal3')">Lösung anzeigen</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Abschnitt 2: Logarithmus anwenden -->
+            <div class="section">
+                <h2>🔢 Teil 2: Logarithmus anwenden</h2>
+                
+                <div class="task-item" data-task="4">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="task4">
+                    </div>
+                    <div class="task-content">
+                        <div class="task-text">
+                            <strong>Aufgabe 4:</strong> Lösen Sie die Gleichung <span class="math">5<sup>x</sup> = 200</span> mithilfe des Logarithmus.
+                            <span class="difficulty easy">Basis</span>
+                        </div>
+                        <button class="btn-hint" onclick="openModal('hint4')">💡 Tipp</button>
+                        <button class="btn-solution" onclick="openModal('modal4')">Lösung anzeigen</button>
+                    </div>
+                </div>
+                
+                <div class="task-item" data-task="5">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="task5">
+                    </div>
+                    <div class="task-content">
+                        <div class="task-text">
+                            <strong>Aufgabe 5:</strong> Nach wie vielen Jahren hat sich ein Kapital von 1000 € bei 3% Zinsen p.a. auf 1500 € erhöht? Nutzen Sie <span class="math">K(t) = K₀ · 1,03<sup>t</sup></span>.
+                            <span class="difficulty medium">Mittel</span>
+                        </div>
+                        <button class="btn-hint" onclick="openModal('hint5')">💡 Tipp</button>
+                        <button class="btn-solution" onclick="openModal('modal5')">Lösung anzeigen</button>
+                    </div>
+                </div>
+                
+                <div class="task-item" data-task="6">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="task6">
+                    </div>
+                    <div class="task-content">
+                        <div class="task-text">
+                            <strong>Aufgabe 6:</strong> Lösen Sie: <span class="math">3 · 2<sup>2x−1</sup> = 48</span>
+                            <span class="difficulty medium">Mittel</span>
+                        </div>
+                        <button class="btn-hint" onclick="openModal('hint6')">💡 Tipp</button>
+                        <button class="btn-solution" onclick="openModal('modal6')">Lösung anzeigen</button>
+                    </div>
+                </div>
+                
+                <div class="task-item" data-task="7">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="task7">
+                    </div>
+                    <div class="task-content">
+                        <div class="task-text">
+                            <strong>Aufgabe 7:</strong> Vereinfachen Sie: <span class="math">log(x³) + 2·log(y) − log(x·y²)</span>
+                            <span class="difficulty medium">Mittel</span>
+                        </div>
+                        <button class="btn-hint" onclick="openModal('hint7')">💡 Tipp</button>
+                        <button class="btn-solution" onclick="openModal('modal7')">Lösung anzeigen</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Abschnitt 3: Anwendungen -->
+            <div class="section">
+                <h2>🌍 Teil 3: Anwendungsaufgaben</h2>
+                
+                <div class="task-item" data-task="8">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="task8">
+                    </div>
+                    <div class="task-content">
+                        <div class="task-text">
+                            <strong>Aufgabe 8:</strong> Radioaktiver Zerfall: Ein Präparat hat eine Halbwertszeit von 5 Jahren. Nach wie vielen Jahren sind noch 10% der ursprünglichen Menge vorhanden?
+                            <span class="difficulty hard">Schwer</span>
+                        </div>
+                        <button class="btn-hint" onclick="openModal('hint8')">💡 Tipp</button>
+                        <button class="btn-solution" onclick="openModal('modal8')">Lösung anzeigen</button>
+                    </div>
+                </div>
+                
+                <div class="task-item" data-task="9">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="task9">
+                    </div>
+                    <div class="task-content">
+                        <div class="task-text">
+                            <strong>Aufgabe 9:</strong> Die Lautstärke in Dezibel ist definiert als <span class="math">L = 10 · log(I/I₀)</span>. Um wie viel dB steigt der Pegel, wenn sich die Intensität I verzehnfacht?
+                            <span class="difficulty medium">Mittel</span>
+                        </div>
+                        <button class="btn-hint" onclick="openModal('hint9')">💡 Tipp</button>
+                        <button class="btn-solution" onclick="openModal('modal9')">Lösung anzeigen</button>
+                    </div>
+                </div>
+                
+                <div class="task-item" data-task="10">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="task10">
+                    </div>
+                    <div class="task-content">
+                        <div class="task-text">
+                            <strong>Aufgabe 10:</strong> Der pH-Wert ist definiert als <span class="math">pH = −log(c<sub>H⁺</sub>)</span>. Welche Konzentration c<sub>H⁺</sub> hat eine Lösung mit pH = 4,5?
+                            <span class="difficulty hard">Schwer</span>
+                        </div>
+                        <button class="btn-hint" onclick="openModal('hint10')">💡 Tipp</button>
+                        <button class="btn-solution" onclick="openModal('modal10')">Lösung anzeigen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Lore-Lorentz-Schule Düsseldorf | Berufskolleg für Technik</p>
+            <p style="margin-top: 8px; opacity: 0.7;">Bearbeiten Sie die Aufgaben auf Papier und haken Sie erledigte Aufgaben ab.</p>
+        </footer>
+    </div>
+    
+    <!-- Tipp-Modals -->
+    
+    <!-- Tipp 1 -->
+    <div class="modal hint-modal" id="hint1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💡 Tipp zu Aufgabe 1</h3>
+                <button class="modal-close" onclick="closeModal('hint1')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tipp-box">
+                    <div class="tipp-item">
+                        <span class="tipp-icon">1️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Nutzen Sie den Punkt P(0|3)!</strong><br>
+                            Was passiert bei x = 0? Erinnern Sie sich: b⁰ = 1 für jede Basis b.
+                            <div class="tipp-formula">f(0) = a · b⁰ = a · 1 = a</div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">2️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Setzen Sie dann den zweiten Punkt ein.</strong><br>
+                            Da Sie nun a kennen, können Sie mit Q(2|12) die Basis b bestimmen.
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">🔑</span>
+                        <div class="tipp-text">
+                            <strong>Schlüsselidee:</strong> Der Punkt mit x = 0 liefert direkt den Parameter a!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tipp 2 -->
+    <div class="modal hint-modal" id="hint2">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💡 Tipp zu Aufgabe 2</h3>
+                <button class="modal-close" onclick="closeModal('hint2')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tipp-box">
+                    <div class="tipp-item">
+                        <span class="tipp-icon">1️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Welche Form hat eine Wachstumsfunktion mit Verdopplungszeit?</strong><br>
+                            <div class="tipp-formula">N(t) = N₀ · 2<sup>t/T</sup></div>
+                            wobei T die Verdopplungszeit ist.
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">2️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Was bedeutet "Verdopplung alle 4 Stunden"?</strong><br>
+                            Nach t = 4 Stunden ist N(4) = 2 · N₀, nach t = 8 Stunden ist N(8) = 4 · N₀, usw.
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">🔑</span>
+                        <div class="tipp-text">
+                            <strong>Schlüsselidee:</strong> Der Exponent t/T zählt, wie oft die Verdopplungszeit vergangen ist!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tipp 3 -->
+    <div class="modal hint-modal" id="hint3">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💡 Tipp zu Aufgabe 3</h3>
+                <button class="modal-close" onclick="closeModal('hint3')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tipp-box">
+                    <div class="tipp-item">
+                        <span class="tipp-icon">1️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Stellen Sie zwei Gleichungen auf!</strong><br>
+                            Setzen Sie beide Punkte in f(x) = a · b<sup>x</sup> ein:
+                            <div class="tipp-formula">(I) a · b¹ = 6 &nbsp;&nbsp;&nbsp; (II) a · b³ = 54</div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">2️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Der Trick: Dividieren Sie die Gleichungen!</strong><br>
+                            Was passiert, wenn Sie (II) durch (I) teilen? Der Parameter a kürzt sich heraus!
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">🔑</span>
+                        <div class="tipp-text">
+                            <strong>Schlüsselidee:</strong> Bei Division zweier Potenzen mit gleicher Basis subtrahieren sich die Exponenten: b³/b¹ = b²
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tipp 4 -->
+    <div class="modal hint-modal" id="hint4">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💡 Tipp zu Aufgabe 4</h3>
+                <button class="modal-close" onclick="closeModal('hint4')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tipp-box">
+                    <div class="tipp-item">
+                        <span class="tipp-icon">1️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Logarithmieren Sie beide Seiten!</strong><br>
+                            Wenden Sie den Logarithmus auf beide Seiten der Gleichung an.
+                            <div class="tipp-formula">log(5<sup>x</sup>) = log(200)</div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">2️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Potenzregel anwenden!</strong><br>
+                            Nutzen Sie: log(a<sup>n</sup>) = n · log(a)
+                            <div class="tipp-formula">x · log(5) = log(200)</div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">🔑</span>
+                        <div class="tipp-text">
+                            <strong>Schlüsselidee:</strong> Der Logarithmus "holt den Exponenten nach vorne" – so wird aus einer Exponentialgleichung eine lineare Gleichung!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tipp 5 -->
+    <div class="modal hint-modal" id="hint5">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💡 Tipp zu Aufgabe 5</h3>
+                <button class="modal-close" onclick="closeModal('hint5')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tipp-box">
+                    <div class="tipp-item">
+                        <span class="tipp-icon">1️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Stellen Sie die Gleichung auf!</strong><br>
+                            Anfangskapital × Wachstumsfaktor = Endkapital
+                            <div class="tipp-formula">1000 · 1,03<sup>t</sup> = 1500</div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">2️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Isolieren Sie die Potenz!</strong><br>
+                            Teilen Sie durch 1000, um 1,03<sup>t</sup> alleine zu haben.
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">3️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Dann logarithmieren!</strong><br>
+                            <div class="tipp-formula">t = log(1,5) / log(1,03)</div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">🔑</span>
+                        <div class="tipp-text">
+                            <strong>Schlüsselidee:</strong> "Nach welcher Zeit erreiche ich Betrag X?" führt immer zu einer Logarithmus-Rechnung!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tipp 6 -->
+    <div class="modal hint-modal" id="hint6">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💡 Tipp zu Aufgabe 6</h3>
+                <button class="modal-close" onclick="closeModal('hint6')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tipp-box">
+                    <div class="tipp-item">
+                        <span class="tipp-icon">1️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Isolieren Sie die Potenz!</strong><br>
+                            Teilen Sie zuerst durch 3:
+                            <div class="tipp-formula">2<sup>2x−1</sup> = 16</div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">2️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Erkennen Sie die Potenz!</strong><br>
+                            Können Sie 16 als Zweierpotenz schreiben? 16 = 2<sup>?</sup>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">3️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Exponenten vergleichen!</strong><br>
+                            Wenn 2<sup>2x−1</sup> = 2<sup>4</sup>, dann muss 2x−1 = 4 sein.
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">🔑</span>
+                        <div class="tipp-text">
+                            <strong>Schlüsselidee:</strong> Wenn beide Seiten als gleiche Basis geschrieben werden können, müssen die Exponenten gleich sein!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tipp 7 -->
+    <div class="modal hint-modal" id="hint7">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💡 Tipp zu Aufgabe 7</h3>
+                <button class="modal-close" onclick="closeModal('hint7')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tipp-box">
+                    <div class="tipp-item">
+                        <span class="tipp-icon">1️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Wenden Sie die Potenzregel an!</strong><br>
+                            <div class="tipp-formula">log(x³) = 3·log(x) &nbsp;&nbsp;&nbsp; 2·log(y) = log(y²)</div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">2️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Zerlegen Sie log(x·y²)!</strong><br>
+                            Produktregel: log(x·y²) = log(x) + log(y²) = log(x) + 2·log(y)
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">3️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Sammeln Sie gleiche Terme!</strong><br>
+                            Sortieren Sie nach log(x) und log(y) und fassen Sie zusammen.
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">🔑</span>
+                        <div class="tipp-text">
+                            <strong>Schlüsselidee:</strong> Alle Logarithmusausdrücke in die Form n·log(Variable) bringen, dann addieren/subtrahieren!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tipp 8 -->
+    <div class="modal hint-modal" id="hint8">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💡 Tipp zu Aufgabe 8</h3>
+                <button class="modal-close" onclick="closeModal('hint8')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tipp-box">
+                    <div class="tipp-item">
+                        <span class="tipp-icon">1️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Die Zerfallsformel lautet:</strong><br>
+                            <div class="tipp-formula">N(t) = N₀ · (1/2)<sup>t/T</sup> = N₀ · 0,5<sup>t/5</sup></div>
+                            wobei T = 5 Jahre die Halbwertszeit ist.
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">2️⃣</span>
+                        <div class="tipp-text">
+                            <strong>"10% übrig" bedeutet:</strong><br>
+                            <div class="tipp-formula">N(t) = 0,1 · N₀</div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">3️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Setzen Sie gleich und lösen Sie nach t!</strong><br>
+                            N₀ kürzt sich heraus, dann logarithmieren.
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">🔑</span>
+                        <div class="tipp-text">
+                            <strong>Schlüsselidee:</strong> Die Halbwertszeit steht im Nenner des Exponenten – sie "zählt" wie oft halbiert wird!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tipp 9 -->
+    <div class="modal hint-modal" id="hint9">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💡 Tipp zu Aufgabe 9</h3>
+                <button class="modal-close" onclick="closeModal('hint9')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tipp-box">
+                    <div class="tipp-item">
+                        <span class="tipp-icon">1️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Vergleichen Sie zwei Pegel!</strong><br>
+                            Ursprünglich: L₁ = 10·log(I/I₀)<br>
+                            Neu mit 10-facher Intensität: L₂ = 10·log(10·I/I₀)
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">2️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Nutzen Sie die Produktregel!</strong><br>
+                            <div class="tipp-formula">log(10·I/I₀) = log(10) + log(I/I₀)</div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">3️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Was ist log(10)?</strong><br>
+                            Beim dekadischen Logarithmus gilt: log(10) = 1
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">🔑</span>
+                        <div class="tipp-text">
+                            <strong>Schlüsselidee:</strong> Berechnen Sie die Differenz ΔL = L₂ − L₁!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tipp 10 -->
+    <div class="modal hint-modal" id="hint10">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💡 Tipp zu Aufgabe 10</h3>
+                <button class="modal-close" onclick="closeModal('hint10')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tipp-box">
+                    <div class="tipp-item">
+                        <span class="tipp-icon">1️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Stellen Sie die Definition um!</strong><br>
+                            Von pH = −log(c<sub>H⁺</sub>) müssen Sie c<sub>H⁺</sub> isolieren.
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">2️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Befreien Sie den Logarithmus!</strong><br>
+                            Wenn log(x) = y, dann ist x = 10<sup>y</sup>
+                            <div class="tipp-formula">−pH = log(c<sub>H⁺</sub>) ⟹ c<sub>H⁺</sub> = 10<sup>−pH</sup></div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">3️⃣</span>
+                        <div class="tipp-text">
+                            <strong>Setzen Sie pH = 4,5 ein!</strong><br>
+                            <div class="tipp-formula">c<sub>H⁺</sub> = 10<sup>−4,5</sup></div>
+                        </div>
+                    </div>
+                    <div class="tipp-item">
+                        <span class="tipp-icon">🔑</span>
+                        <div class="tipp-text">
+                            <strong>Schlüsselidee:</strong> Der Logarithmus und die Exponentialfunktion sind Umkehrfunktionen – sie "heben sich auf"!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Lösungs-Modals -->
+    
+    <!-- Modal 1 -->
+    <div class="modal" id="modal1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aufgabe 1 – Lösung</h3>
+                <button class="modal-close" onclick="closeModal('modal1')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>📋 Aufgabe</h4>
+                    <div class="aufgabe-box">
+                        Bestimmen Sie die Exponentialfunktion f(x) = a · b<sup>x</sup>, die durch die Punkte P(0|3) und Q(2|12) verläuft.
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>✅ Lösung</h4>
+                    <div class="loesung-box">
+                        <div class="step">
+                            <strong>Schritt 1:</strong> Punkt P(0|3) einsetzen:<br>
+                            f(0) = a · b⁰ = a · 1 = a = 3
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 2:</strong> Punkt Q(2|12) einsetzen:<br>
+                            f(2) = 3 · b² = 12
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 3:</strong> Nach b auflösen:<br>
+                            b² = 12/3 = 4<br>
+                            b = 2 (da b > 0)
+                        </div>
+                        <div class="result">
+                            f(x) = 3 · 2<sup>x</sup>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>🤖 KI-Lernhilfe</h4>
+                    <div class="ki-section">
+                        <div class="ki-prompt" id="prompt1">Erkläre mir Schritt für Schritt, wie ich eine Exponentialfunktion f(x) = a·b^x aufstelle, wenn zwei Punkte gegeben sind. Nutze als Beispiel die Punkte P(0|3) und Q(2|12). Erkläre besonders, warum der Punkt mit x=0 so praktisch ist.</div>
+                        <div class="ki-buttons">
+                            <button class="ki-btn copy" onclick="copyPrompt('prompt1')">📋 Kopieren</button>
+                            <button class="ki-btn google" onclick="openGoogle('prompt1')">🔍 Google AI</button>
+                            <button class="ki-btn chatgpt" onclick="openChatGPT('prompt1')">💬 ChatGPT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 2 -->
+    <div class="modal" id="modal2">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aufgabe 2 – Lösung</h3>
+                <button class="modal-close" onclick="closeModal('modal2')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>📋 Aufgabe</h4>
+                    <div class="aufgabe-box">
+                        Eine Bakterienkultur verdoppelt sich alle 4 Stunden. Zu Beginn sind 500 Bakterien vorhanden. Stellen Sie die Wachstumsfunktion N(t) auf.
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>✅ Lösung</h4>
+                    <div class="loesung-box">
+                        <div class="step">
+                            <strong>Schritt 1:</strong> Allgemeine Form:<br>
+                            N(t) = N₀ · b<sup>t/T</sup><br>
+                            mit N₀ = Anfangswert, T = Verdopplungszeit
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 2:</strong> Werte einsetzen:<br>
+                            N₀ = 500, T = 4 h, b = 2 (Verdopplung)
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 3:</strong> Funktion aufstellen:<br>
+                            N(t) = 500 · 2<sup>t/4</sup>
+                        </div>
+                        <div class="hint">
+                            <strong>Alternative Darstellung:</strong> N(t) = 500 · 2<sup>0,25t</sup>
+                        </div>
+                        <div class="result">
+                            N(t) = 500 · 2<sup>t/4</sup> (t in Stunden)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>🤖 KI-Lernhilfe</h4>
+                    <div class="ki-section">
+                        <div class="ki-prompt" id="prompt2">Erkläre mir, wie ich eine Wachstumsfunktion für Bakterien aufstelle, wenn die Verdopplungszeit gegeben ist. Warum steht die Zeit im Exponenten als t/T? Gib mir weitere Beispiele mit verschiedenen Verdopplungszeiten.</div>
+                        <div class="ki-buttons">
+                            <button class="ki-btn copy" onclick="copyPrompt('prompt2')">📋 Kopieren</button>
+                            <button class="ki-btn google" onclick="openGoogle('prompt2')">🔍 Google AI</button>
+                            <button class="ki-btn chatgpt" onclick="openChatGPT('prompt2')">💬 ChatGPT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 3 -->
+    <div class="modal" id="modal3">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aufgabe 3 – Lösung</h3>
+                <button class="modal-close" onclick="closeModal('modal3')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>📋 Aufgabe</h4>
+                    <div class="aufgabe-box">
+                        Die Exponentialfunktion f(x) = a · b<sup>x</sup> verläuft durch P(1|6) und Q(3|54). Bestimmen Sie a und b.
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>✅ Lösung</h4>
+                    <div class="loesung-box">
+                        <div class="step">
+                            <strong>Schritt 1:</strong> Beide Punkte einsetzen:<br>
+                            (I) &nbsp; a · b¹ = 6 &nbsp;→&nbsp; a · b = 6<br>
+                            (II) a · b³ = 54
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 2:</strong> Division (II)/(I):<br>
+                            (a · b³)/(a · b) = 54/6<br>
+                            b² = 9<br>
+                            b = 3
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 3:</strong> a berechnen:<br>
+                            a · 3 = 6<br>
+                            a = 2
+                        </div>
+                        <div class="result">
+                            f(x) = 2 · 3<sup>x</sup>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>🤖 KI-Lernhilfe</h4>
+                    <div class="ki-section">
+                        <div class="ki-prompt" id="prompt3">Erkläre mir die Methode, wie man eine Exponentialfunktion f(x)=a·b^x bestimmt, wenn beide gegebenen Punkte NICHT x=0 haben. Warum funktioniert die Division der beiden Gleichungen? Zeige mir den Trick mit einem anderen Beispiel.</div>
+                        <div class="ki-buttons">
+                            <button class="ki-btn copy" onclick="copyPrompt('prompt3')">📋 Kopieren</button>
+                            <button class="ki-btn google" onclick="openGoogle('prompt3')">🔍 Google AI</button>
+                            <button class="ki-btn chatgpt" onclick="openChatGPT('prompt3')">💬 ChatGPT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 4 -->
+    <div class="modal" id="modal4">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aufgabe 4 – Lösung</h3>
+                <button class="modal-close" onclick="closeModal('modal4')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>📋 Aufgabe</h4>
+                    <div class="aufgabe-box">
+                        Lösen Sie die Gleichung 5<sup>x</sup> = 200 mithilfe des Logarithmus.
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>✅ Lösung</h4>
+                    <div class="loesung-box">
+                        <div class="step">
+                            <strong>Schritt 1:</strong> Logarithmus auf beiden Seiten:<br>
+                            log(5<sup>x</sup>) = log(200)
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 2:</strong> Potenzregel anwenden:<br>
+                            x · log(5) = log(200)
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 3:</strong> Nach x auflösen:<br>
+                            x = log(200) / log(5)<br>
+                            x = 2,301 / 0,699<br>
+                            x ≈ 3,29
+                        </div>
+                        <div class="hint">
+                            <strong>Probe:</strong> 5<sup>3,29</sup> ≈ 199,5 ✓
+                        </div>
+                        <div class="result">
+                            x ≈ 3,29
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>🤖 KI-Lernhilfe</h4>
+                    <div class="ki-section">
+                        <div class="ki-prompt" id="prompt4">Erkläre mir ausführlich, wie ich Exponentialgleichungen der Form b^x = c mit dem Logarithmus löse. Warum darf ich den Exponenten nach vorne ziehen? Zeige mir die Potenzregel des Logarithmus und gib weitere Übungsbeispiele.</div>
+                        <div class="ki-buttons">
+                            <button class="ki-btn copy" onclick="copyPrompt('prompt4')">📋 Kopieren</button>
+                            <button class="ki-btn google" onclick="openGoogle('prompt4')">🔍 Google AI</button>
+                            <button class="ki-btn chatgpt" onclick="openChatGPT('prompt4')">💬 ChatGPT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 5 -->
+    <div class="modal" id="modal5">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aufgabe 5 – Lösung</h3>
+                <button class="modal-close" onclick="closeModal('modal5')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>📋 Aufgabe</h4>
+                    <div class="aufgabe-box">
+                        Nach wie vielen Jahren hat sich ein Kapital von 1000 € bei 3% Zinsen p.a. auf 1500 € erhöht?
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>✅ Lösung</h4>
+                    <div class="loesung-box">
+                        <div class="step">
+                            <strong>Schritt 1:</strong> Gleichung aufstellen:<br>
+                            1000 · 1,03<sup>t</sup> = 1500
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 2:</strong> Durch 1000 teilen:<br>
+                            1,03<sup>t</sup> = 1,5
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 3:</strong> Logarithmieren:<br>
+                            t · log(1,03) = log(1,5)
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 4:</strong> Nach t auflösen:<br>
+                            t = log(1,5) / log(1,03)<br>
+                            t = 0,176 / 0,0128<br>
+                            t ≈ 13,7 Jahre
+                        </div>
+                        <div class="result">
+                            t ≈ 13,7 Jahre (≈ 13 Jahre und 9 Monate)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>🤖 KI-Lernhilfe</h4>
+                    <div class="ki-section">
+                        <div class="ki-prompt" id="prompt5">Erkläre mir Zinseszinsrechnung mit der Formel K(t) = K₀ · q^t. Wie berechne ich, nach welcher Zeit ein bestimmtes Kapital erreicht wird? Zeige mir weitere Beispiele mit verschiedenen Zinssätzen und Zielbeträgen.</div>
+                        <div class="ki-buttons">
+                            <button class="ki-btn copy" onclick="copyPrompt('prompt5')">📋 Kopieren</button>
+                            <button class="ki-btn google" onclick="openGoogle('prompt5')">🔍 Google AI</button>
+                            <button class="ki-btn chatgpt" onclick="openChatGPT('prompt5')">💬 ChatGPT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 6 -->
+    <div class="modal" id="modal6">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aufgabe 6 – Lösung</h3>
+                <button class="modal-close" onclick="closeModal('modal6')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>📋 Aufgabe</h4>
+                    <div class="aufgabe-box">
+                        Lösen Sie: 3 · 2<sup>2x−1</sup> = 48
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>✅ Lösung</h4>
+                    <div class="loesung-box">
+                        <div class="step">
+                            <strong>Schritt 1:</strong> Durch 3 teilen:<br>
+                            2<sup>2x−1</sup> = 16
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 2:</strong> 16 als Potenz von 2 schreiben:<br>
+                            2<sup>2x−1</sup> = 2<sup>4</sup>
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 3:</strong> Exponenten vergleichen:<br>
+                            2x − 1 = 4<br>
+                            2x = 5<br>
+                            x = 2,5
+                        </div>
+                        <div class="hint">
+                            <strong>Alternative mit log:</strong> (2x−1)·log(2) = log(16) → x = 2,5
+                        </div>
+                        <div class="result">
+                            x = 2,5
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>🤖 KI-Lernhilfe</h4>
+                    <div class="ki-section">
+                        <div class="ki-prompt" id="prompt6">Erkläre mir, wie ich komplexere Exponentialgleichungen wie 3·2^(2x-1) = 48 löse. Wann kann ich durch Umschreiben als gleiche Basis lösen und wann brauche ich den Logarithmus? Gib mir Übungsaufgaben beider Typen.</div>
+                        <div class="ki-buttons">
+                            <button class="ki-btn copy" onclick="copyPrompt('prompt6')">📋 Kopieren</button>
+                            <button class="ki-btn google" onclick="openGoogle('prompt6')">🔍 Google AI</button>
+                            <button class="ki-btn chatgpt" onclick="openChatGPT('prompt6')">💬 ChatGPT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 7 -->
+    <div class="modal" id="modal7">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aufgabe 7 – Lösung</h3>
+                <button class="modal-close" onclick="closeModal('modal7')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>📋 Aufgabe</h4>
+                    <div class="aufgabe-box">
+                        Vereinfachen Sie: log(x³) + 2·log(y) − log(x·y²)
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>✅ Lösung</h4>
+                    <div class="loesung-box">
+                        <div class="step">
+                            <strong>Schritt 1:</strong> Potenzregel anwenden:<br>
+                            log(x³) = 3·log(x)<br>
+                            2·log(y) = log(y²)
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 2:</strong> Produktregel auf log(x·y²):<br>
+                            log(x·y²) = log(x) + log(y²) = log(x) + 2·log(y)
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 3:</strong> Zusammenfassen:<br>
+                            3·log(x) + 2·log(y) − log(x) − 2·log(y)<br>
+                            = 2·log(x)
+                        </div>
+                        <div class="result">
+                            2·log(x) = log(x²)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>🤖 KI-Lernhilfe</h4>
+                    <div class="ki-section">
+                        <div class="ki-prompt" id="prompt7">Erkläre mir alle Logarithmusregeln (Produkt-, Quotienten- und Potenzregel) und zeige mir, wie ich komplexe Logarithmusausdrücke systematisch vereinfache. Gib mir 5 Übungsaufgaben zum Vereinfachen.</div>
+                        <div class="ki-buttons">
+                            <button class="ki-btn copy" onclick="copyPrompt('prompt7')">📋 Kopieren</button>
+                            <button class="ki-btn google" onclick="openGoogle('prompt7')">🔍 Google AI</button>
+                            <button class="ki-btn chatgpt" onclick="openChatGPT('prompt7')">💬 ChatGPT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 8 -->
+    <div class="modal" id="modal8">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aufgabe 8 – Lösung</h3>
+                <button class="modal-close" onclick="closeModal('modal8')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>📋 Aufgabe</h4>
+                    <div class="aufgabe-box">
+                        Radioaktiver Zerfall: Ein Präparat hat eine Halbwertszeit von 5 Jahren. Nach wie vielen Jahren sind noch 10% der ursprünglichen Menge vorhanden?
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>✅ Lösung</h4>
+                    <div class="loesung-box">
+                        <div class="step">
+                            <strong>Schritt 1:</strong> Zerfallsfunktion aufstellen:<br>
+                            N(t) = N₀ · (1/2)<sup>t/T</sup> = N₀ · 0,5<sup>t/5</sup>
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 2:</strong> Bedingung 10% = 0,1·N₀:<br>
+                            N₀ · 0,5<sup>t/5</sup> = 0,1 · N₀
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 3:</strong> Durch N₀ teilen und logarithmieren:<br>
+                            0,5<sup>t/5</sup> = 0,1<br>
+                            (t/5) · log(0,5) = log(0,1)
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 4:</strong> Nach t auflösen:<br>
+                            t = 5 · log(0,1) / log(0,5)<br>
+                            t = 5 · (−1) / (−0,301)<br>
+                            t ≈ 16,6 Jahre
+                        </div>
+                        <div class="result">
+                            t ≈ 16,6 Jahre (≈ 3,32 Halbwertszeiten)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>🤖 KI-Lernhilfe</h4>
+                    <div class="ki-section">
+                        <div class="ki-prompt" id="prompt8">Erkläre mir radioaktiven Zerfall und die Halbwertszeit-Formel N(t) = N₀ · (1/2)^(t/T). Wie berechne ich, nach welcher Zeit ein bestimmter Prozentsatz übrig ist? Was bedeutet die Zerfallskonstante λ und wie hängt sie mit der Halbwertszeit zusammen?</div>
+                        <div class="ki-buttons">
+                            <button class="ki-btn copy" onclick="copyPrompt('prompt8')">📋 Kopieren</button>
+                            <button class="ki-btn google" onclick="openGoogle('prompt8')">🔍 Google AI</button>
+                            <button class="ki-btn chatgpt" onclick="openChatGPT('prompt8')">💬 ChatGPT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 9 -->
+    <div class="modal" id="modal9">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aufgabe 9 – Lösung</h3>
+                <button class="modal-close" onclick="closeModal('modal9')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>📋 Aufgabe</h4>
+                    <div class="aufgabe-box">
+                        Die Lautstärke in Dezibel ist definiert als L = 10 · log(I/I₀). Um wie viel dB steigt der Pegel, wenn sich die Intensität I verzehnfacht?
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>✅ Lösung</h4>
+                    <div class="loesung-box">
+                        <div class="step">
+                            <strong>Schritt 1:</strong> Ausgangspegel:<br>
+                            L₁ = 10 · log(I/I₀)
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 2:</strong> Neuer Pegel mit 10·I:<br>
+                            L₂ = 10 · log(10·I/I₀)<br>
+                            L₂ = 10 · [log(10) + log(I/I₀)]<br>
+                            L₂ = 10 · 1 + 10 · log(I/I₀)<br>
+                            L₂ = 10 + L₁
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 3:</strong> Differenz:<br>
+                            ΔL = L₂ − L₁ = 10 dB
+                        </div>
+                        <div class="result">
+                            Der Pegel steigt um 10 dB
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>🤖 KI-Lernhilfe</h4>
+                    <div class="ki-section">
+                        <div class="ki-prompt" id="prompt9">Erkläre mir die Dezibel-Skala und warum sie logarithmisch ist. Warum entspricht eine Verzehnfachung der Intensität genau +10 dB? Was passiert bei Verdopplung der Intensität? Gib mir Beispiele aus dem Alltag.</div>
+                        <div class="ki-buttons">
+                            <button class="ki-btn copy" onclick="copyPrompt('prompt9')">📋 Kopieren</button>
+                            <button class="ki-btn google" onclick="openGoogle('prompt9')">🔍 Google AI</button>
+                            <button class="ki-btn chatgpt" onclick="openChatGPT('prompt9')">💬 ChatGPT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 10 -->
+    <div class="modal" id="modal10">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aufgabe 10 – Lösung</h3>
+                <button class="modal-close" onclick="closeModal('modal10')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>📋 Aufgabe</h4>
+                    <div class="aufgabe-box">
+                        Der pH-Wert ist definiert als pH = −log(c<sub>H⁺</sub>). Welche Konzentration c<sub>H⁺</sub> hat eine Lösung mit pH = 4,5?
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>✅ Lösung</h4>
+                    <div class="loesung-box">
+                        <div class="step">
+                            <strong>Schritt 1:</strong> Definition umstellen:<br>
+                            pH = −log(c<sub>H⁺</sub>)<br>
+                            −pH = log(c<sub>H⁺</sub>)
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 2:</strong> Exponentialform:<br>
+                            c<sub>H⁺</sub> = 10<sup>−pH</sup>
+                        </div>
+                        <div class="step">
+                            <strong>Schritt 3:</strong> Wert einsetzen:<br>
+                            c<sub>H⁺</sub> = 10<sup>−4,5</sup><br>
+                            c<sub>H⁺</sub> = 10<sup>−4</sup> · 10<sup>−0,5</sup><br>
+                            c<sub>H⁺</sub> ≈ 0,0001 · 0,316<br>
+                            c<sub>H⁺</sub> ≈ 3,16 · 10<sup>−5</sup> mol/L
+                        </div>
+                        <div class="result">
+                            c<sub>H⁺</sub> ≈ 3,16 · 10<sup>−5</sup> mol/L
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h4>🤖 KI-Lernhilfe</h4>
+                    <div class="ki-section">
+                        <div class="ki-prompt" id="prompt10">Erkläre mir den pH-Wert und seine logarithmische Definition. Wie rechne ich zwischen pH-Wert und H⁺-Konzentration um? Warum wird der negative Logarithmus verwendet? Zeige mir Beispiele für saure und basische Lösungen.</div>
+                        <div class="ki-buttons">
+                            <button class="ki-btn copy" onclick="copyPrompt('prompt10')">📋 Kopieren</button>
+                            <button class="ki-btn google" onclick="openGoogle('prompt10')">🔍 Google AI</button>
+                            <button class="ki-btn chatgpt" onclick="openChatGPT('prompt10')">💬 ChatGPT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="copied-toast" id="toast">Prompt kopiert!</div>
+    
+    <script>
+        // LocalStorage Key
+        const STORAGE_KEY = 'exponential_log_progress';
+        
+        // Load saved progress
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const checked = JSON.parse(saved);
+                checked.forEach(id => {
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                        checkbox.closest('.task-item').classList.add('completed');
+                    }
+                });
+            }
+            updateProgressBar();
+        }
+        
+        // Save progress
+        function saveProgress() {
+            const checkboxes = document.querySelectorAll('.task-item input[type="checkbox"]');
+            const checked = [];
+            checkboxes.forEach(cb => {
+                if (cb.checked) checked.push(cb.id);
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
+        }
+        
+        // Update progress bar
+        function updateProgressBar() {
+            const total = document.querySelectorAll('.task-item input[type="checkbox"]').length;
+            const checked = document.querySelectorAll('.task-item input[type="checkbox"]:checked').length;
+            const percent = Math.round((checked / total) * 100);
+            const bar = document.getElementById('progressBar');
+            bar.style.width = percent + '%';
+            bar.textContent = percent + '% (' + checked + '/' + total + ')';
+        }
+        
+        // Checkbox event listeners
+        document.querySelectorAll('.task-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const taskItem = this.closest('.task-item');
+                if (this.checked) {
+                    taskItem.classList.add('completed');
+                } else {
+                    taskItem.classList.remove('completed');
+                }
+                saveProgress();
+                updateProgressBar();
+            });
+        });
+        
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close modal on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Copy prompt to clipboard
+        function copyPrompt(promptId) {
+            const promptText = document.getElementById(promptId).textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                showToast();
+            });
+        }
+        
+        // Show toast notification
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Open Google AI
+        function openGoogle(promptId) {
+            const promptText = document.getElementById(promptId).textContent;
+            const url = 'https://gemini.google.com/app?q=' + encodeURIComponent(promptText);
+            window.open(url, '_blank');
+        }
+        
+        // Open ChatGPT
+        function openChatGPT(promptId) {
+            const promptText = document.getElementById(promptId).textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                window.open('https://chat.openai.com/', '_blank');
+                showToast();
+            });
+        }
+        
+        // Initialize
+        loadProgress();
+    </script>
+</body>
+</html>
