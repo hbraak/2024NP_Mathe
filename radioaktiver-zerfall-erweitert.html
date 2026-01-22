@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radioaktiver Zerfall – Anwendung der e-Funktion</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+        }
+        .context-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 4px solid #ff9800;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 10px 10px 0;
+        }
+        .context-box h3 {
+            margin-top: 0;
+            color: #e65100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .formula-highlight {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.2em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .math {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+        }
+        .graph-section {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+        .legend-line {
+            width: 30px;
+            height: 3px;
+        }
+        .legend-line.solid { background: currentColor; }
+        .legend-line.dashed { 
+            background: repeating-linear-gradient(90deg, currentColor 0px, currentColor 5px, transparent 5px, transparent 10px);
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 20px;
+            border-radius: 10px;
+            min-width: 220px;
+        }
+        .slider-group.isotope { 
+            background: #e8f5e9; 
+            border: 2px solid #4CAF50; 
+        }
+        .slider-group.time { 
+            background: #e3f2fd; 
+            border: 2px solid #2196F3; 
+        }
+        .slider-group.initial { 
+            background: #fce4ec; 
+            border: 2px solid #E91E63; 
+        }
+        .slider-group h4 {
+            margin: 0 0 10px 0;
+            font-size: 0.95em;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .slider-container label {
+            font-weight: bold;
+            min-width: 30px;
+        }
+        input[type="range"] {
+            width: 120px;
+            cursor: pointer;
+        }
+        .value-display {
+            min-width: 70px;
+            font-family: monospace;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .info-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .info-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .info-card.amount { border-top: 4px solid #4CAF50; }
+        .info-card.rate { border-top: 4px solid #f44336; }
+        .info-card.halflife { border-top: 4px solid #9c27b0; }
+        .info-card.activity { border-top: 4px solid #ff9800; }
+        .info-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            font-family: monospace;
+        }
+        .info-unit {
+            font-size: 0.8em;
+            color: #888;
+        }
+        .interpretation-box {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .interpretation-box h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        .interpretation-box .highlight {
+            background: #c8e6c9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .task-box {
+            background: #fff8e1;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .task-box h3 {
+            margin-top: 0;
+            color: #f57f17;
+        }
+        .task-box ol {
+            margin-bottom: 0;
+        }
+        .task-box li {
+            margin: 10px 0;
+        }
+        .isotope-info {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 8px;
+        }
+        select {
+            padding: 8px 12px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 2px solid #4CAF50;
+            background: white;
+            cursor: pointer;
+        }
+        .derivative-explanation {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .derivative-explanation h3 {
+            margin-top: 0;
+            color: #1565c0;
+        }
+        .equation-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        .extension-ideas {
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .extension-ideas h3 {
+            margin-top: 0;
+            color: #303f9f;
+        }
+        .idea-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .idea-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .idea-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .idea-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+        .idea-title {
+            font-weight: bold;
+            color: #303f9f;
+            margin-bottom: 5px;
+        }
+        .idea-desc {
+            font-size: 0.85em;
+            color: #666;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+        }
+        .idea-hint {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 8px;
+        }
+        /* Modal für Beispielaufgaben */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s;
+        }
+        .modal-close:hover {
+            color: #333;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .modal-icon {
+            font-size: 2.5em;
+        }
+        .modal-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #303f9f;
+        }
+        .modal-formula {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2em;
+            margin: 15px 0;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+        }
+        .modal-task {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .modal-task h4 {
+            margin-top: 0;
+            color: #f57f17;
+        }
+        .modal-solution {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        .modal-solution.visible {
+            display: block;
+        }
+        .modal-solution h4 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        .solution-step {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        .solution-result {
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 1.1em;
+        }
+        .modal-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        .modal-btn:hover {
+            transform: scale(1.05);
+        }
+        /* Rechenaufgaben Styles */
+        .exercise-section {
+            background: #fafafa;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        .exercise-section h2 {
+            color: #7b1fa2;
+            margin-top: 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e1bee7;
+        }
+        .exercise-context {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #9c27b0;
+            font-size: 1.05em;
+        }
+        .exercise-part {
+            margin: 15px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .exercise-header {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+        .exercise-header:hover {
+            background: linear-gradient(135deg, #e1bee7 0%, #ce93d8 100%);
+        }
+        .exercise-number {
+            background: #9c27b0;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .exercise-question {
+            flex: 1;
+            font-weight: 500;
+        }
+        .toggle-icon {
+            color: #7b1fa2;
+            font-size: 0.9em;
+        }
+        .hint-solution-container {
+            background: white;
+            padding: 15px 20px;
+        }
+        .hint, .solution {
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .hint {
+            background: #fff8e1;
+            border: 1px solid #ffca28;
+        }
+        .hint:hover {
+            background: #ffecb3;
+        }
+        .solution {
+            background: #e8f5e9;
+            border: 1px solid #66bb6a;
+        }
+        .solution:hover {
+            background: #c8e6c9;
+        }
+        .hint-content {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed currentColor;
+        }
+        .hint .hint-content {
+            border-color: #ffca28;
+        }
+        .solution .hint-content {
+            border-color: #66bb6a;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+        .result-table th, .result-table td {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .result-table th {
+            background: #f5f5f5;
+            font-weight: bold;
+        }
+        .result-table tr:nth-child(even) {
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>☢️ Radioaktiver Zerfall</h1>
+        <p class="subtitle">Die e-Funktion und ihre Ableitung in der Anwendung</p>
+        
+        <div class="context-box">
+            <h3>⚛️ Physikalischer Hintergrund</h3>
+            <p>Radioaktive Stoffe zerfallen exponentiell. Die Anzahl der noch vorhandenen Atomkerne N(t) zum Zeitpunkt t wird beschrieben durch:</p>
+            <div class="formula-highlight">
+                <span class="math">N(t) = N₀ · e<sup>−λt</sup></span>
+            </div>
+            <p>Dabei ist <span class="math">N₀</span> die Anfangsanzahl der Kerne und <span class="math">λ</span> die Zerfallskonstante (stoffspezifisch).</p>
+        </div>
+
+        <div class="graph-section">
+            <canvas id="mainCanvas" width="900" height="400"></canvas>
+            
+            <div class="legend">
+                <div class="legend-item" style="color: #4CAF50;">
+                    <div class="legend-line solid"></div>
+                    <span>N(t) – Anzahl der Kerne</span>
+                </div>
+                <div class="legend-item" style="color: #f44336;">
+                    <div class="legend-line dashed"></div>
+                    <span>N'(t) – Zerfallsrate (negativ)</span>
+                </div>
+                <div class="legend-item" style="color: #ff9800;">
+                    <div class="legend-line solid"></div>
+                    <span>Tangente</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="slider-group isotope">
+                    <h4>Isotop wählen</h4>
+                    <select id="isotopeSelect">
+                        <option value="0.0866">Iod-131 (T½ = 8 Tage)</option>
+                        <option value="0.0231">Cäsium-137 (T½ = 30 Jahre)</option>
+                        <option value="0.000428">Kohlenstoff-14 (T½ = 5730 Jahre)</option>
+                        <option value="0.693">Radon-222 (T½ = 3,8 Tage)</option>
+                        <option value="custom">Eigene Halbwertszeit...</option>
+                    </select>
+                    <div class="isotope-info" id="isotopeInfo">λ = 0.0866 pro Tag</div>
+                </div>
+                
+                <div class="slider-group time">
+                    <h4>Zeitpunkt t</h4>
+                    <div class="slider-container">
+                        <label>t =</label>
+                        <input type="range" id="sliderT" min="0" max="50" step="0.5" value="0">
+                        <span class="value-display" id="tValue">0</span>
+                    </div>
+                </div>
+                
+                <div class="slider-group initial">
+                    <h4>Anfangsmenge N₀</h4>
+                    <div class="slider-container">
+                        <label>N₀ =</label>
+                        <input type="range" id="sliderN0" min="100" max="1000" step="50" value="1000">
+                        <span class="value-display" id="n0Value">1000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <div class="info-card amount">
+                <div class="info-label">Verbleibende Kerne N(t)</div>
+                <div class="info-value" id="nValue" style="color: #4CAF50;">1000</div>
+                <div class="info-unit">Kerne</div>
+            </div>
+            <div class="info-card rate">
+                <div class="info-label">Zerfallsrate N'(t)</div>
+                <div class="info-value" id="dnValue" style="color: #f44336;">−86.6</div>
+                <div class="info-unit">Kerne pro Zeiteinheit</div>
+            </div>
+            <div class="info-card halflife">
+                <div class="info-label">Halbwertszeit T½</div>
+                <div class="info-value" id="halflifeValue" style="color: #9c27b0;">8.0</div>
+                <div class="info-unit" id="halflifeUnit">Tage</div>
+            </div>
+            <div class="info-card activity">
+                <div class="info-label">Aktivität |N'(t)|</div>
+                <div class="info-value" id="activityValue" style="color: #ff9800;">86.6</div>
+                <div class="info-unit">Zerfälle pro Zeiteinheit</div>
+            </div>
+        </div>
+
+        <div class="derivative-explanation">
+            <h3>📐 Die Bedeutung der Ableitung</h3>
+            <div class="equation-box">
+                <strong>Funktion:</strong> <span class="math">N(t) = N₀ · e<sup>−λt</sup></span> → Anzahl der Kerne zum Zeitpunkt t
+            </div>
+            <div class="equation-box">
+                <strong>Ableitung:</strong> <span class="math">N'(t) = −λ · N₀ · e<sup>−λt</sup> = −λ · N(t)</span> → Änderungsrate (Zerfallsrate)
+            </div>
+            <p><strong>Interpretation:</strong> Die Ableitung N'(t) gibt an, wie viele Kerne <em>pro Zeiteinheit</em> zerfallen. Das Minuszeichen zeigt: Die Anzahl <em>nimmt ab</em>.</p>
+            <p><strong>Besonderheit:</strong> Die Zerfallsrate ist proportional zur aktuellen Anzahl! Je mehr Kerne vorhanden, desto mehr zerfallen pro Zeiteinheit.</p>
+        </div>
+
+        <div class="interpretation-box">
+            <h3>🔍 Aktuelle Interpretation</h3>
+            <p id="interpretationText">
+                Zum Zeitpunkt <span class="highlight" id="intT">t = 0</span> sind noch <span class="highlight" id="intN">1000 Kerne</span> vorhanden.
+                Die momentane Zerfallsrate beträgt <span class="highlight" id="intDN">86.6 Kerne pro Zeiteinheit</span>.
+                Das bedeutet: In diesem Moment zerfallen etwa <span class="highlight" id="intPercent">8.7%</span> der vorhandenen Kerne pro Zeiteinheit.
+            </p>
+        </div>
+
+        <div class="task-box">
+            <h3>📝 Erkundungsaufgaben</h3>
+            <ol>
+                <li><strong>Halbwertszeit ablesen:</strong> Bewegen Sie den Zeitregler, bis N(t) = N₀/2 ist. Vergleichen Sie mit dem angezeigten T½-Wert.</li>
+                <li><strong>Zerfallsrate untersuchen:</strong> Wie ändert sich die Steigung der Tangente (= Zerfallsrate) mit der Zeit? Warum?</li>
+                <li><strong>Isotope vergleichen:</strong> Wechseln Sie zwischen verschiedenen Isotopen. Welches zerfällt am schnellsten?</li>
+                <li><strong>Proportionalität prüfen:</strong> Bestätigen Sie, dass N'(t)/N(t) = −λ konstant ist (unabhängig von t).</li>
+            </ol>
+        </div>
+
+        <div class="exercise-section">
+            <h2>✏️ Rechenaufgabe: Iod-131 in der Schilddrüsendiagnostik</h2>
+            
+            <div class="exercise-context">
+                <p>Bei einer Schilddrüsenuntersuchung wird einem Patienten eine Lösung mit <strong>N₀ = 10⁸ Iod-131-Kernen</strong> verabreicht. Die Halbwertszeit von Iod-131 beträgt <strong>T½ = 8 Tage</strong>.</p>
+            </div>
+
+            <div class="exercise-part">
+                <div class="exercise-header" onclick="toggleSolution('task1')">
+                    <span class="exercise-number">a)</span>
+                    <span class="exercise-question">Bestimmen Sie die Zerfallskonstante λ.</span>
+                    <span class="toggle-icon" id="icon-task1">▶</span>
+                </div>
+                <div class="hint-solution-container" id="task1" style="display: none;">
+                    <div class="hint" onclick="toggleHint('hint1')">
+                        <strong>💡 Tipp anzeigen</strong>
+                        <div class="hint-content" id="hint1" style="display: none;">
+                            <p>Es gilt der Zusammenhang: T½ = ln(2) / λ</p>
+                            <p>Stellen Sie diese Gleichung nach λ um.</p>
+                        </div>
+                    </div>
+                    <div class="solution" onclick="toggleHint('sol1')">
+                        <strong>✓ Lösung anzeigen</strong>
+                        <div class="hint-content" id="sol1" style="display: none;">
+                            <p>Aus T½ = ln(2) / λ folgt:</p>
+                            <p class="formula-highlight">λ = ln(2) / T½ = ln(2) / 8 Tage ≈ <strong>0,0866 pro Tag</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-part">
+                <div class="exercise-header" onclick="toggleSolution('task2')">
+                    <span class="exercise-number">b)</span>
+                    <span class="exercise-question">Stellen Sie die Funktion N(t) auf und berechnen Sie die Ableitung N'(t).</span>
+                    <span class="toggle-icon" id="icon-task2">▶</span>
+                </div>
+                <div class="hint-solution-container" id="task2" style="display: none;">
+                    <div class="hint" onclick="toggleHint('hint2')">
+                        <strong>💡 Tipp anzeigen</strong>
+                        <div class="hint-content" id="hint2" style="display: none;">
+                            <p>Die allgemeine Form lautet: N(t) = N₀ · e<sup>−λt</sup></p>
+                            <p>Für die Ableitung benötigen Sie die Kettenregel: (e<sup>u</sup>)' = u' · e<sup>u</sup></p>
+                        </div>
+                    </div>
+                    <div class="solution" onclick="toggleHint('sol2')">
+                        <strong>✓ Lösung anzeigen</strong>
+                        <div class="hint-content" id="sol2" style="display: none;">
+                            <p><strong>Funktion:</strong></p>
+                            <p class="formula-highlight">N(t) = 10⁸ · e<sup>−0,0866·t</sup></p>
+                            <p><strong>Ableitung mit Kettenregel:</strong></p>
+                            <p>N'(t) = 10⁸ · (−0,0866) · e<sup>−0,0866·t</sup></p>
+                            <p class="formula-highlight">N'(t) = −0,0866 · 10⁸ · e<sup>−0,0866·t</sup> = <strong>−0,0866 · N(t)</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-part">
+                <div class="exercise-header" onclick="toggleSolution('task3')">
+                    <span class="exercise-number">c)</span>
+                    <span class="exercise-question">Berechnen Sie die Zerfallsrate (Aktivität) zu den Zeitpunkten t = 0, t = 8 Tage und t = 24 Tage.</span>
+                    <span class="toggle-icon" id="icon-task3">▶</span>
+                </div>
+                <div class="hint-solution-container" id="task3" style="display: none;">
+                    <div class="hint" onclick="toggleHint('hint3')">
+                        <strong>💡 Tipp anzeigen</strong>
+                        <div class="hint-content" id="hint3" style="display: none;">
+                            <p>Die Aktivität A(t) ist der Betrag der Zerfallsrate: A(t) = |N'(t)|</p>
+                            <p>Setzen Sie die Zeitwerte in N'(t) ein.</p>
+                            <p>Beachten Sie: Nach einer Halbwertszeit ist N(T½) = N₀/2</p>
+                        </div>
+                    </div>
+                    <div class="solution" onclick="toggleHint('sol3')">
+                        <strong>✓ Lösung anzeigen</strong>
+                        <div class="hint-content" id="sol3" style="display: none;">
+                            <table class="result-table">
+                                <tr>
+                                    <th>Zeitpunkt</th>
+                                    <th>N(t)</th>
+                                    <th>A(t) = |N'(t)| = λ·N(t)</th>
+                                </tr>
+                                <tr>
+                                    <td>t = 0</td>
+                                    <td>10⁸</td>
+                                    <td>0,0866 · 10⁸ = <strong>8,66 · 10⁶ Zerfälle/Tag</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>t = 8 d (1× T½)</td>
+                                    <td>5 · 10⁷</td>
+                                    <td>0,0866 · 5·10⁷ = <strong>4,33 · 10⁶ Zerfälle/Tag</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>t = 24 d (3× T½)</td>
+                                    <td>1,25 · 10⁷</td>
+                                    <td>0,0866 · 1,25·10⁷ = <strong>1,08 · 10⁶ Zerfälle/Tag</strong></td>
+                                </tr>
+                            </table>
+                            <p style="margin-top: 15px;"><strong>Erkenntnis:</strong> Nach jeder Halbwertszeit halbiert sich auch die Aktivität!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-part">
+                <div class="exercise-header" onclick="toggleSolution('task4')">
+                    <span class="exercise-number">d)</span>
+                    <span class="exercise-question">Interpretieren Sie das Ergebnis: Was bedeutet die Zerfallsrate physikalisch? Warum nimmt sie ab?</span>
+                    <span class="toggle-icon" id="icon-task4">▶</span>
+                </div>
+                <div class="hint-solution-container" id="task4" style="display: none;">
+                    <div class="hint" onclick="toggleHint('hint4')">
+                        <strong>💡 Tipp anzeigen</strong>
+                        <div class="hint-content" id="hint4" style="display: none;">
+                            <p>Denken Sie an die Formel N'(t) = −λ · N(t).</p>
+                            <p>Die Zerfallsrate hängt von der aktuellen Anzahl der Kerne ab.</p>
+                        </div>
+                    </div>
+                    <div class="solution" onclick="toggleHint('sol4')">
+                        <strong>✓ Lösung anzeigen</strong>
+                        <div class="hint-content" id="sol4" style="display: none;">
+                            <p><strong>Physikalische Bedeutung:</strong></p>
+                            <ul>
+                                <li>Die Zerfallsrate gibt an, wie viele Kerne <em>pro Zeiteinheit</em> zerfallen.</li>
+                                <li>Sie entspricht der Steigung der Tangente an N(t) – mit negativem Vorzeichen.</li>
+                            </ul>
+                            <p><strong>Warum nimmt die Zerfallsrate ab?</strong></p>
+                            <ul>
+                                <li>Es gilt: N'(t) = −λ · N(t), also ist die Zerfallsrate <em>proportional</em> zur Anzahl der vorhandenen Kerne.</li>
+                                <li>Je weniger Kerne vorhanden sind, desto weniger können pro Zeiteinheit zerfallen.</li>
+                                <li>Der <em>prozentuale</em> Anteil (λ ≈ 8,66%) bleibt konstant, aber die <em>absolute</em> Zahl sinkt.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-part">
+                <div class="exercise-header" onclick="toggleSolution('task5')">
+                    <span class="exercise-number">e)</span>
+                    <span class="exercise-question">Nach wie vielen Tagen ist die Aktivität auf 1% des Anfangswertes gesunken?</span>
+                    <span class="toggle-icon" id="icon-task5">▶</span>
+                </div>
+                <div class="hint-solution-container" id="task5" style="display: none;">
+                    <div class="hint" onclick="toggleHint('hint5')">
+                        <strong>💡 Tipp anzeigen</strong>
+                        <div class="hint-content" id="hint5" style="display: none;">
+                            <p>Da A(t) = λ·N(t) und λ konstant ist, gilt: A(t)/A₀ = N(t)/N₀</p>
+                            <p>Setzen Sie N(t)/N₀ = 0,01 und lösen Sie nach t auf.</p>
+                            <p>Sie benötigen den natürlichen Logarithmus.</p>
+                        </div>
+                    </div>
+                    <div class="solution" onclick="toggleHint('sol5')">
+                        <strong>✓ Lösung anzeigen</strong>
+                        <div class="hint-content" id="sol5" style="display: none;">
+                            <p><strong>Ansatz:</strong> N(t) = 0,01 · N₀</p>
+                            <p>N₀ · e<sup>−λt</sup> = 0,01 · N₀</p>
+                            <p>e<sup>−λt</sup> = 0,01</p>
+                            <p>−λt = ln(0,01) = −4,605</p>
+                            <p class="formula-highlight">t = 4,605 / 0,0866 ≈ <strong>53,2 Tage</strong></p>
+                            <p style="margin-top: 10px;"><em>Das entspricht etwa 6,6 Halbwertszeiten (53,2 / 8 ≈ 6,6).</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="extension-ideas">
+            <h3>🚀 Weiterführende Anwendungen</h3>
+            <p>Die gleiche Mathematik beschreibt viele natürliche Prozesse. <em>Klicken Sie auf eine Karte für eine Beispielaufgabe!</em></p>
+            <div class="idea-grid">
+                <div class="idea-card" onclick="openModal('kondensator')">
+                    <div class="idea-icon">⚡</div>
+                    <div class="idea-title">Kondensatorentladung</div>
+                    <div class="idea-desc">U(t) = U₀·e<sup>−t/τ</sup></div>
+                    <div class="idea-hint">▶ Aufgabe anzeigen</div>
+                </div>
+                <div class="idea-card" onclick="openModal('abkuehlung')">
+                    <div class="idea-icon">🌡️</div>
+                    <div class="idea-title">Abkühlung</div>
+                    <div class="idea-desc">ΔT(t) = ΔT₀·e<sup>−kt</sup></div>
+                    <div class="idea-hint">▶ Aufgabe anzeigen</div>
+                </div>
+                <div class="idea-card" onclick="openModal('bakterien')">
+                    <div class="idea-icon">🦠</div>
+                    <div class="idea-title">Bakterienwachstum</div>
+                    <div class="idea-desc">N(t) = N₀·e<sup>+kt</sup></div>
+                    <div class="idea-hint">▶ Aufgabe anzeigen</div>
+                </div>
+                <div class="idea-card" onclick="openModal('medikament')">
+                    <div class="idea-icon">💊</div>
+                    <div class="idea-title">Medikamentenabbau</div>
+                    <div class="idea-desc">c(t) = c₀·e<sup>−λt</sup></div>
+                    <div class="idea-hint">▶ Aufgabe anzeigen</div>
+                </div>
+                <div class="idea-card" onclick="openModal('luftdruck')">
+                    <div class="idea-icon">🏔️</div>
+                    <div class="idea-title">Luftdruck</div>
+                    <div class="idea-desc">p(h) = p₀·e<sup>−h/h₀</sup></div>
+                    <div class="idea-hint">▶ Aufgabe anzeigen</div>
+                </div>
+                <div class="idea-card" onclick="openModal('c14')">
+                    <div class="idea-icon">📅</div>
+                    <div class="idea-title">C-14-Datierung</div>
+                    <div class="idea-desc">Altersbestimmung</div>
+                    <div class="idea-hint">▶ Aufgabe anzeigen</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modals für Beispielaufgaben -->
+        <div class="modal-overlay" id="modal-kondensator">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal('kondensator')">&times;</span>
+                <div class="modal-header">
+                    <span class="modal-icon">⚡</span>
+                    <span class="modal-title">Kondensatorentladung</span>
+                </div>
+                <p>Bei der Entladung eines Kondensators über einen Widerstand nimmt die Spannung exponentiell ab:</p>
+                <div class="modal-formula">U(t) = U₀ · e<sup>−t/τ</sup> mit τ = R·C</div>
+                <p>Die Zeitkonstante τ gibt an, nach welcher Zeit die Spannung auf ca. 37% (= 1/e) gefallen ist.</p>
+                
+                <div class="modal-task">
+                    <h4>📝 Aufgabe</h4>
+                    <p>Ein Kondensator (C = 470 µF) wird über einen Widerstand (R = 10 kΩ) entladen. Die Anfangsspannung beträgt U₀ = 12 V.</p>
+                    <ol>
+                        <li>Berechnen Sie die Zeitkonstante τ.</li>
+                        <li>Bestimmen Sie U'(t) und interpretieren Sie diese physikalisch.</li>
+                        <li>Nach welcher Zeit ist die Spannung auf 3 V gesunken?</li>
+                    </ol>
+                </div>
+                
+                <button class="modal-btn" onclick="toggleModalSolution('kondensator')">Lösung anzeigen</button>
+                
+                <div class="modal-solution" id="solution-kondensator">
+                    <h4>✓ Lösung</h4>
+                    <div class="solution-step">
+                        <strong>a) Zeitkonstante:</strong><br>
+                        τ = R · C = 10.000 Ω · 0,00047 F = <span class="solution-result">4,7 s</span>
+                    </div>
+                    <div class="solution-step">
+                        <strong>b) Ableitung:</strong><br>
+                        U(t) = 12 · e<sup>−t/4,7</sup><br>
+                        U'(t) = 12 · (−1/4,7) · e<sup>−t/4,7</sup> = <span class="solution-result">−2,55 · e<sup>−t/4,7</sup> V/s</span><br><br>
+                        <em>Interpretation:</em> U'(t) ist die momentane Änderungsrate der Spannung. Das Minuszeichen zeigt, dass die Spannung abnimmt. Der Betrag |U'(t)| = I(t)·R entspricht dem Spannungsabfall am Widerstand.
+                    </div>
+                    <div class="solution-step">
+                        <strong>c) Zeit für U = 3 V:</strong><br>
+                        3 = 12 · e<sup>−t/4,7</sup><br>
+                        0,25 = e<sup>−t/4,7</sup><br>
+                        ln(0,25) = −t/4,7<br>
+                        t = −4,7 · ln(0,25) = 4,7 · 1,386 = <span class="solution-result">6,5 s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modal-abkuehlung">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal('abkuehlung')">&times;</span>
+                <div class="modal-header">
+                    <span class="modal-icon">🌡️</span>
+                    <span class="modal-title">Newtonsches Abkühlungsgesetz</span>
+                </div>
+                <p>Die Temperaturdifferenz zur Umgebung nimmt exponentiell ab:</p>
+                <div class="modal-formula">T(t) = T<sub>U</sub> + (T₀ − T<sub>U</sub>) · e<sup>−kt</sup></div>
+                <p>Dabei ist T<sub>U</sub> die Umgebungstemperatur und k die Abkühlungskonstante.</p>
+                
+                <div class="modal-task">
+                    <h4>📝 Aufgabe</h4>
+                    <p>Eine Tasse Kaffee hat anfangs 90°C. Die Raumtemperatur beträgt 20°C. Nach 5 Minuten ist der Kaffee auf 70°C abgekühlt.</p>
+                    <ol>
+                        <li>Bestimmen Sie die Abkühlungskonstante k.</li>
+                        <li>Berechnen Sie die Abkühlungsrate T'(t) und deren Wert bei t = 0.</li>
+                        <li>Wann erreicht der Kaffee Trinktemperatur (60°C)?</li>
+                    </ol>
+                </div>
+                
+                <button class="modal-btn" onclick="toggleModalSolution('abkuehlung')">Lösung anzeigen</button>
+                
+                <div class="modal-solution" id="solution-abkuehlung">
+                    <h4>✓ Lösung</h4>
+                    <div class="solution-step">
+                        <strong>a) Abkühlungskonstante k:</strong><br>
+                        T(5) = 20 + 70 · e<sup>−5k</sup> = 70<br>
+                        70 · e<sup>−5k</sup> = 50<br>
+                        e<sup>−5k</sup> = 50/70 = 5/7<br>
+                        −5k = ln(5/7) = −0,336<br>
+                        <span class="solution-result">k ≈ 0,0673 min⁻¹</span>
+                    </div>
+                    <div class="solution-step">
+                        <strong>b) Abkühlungsrate:</strong><br>
+                        T(t) = 20 + 70 · e<sup>−0,0673t</sup><br>
+                        T'(t) = 70 · (−0,0673) · e<sup>−0,0673t</sup> = <span class="solution-result">−4,71 · e<sup>−0,0673t</sup> °C/min</span><br><br>
+                        Bei t = 0: T'(0) = −4,71 °C/min<br>
+                        <em>Der Kaffee kühlt anfangs um ca. 4,7°C pro Minute ab.</em>
+                    </div>
+                    <div class="solution-step">
+                        <strong>c) Zeit für 60°C:</strong><br>
+                        60 = 20 + 70 · e<sup>−0,0673t</sup><br>
+                        40 = 70 · e<sup>−0,0673t</sup><br>
+                        e<sup>−0,0673t</sup> = 4/7<br>
+                        t = −ln(4/7) / 0,0673 = <span class="solution-result">8,3 Minuten</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modal-bakterien">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal('bakterien')">&times;</span>
+                <div class="modal-header">
+                    <span class="modal-icon">🦠</span>
+                    <span class="modal-title">Bakterienwachstum</span>
+                </div>
+                <p>Unter idealen Bedingungen wachsen Bakterienpopulationen exponentiell:</p>
+                <div class="modal-formula">N(t) = N₀ · e<sup>kt</sup></div>
+                <p>Die Wachstumskonstante k hängt von der Verdopplungszeit T<sub>2</sub> ab: k = ln(2)/T<sub>2</sub></p>
+                
+                <div class="modal-task">
+                    <h4>📝 Aufgabe</h4>
+                    <p>Eine Bakterienkultur startet mit 1000 Bakterien. Die Verdopplungszeit beträgt 20 Minuten.</p>
+                    <ol>
+                        <li>Bestimmen Sie die Wachstumskonstante k.</li>
+                        <li>Berechnen Sie N'(t). Was bedeutet N'(60)?</li>
+                        <li>Nach welcher Zeit sind 1 Million Bakterien erreicht?</li>
+                    </ol>
+                </div>
+                
+                <button class="modal-btn" onclick="toggleModalSolution('bakterien')">Lösung anzeigen</button>
+                
+                <div class="modal-solution" id="solution-bakterien">
+                    <h4>✓ Lösung</h4>
+                    <div class="solution-step">
+                        <strong>a) Wachstumskonstante:</strong><br>
+                        k = ln(2) / T<sub>2</sub> = ln(2) / 20 = <span class="solution-result">0,0347 min⁻¹</span>
+                    </div>
+                    <div class="solution-step">
+                        <strong>b) Ableitung:</strong><br>
+                        N(t) = 1000 · e<sup>0,0347t</sup><br>
+                        N'(t) = 1000 · 0,0347 · e<sup>0,0347t</sup> = <span class="solution-result">34,7 · e<sup>0,0347t</sup> Bakterien/min</span><br><br>
+                        N'(60) = 34,7 · e<sup>0,0347·60</sup> = 34,7 · 8 = 277,6 Bakterien/min<br>
+                        <em>Nach 1 Stunde wächst die Population um ca. 278 Bakterien pro Minute.</em>
+                    </div>
+                    <div class="solution-step">
+                        <strong>c) Zeit für 1 Million:</strong><br>
+                        1.000.000 = 1000 · e<sup>0,0347t</sup><br>
+                        1000 = e<sup>0,0347t</sup><br>
+                        ln(1000) = 0,0347t<br>
+                        t = 6,908 / 0,0347 = <span class="solution-result">199 Minuten ≈ 3,3 Stunden</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modal-medikament">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal('medikament')">&times;</span>
+                <div class="modal-header">
+                    <span class="modal-icon">💊</span>
+                    <span class="modal-title">Medikamentenabbau (Pharmakokinetik)</span>
+                </div>
+                <p>Die Wirkstoffkonzentration im Blut nimmt nach Einnahme exponentiell ab:</p>
+                <div class="modal-formula">c(t) = c₀ · e<sup>−λt</sup></div>
+                <p>Die Halbwertszeit T<sub>½</sub> ist ein wichtiger Parameter für die Dosierung.</p>
+                
+                <div class="modal-task">
+                    <h4>📝 Aufgabe</h4>
+                    <p>Ein Schmerzmittel hat eine Halbwertszeit von 4 Stunden. Die Anfangskonzentration nach Einnahme beträgt c₀ = 400 mg/L.</p>
+                    <ol>
+                        <li>Bestimmen Sie die Abbaukonstante λ.</li>
+                        <li>Wie schnell sinkt die Konzentration anfänglich (c'(0))?</li>
+                        <li>Wann ist die Konzentration unter die Wirksamkeitsgrenze von 50 mg/L gesunken?</li>
+                    </ol>
+                </div>
+                
+                <button class="modal-btn" onclick="toggleModalSolution('medikament')">Lösung anzeigen</button>
+                
+                <div class="modal-solution" id="solution-medikament">
+                    <h4>✓ Lösung</h4>
+                    <div class="solution-step">
+                        <strong>a) Abbaukonstante:</strong><br>
+                        λ = ln(2) / T<sub>½</sub> = ln(2) / 4 = <span class="solution-result">0,173 h⁻¹</span>
+                    </div>
+                    <div class="solution-step">
+                        <strong>b) Anfängliche Abbaurate:</strong><br>
+                        c(t) = 400 · e<sup>−0,173t</sup><br>
+                        c'(t) = −0,173 · 400 · e<sup>−0,173t</sup> = −69,2 · e<sup>−0,173t</sup><br>
+                        c'(0) = <span class="solution-result">−69,2 mg/(L·h)</span><br>
+                        <em>Die Konzentration sinkt anfangs um ca. 69 mg/L pro Stunde.</em>
+                    </div>
+                    <div class="solution-step">
+                        <strong>c) Zeit bis unter Wirksamkeitsgrenze:</strong><br>
+                        50 = 400 · e<sup>−0,173t</sup><br>
+                        0,125 = e<sup>−0,173t</sup><br>
+                        ln(0,125) = −0,173t<br>
+                        t = −ln(0,125) / 0,173 = 2,079 / 0,173 = <span class="solution-result">12 Stunden</span><br>
+                        <em>(Das entspricht 3 Halbwertszeiten: 400 → 200 → 100 → 50)</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modal-luftdruck">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal('luftdruck')">&times;</span>
+                <div class="modal-header">
+                    <span class="modal-icon">🏔️</span>
+                    <span class="modal-title">Barometrische Höhenformel</span>
+                </div>
+                <p>Der Luftdruck nimmt mit der Höhe exponentiell ab:</p>
+                <div class="modal-formula">p(h) = p₀ · e<sup>−h/h₀</sup></div>
+                <p>Dabei ist h₀ ≈ 8500 m die Skalenhöhe der Atmosphäre.</p>
+                
+                <div class="modal-task">
+                    <h4>📝 Aufgabe</h4>
+                    <p>Der Luftdruck auf Meereshöhe beträgt p₀ = 1013 hPa. Die Skalenhöhe ist h₀ = 8500 m.</p>
+                    <ol>
+                        <li>Berechnen Sie den Luftdruck auf der Zugspitze (2962 m).</li>
+                        <li>Bestimmen Sie p'(h). Was bedeutet p'(0)?</li>
+                        <li>In welcher Höhe ist der Luftdruck auf die Hälfte gesunken?</li>
+                    </ol>
+                </div>
+                
+                <button class="modal-btn" onclick="toggleModalSolution('luftdruck')">Lösung anzeigen</button>
+                
+                <div class="modal-solution" id="solution-luftdruck">
+                    <h4>✓ Lösung</h4>
+                    <div class="solution-step">
+                        <strong>a) Druck auf der Zugspitze:</strong><br>
+                        p(2962) = 1013 · e<sup>−2962/8500</sup><br>
+                        p(2962) = 1013 · e<sup>−0,348</sup> = 1013 · 0,706 = <span class="solution-result">715 hPa</span>
+                    </div>
+                    <div class="solution-step">
+                        <strong>b) Ableitung:</strong><br>
+                        p(h) = 1013 · e<sup>−h/8500</sup><br>
+                        p'(h) = 1013 · (−1/8500) · e<sup>−h/8500</sup> = <span class="solution-result">−0,119 · e<sup>−h/8500</sup> hPa/m</span><br><br>
+                        p'(0) = −0,119 hPa/m<br>
+                        <em>Auf Meereshöhe sinkt der Druck um ca. 0,12 hPa pro Meter Höhe (≈ 12 hPa pro 100 m).</em>
+                    </div>
+                    <div class="solution-step">
+                        <strong>c) Höhe für halben Druck:</strong><br>
+                        506,5 = 1013 · e<sup>−h/8500</sup><br>
+                        0,5 = e<sup>−h/8500</sup><br>
+                        ln(0,5) = −h/8500<br>
+                        h = −8500 · ln(0,5) = 8500 · 0,693 = <span class="solution-result">5890 m</span><br>
+                        <em>(etwa die Höhe des Kilimandscharo)</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modal-c14">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal('c14')">&times;</span>
+                <div class="modal-header">
+                    <span class="modal-icon">📅</span>
+                    <span class="modal-title">C-14-Datierung (Radiokarbonmethode)</span>
+                </div>
+                <p>Lebende Organismen haben einen konstanten C-14-Anteil. Nach dem Tod zerfällt C-14 mit einer Halbwertszeit von 5730 Jahren:</p>
+                <div class="modal-formula">N(t) = N₀ · e<sup>−λt</sup> mit λ = ln(2)/5730 ≈ 0,000121 pro Jahr</div>
+                
+                <div class="modal-task">
+                    <h4>📝 Aufgabe</h4>
+                    <p>Bei einer archäologischen Ausgrabung wird ein Holzstück gefunden. Die C-14-Aktivität beträgt nur noch 35% des Wertes von frischem Holz.</p>
+                    <ol>
+                        <li>Wie alt ist das Holzstück?</li>
+                        <li>Berechnen Sie, wie viel Prozent des ursprünglichen C-14 nach 10.000 Jahren noch vorhanden sind.</li>
+                        <li>Warum ist die C-14-Methode für Proben älter als ~50.000 Jahre ungeeignet?</li>
+                    </ol>
+                </div>
+                
+                <button class="modal-btn" onclick="toggleModalSolution('c14')">Lösung anzeigen</button>
+                
+                <div class="modal-solution" id="solution-c14">
+                    <h4>✓ Lösung</h4>
+                    <div class="solution-step">
+                        <strong>a) Alter des Holzstücks:</strong><br>
+                        N(t)/N₀ = 0,35 = e<sup>−0,000121t</sup><br>
+                        ln(0,35) = −0,000121t<br>
+                        t = −ln(0,35) / 0,000121 = 1,050 / 0,000121 = <span class="solution-result">8678 Jahre</span>
+                    </div>
+                    <div class="solution-step">
+                        <strong>b) C-14-Anteil nach 10.000 Jahren:</strong><br>
+                        N(10000)/N₀ = e<sup>−0,000121 · 10000</sup> = e<sup>−1,21</sup> = <span class="solution-result">29,8% ≈ 30%</span>
+                    </div>
+                    <div class="solution-step">
+                        <strong>c) Grenze der Methode:</strong><br>
+                        Nach 50.000 Jahren: N/N₀ = e<sup>−0,000121 · 50000</sup> = e<sup>−6,05</sup> ≈ 0,24%<br><br>
+                        <em>Bei so geringen Restmengen (< 1%) wird die Messung ungenau, da:</em>
+                        <ul>
+                            <li>Die Aktivität extrem gering ist</li>
+                            <li>Verunreinigungen einen großen relativen Fehler verursachen</li>
+                            <li>Der statistische Messfehler dominiert</li>
+                        </ul>
+                        <span class="solution-result">Praktische Grenze: ca. 50.000 Jahre (≈ 9 Halbwertszeiten)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal-Funktionen
+        function openModal(id) {
+            document.getElementById('modal-' + id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            document.getElementById('modal-' + id).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleModalSolution(id) {
+            const solution = document.getElementById('solution-' + id);
+            solution.classList.toggle('visible');
+        }
+
+        // Modal schließen bei Klick auf Overlay
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // Modal schließen mit Escape-Taste
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        function toggleSolution(id) {
+            const element = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            if (element.style.display === 'none') {
+                element.style.display = 'block';
+                icon.textContent = '▼';
+            } else {
+                element.style.display = 'none';
+                icon.textContent = '▶';
+            }
+        }
+
+        function toggleHint(id) {
+            const element = document.getElementById(id);
+            if (element.style.display === 'none') {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+            event.stopPropagation();
+        }
+
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Koordinatensystem-Einstellungen
+        let tMax = 50;
+        const tMin = 0, nMin = 0, nMax = 1100;
+
+        // Aktuelle Parameter
+        let lambda = 0.0866;  // Iod-131
+        let N0 = 1000;
+        let currentT = 0;
+        let maxDrawnT = 0;
+
+        // Zeiteinheit für Anzeige
+        let timeUnit = "Tage";
+
+        // Skalierungsfunktionen
+        function toPixelX(t) {
+            return 50 + (t - tMin) / (tMax - tMin) * (width - 70);
+        }
+        
+        function toPixelY(n) {
+            return height - 40 - (n - nMin) / (nMax - nMin) * (height - 60);
+        }
+
+        // Koordinatensystem zeichnen
+        function drawAxes() {
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+
+            // t-Achse
+            ctx.beginPath();
+            ctx.moveTo(50, height - 40);
+            ctx.lineTo(width - 20, height - 40);
+            ctx.stroke();
+
+            // N-Achse
+            ctx.beginPath();
+            ctx.moveTo(50, height - 40);
+            ctx.lineTo(50, 20);
+            ctx.stroke();
+
+            // Gitterlinien und Beschriftungen
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            ctx.fillStyle = '#666';
+            ctx.font = '12px Arial';
+
+            // t-Achse Beschriftungen
+            const tStep = tMax <= 50 ? 10 : (tMax <= 200 ? 50 : 1000);
+            for (let t = 0; t <= tMax; t += tStep) {
+                const px = toPixelX(t);
+                ctx.beginPath();
+                ctx.moveTo(px, 20);
+                ctx.lineTo(px, height - 40);
+                ctx.stroke();
+                ctx.fillText(t.toString(), px - 10, height - 22);
+            }
+
+            // N-Achse Beschriftungen
+            for (let n = 0; n <= nMax; n += 200) {
+                const py = toPixelY(n);
+                ctx.beginPath();
+                ctx.moveTo(50, py);
+                ctx.lineTo(width - 20, py);
+                ctx.stroke();
+                ctx.fillText(n.toString(), 15, py + 4);
+            }
+
+            // Achsenbeschriftungen
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('t (' + timeUnit + ')', width - 60, height - 22);
+            ctx.fillText('N', 15, 15);
+        }
+
+        // Funktion zeichnen
+        function drawFunction(func, color, dashed = false, maxT = tMax) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.setLineDash(dashed ? [10, 5] : []);
+
+            ctx.beginPath();
+            let started = false;
+
+            const endPx = toPixelX(Math.min(maxT, tMax));
+
+            for (let px = toPixelX(0); px <= endPx; px++) {
+                const t = tMin + (px - 50) / (width - 70) * (tMax - tMin);
+                if (t < 0) continue;
+                const n = func(t);
+                const py = toPixelY(n);
+
+                if (py >= 10 && py <= height - 30) {
+                    if (!started) {
+                        ctx.moveTo(px, py);
+                        started = true;
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                }
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // Tangente zeichnen
+        function drawTangent(t0, n0, slope, color) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+
+            const tangent = (t) => n0 + slope * (t - t0);
+            
+            ctx.beginPath();
+            let started = false;
+
+            for (let px = toPixelX(0); px <= toPixelX(tMax); px++) {
+                const t = tMin + (px - 50) / (width - 70) * (tMax - tMin);
+                const n = tangent(t);
+                const py = toPixelY(n);
+
+                if (py >= 10 && py <= height - 30) {
+                    if (!started) {
+                        ctx.moveTo(px, py);
+                        started = true;
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                }
+            }
+            ctx.stroke();
+        }
+
+        // Steigungsdreieck zeichnen
+        function drawSlopeTriangle(t0, n0, slope) {
+            // Zeitschritt für Dreieck (abhängig von tMax)
+            const deltaT = tMax / 10;
+            const deltaN = slope * deltaT;
+            
+            const px0 = toPixelX(t0);
+            const py0 = toPixelY(n0);
+            const px1 = toPixelX(t0 + deltaT);
+            const py1 = toPixelY(n0);
+            const px2 = toPixelX(t0 + deltaT);
+            const py2 = toPixelY(n0 + deltaN);
+
+            if (py2 < 10 || py0 > height - 30 || px1 > width - 20) return;
+
+            // Dreieck füllen
+            ctx.fillStyle = 'rgba(255, 152, 0, 0.2)';
+            ctx.beginPath();
+            ctx.moveTo(px0, py0);
+            ctx.lineTo(px1, py1);
+            ctx.lineTo(px2, py2);
+            ctx.closePath();
+            ctx.fill();
+
+            // Kanten
+            ctx.strokeStyle = '#FF9800';
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.moveTo(px0, py0);
+            ctx.lineTo(px1, py1);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(px1, py1);
+            ctx.lineTo(px2, py2);
+            ctx.stroke();
+
+            // Beschriftungen
+            ctx.fillStyle = '#E65100';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('Δt', (px0 + px1) / 2 - 8, py0 + 15);
+            ctx.fillText("N'·Δt", px1 + 5, (py1 + py2) / 2);
+        }
+
+        // Punkt zeichnen
+        function drawPoint(t, n, color) {
+            const px = toPixelX(t);
+            const py = toPixelY(n);
+
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(px, py, 8, 0, 2 * Math.PI);
+            ctx.fill();
+
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(px, py, 4, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        // Hauptzeichenfunktion
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            drawAxes();
+
+            // Funktionen
+            const N = (t) => N0 * Math.exp(-lambda * t);
+            const dN = (t) => -lambda * N0 * Math.exp(-lambda * t);
+            
+            // Skalierte Ableitung für bessere Sichtbarkeit (mit Faktor)
+            const scaleFactor = -10 / lambda;  // Skalierung anpassen
+            const dNscaled = (t) => -dN(t) * scaleFactor / 10;
+
+            // Update maxDrawnT
+            if (currentT > maxDrawnT) {
+                maxDrawnT = currentT;
+            }
+
+            // Ableitung (gestrichelt, bis zum Slider, skaliert für Sichtbarkeit)
+            if (maxDrawnT > 0) {
+                // Zeige |N'(t)| skaliert
+                const dNvisual = (t) => Math.abs(dN(t));
+                drawFunction(dNvisual, '#f44336', true, maxDrawnT);
+            }
+
+            // Hauptfunktion N(t)
+            drawFunction(N, '#4CAF50');
+
+            // Tangente und Punkt
+            const nCurrent = N(currentT);
+            const dnCurrent = dN(currentT);
+            drawTangent(currentT, nCurrent, dnCurrent, '#FF9800');
+            drawSlopeTriangle(currentT, nCurrent, dnCurrent);
+            drawPoint(currentT, nCurrent, '#4CAF50');
+
+            // Werte aktualisieren
+            updateDisplay(nCurrent, dnCurrent);
+        }
+
+        // Anzeige aktualisieren
+        function updateDisplay(n, dn) {
+            document.getElementById('tValue').textContent = currentT.toFixed(1);
+            document.getElementById('nValue').textContent = n.toFixed(0);
+            document.getElementById('dnValue').textContent = dn.toFixed(1);
+            document.getElementById('activityValue').textContent = Math.abs(dn).toFixed(1);
+
+            const halflife = Math.log(2) / lambda;
+            document.getElementById('halflifeValue').textContent = halflife.toFixed(1);
+
+            // Interpretation
+            document.getElementById('intT').textContent = 't = ' + currentT.toFixed(1) + ' ' + timeUnit;
+            document.getElementById('intN').textContent = n.toFixed(0) + ' Kerne';
+            document.getElementById('intDN').textContent = Math.abs(dn).toFixed(1) + ' Kerne pro ' + timeUnit.slice(0, -1);
+            
+            const percent = (Math.abs(dn) / n * 100).toFixed(1);
+            document.getElementById('intPercent').textContent = percent + '%';
+        }
+
+        // Isotop-Auswahl
+        document.getElementById('isotopeSelect').addEventListener('change', (e) => {
+            const value = e.target.value;
+            
+            if (value === 'custom') {
+                const input = prompt('Halbwertszeit eingeben (in Tagen):', '10');
+                if (input) {
+                    const T = parseFloat(input);
+                    lambda = Math.log(2) / T;
+                    timeUnit = 'Tage';
+                    tMax = T * 6;
+                }
+            } else {
+                lambda = parseFloat(value);
+                
+                // Zeiteinheit und Skalierung anpassen
+                if (lambda === 0.0866) {
+                    timeUnit = 'Tage';
+                    tMax = 50;
+                } else if (lambda === 0.0231) {
+                    timeUnit = 'Jahre';
+                    tMax = 200;
+                } else if (lambda === 0.000428) {
+                    timeUnit = 'Jahre';
+                    tMax = 30000;
+                } else if (lambda === 0.693) {
+                    timeUnit = 'Tage';
+                    tMax = 20;
+                }
+            }
+
+            // Slider anpassen
+            document.getElementById('sliderT').max = tMax;
+            document.getElementById('sliderT').value = 0;
+            currentT = 0;
+            maxDrawnT = 0;
+            
+            document.getElementById('halflifeUnit').textContent = timeUnit;
+            document.getElementById('isotopeInfo').textContent = 'λ = ' + lambda.toFixed(6) + ' pro ' + timeUnit.slice(0, -1);
+            
+            draw();
+        });
+
+        // Slider Event Listener
+        document.getElementById('sliderT').addEventListener('input', (e) => {
+            currentT = parseFloat(e.target.value);
+            draw();
+        });
+
+        document.getElementById('sliderN0').addEventListener('input', (e) => {
+            N0 = parseFloat(e.target.value);
+            document.getElementById('n0Value').textContent = N0;
+            maxDrawnT = currentT;  // Reset der Ableitungskurve
+            draw();
+        });
+
+        // Initialisierung
+        draw();
+    </script>
+</body>
+</html>
