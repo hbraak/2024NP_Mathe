@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Die Zahl e – Warum ist sie besonders?</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+        .intro-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 0 10px 10px 0;
+        }
+        .intro-box h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .graph-section {
+            background: #fafafa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+        .legend-item.hidden {
+            opacity: 0.3;
+        }
+        .legend-line {
+            width: 30px;
+            height: 3px;
+        }
+        .legend-line.solid { background: currentColor; }
+        .legend-line.dashed { 
+            background: repeating-linear-gradient(90deg, currentColor 0px, currentColor 5px, transparent 5px, transparent 10px);
+        }
+        
+        /* Toggle Switches */
+        .toggle-controls {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toggle-label {
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 26px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        input:checked + .toggle-slider {
+            background-color: #667eea;
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        .toggle-switch.blue input:checked + .toggle-slider {
+            background-color: #2196F3;
+        }
+        .toggle-switch.green input:checked + .toggle-slider {
+            background-color: #4CAF50;
+        }
+        .toggle-switch.gold input:checked + .toggle-slider {
+            background-color: #FF9800;
+        }
+        .toggle-switch.orange input:checked + .toggle-slider {
+            background-color: #FF5722;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 25px;
+            border-radius: 10px;
+            min-width: 280px;
+            transition: opacity 0.3s;
+        }
+        .slider-group.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .slider-group.blue { background: #e3f2fd; border: 2px solid #2196F3; }
+        .slider-group.green { background: #e8f5e9; border: 2px solid #4CAF50; }
+        .slider-group h4 {
+            margin: 0 0 10px 0;
+        }
+        .slider-group.blue h4 { color: #1565C0; }
+        .slider-group.green h4 { color: #2E7D32; }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 5px 0;
+        }
+        .slider-container label {
+            font-weight: bold;
+            min-width: 70px;
+        }
+        input[type="range"] {
+            width: 150px;
+            cursor: pointer;
+        }
+        .value-display {
+            min-width: 50px;
+            font-family: monospace;
+            font-size: 1.1em;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .info-item {
+            text-align: center;
+        }
+        .info-value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .ratio-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        .ratio-badge.under { background: #ffcdd2; color: #c62828; }
+        .ratio-badge.over { background: #c8e6c9; color: #2e7d32; }
+        .math {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        .comparison-table th {
+            background: #f5f5f5;
+        }
+        .comparison-table .blue-cell { background: #e3f2fd; }
+        .comparison-table .green-cell { background: #e8f5e9; }
+        .conclusion-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .conclusion-box h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .formula-box {
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.3em;
+        }
+        .instruction {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin: 10px 0;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Die Zahl <span class="math">e</span> – Warum ist sie besonders?</h1>
+        <p class="subtitle">Eine graphische Erkundung der Exponentialfunktionen</p>
+        
+        <div class="intro-box">
+            <h3>Die zentrale Frage</h3>
+            <p>Betrachten Sie die Exponentialfunktion <span class="math">f(x) = 2<sup>x</sup></span>.</p>
+            <p>Für jede Exponentialfunktion <span class="math">a<sup>x</sup></span> gilt: Die Ableitung ist proportional zur Funktion selbst.</p>
+            <p><strong>Gibt es eine Basis, bei der die Ableitung <em>exakt gleich</em> der Funktion ist?</strong></p>
+        </div>
+
+        <div class="graph-section">
+            <canvas id="mainCanvas" width="900" height="500"></canvas>
+            
+            <div class="toggle-controls">
+                <div class="toggle-group">
+                    <span class="toggle-label">Ableitung anzeigen</span>
+                    <label class="toggle-switch blue">
+                        <input type="checkbox" id="toggleDerivative">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-group">
+                    <span class="toggle-label">Steigungsdreieck</span>
+                    <label class="toggle-switch orange">
+                        <input type="checkbox" id="toggleTriangle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-group">
+                    <span class="toggle-label">g(x) = 3<sup>x</sup> anzeigen</span>
+                    <label class="toggle-switch green">
+                        <input type="checkbox" id="toggleFunc3">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-group">
+                    <span class="toggle-label">h(x) = e<sup>x</sup> anzeigen</span>
+                    <label class="toggle-switch gold">
+                        <input type="checkbox" id="toggleFuncE">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item" style="color: #2196F3;" id="legend2">
+                    <div class="legend-line solid"></div>
+                    <span>f(x) = 2<sup>x</sup></span>
+                </div>
+                <div class="legend-item hidden" style="color: #1565C0;" id="legendDf2">
+                    <div class="legend-line dashed"></div>
+                    <span>f'(x) – Ableitung von 2<sup>x</sup></span>
+                </div>
+                <div class="legend-item hidden" style="color: #4CAF50;" id="legend3">
+                    <div class="legend-line solid"></div>
+                    <span>g(x) = 3<sup>x</sup></span>
+                </div>
+                <div class="legend-item hidden" style="color: #2E7D32;" id="legendDg3">
+                    <div class="legend-line dashed"></div>
+                    <span>g'(x) – Ableitung von 3<sup>x</sup></span>
+                </div>
+                <div class="legend-item hidden" style="color: #FF9800;" id="legendE">
+                    <div class="legend-line solid"></div>
+                    <span>h(x) = e<sup>x</sup> <strong>(= h'(x)!)</strong></span>
+                </div>
+            </div>
+            
+            <p class="instruction">Ziehen Sie den Punkt auf der Kurve oder nutzen Sie die Slider, um die Tangentensteigung abzulesen.</p>
+            
+            <div class="controls">
+                <div class="slider-group blue" id="sliderGroup2">
+                    <h4>f(x) = 2<sup>x</sup></h4>
+                    <div class="slider-container">
+                        <label>x-Wert:</label>
+                        <input type="range" id="slider2" min="-2" max="3" step="0.05" value="-2">
+                        <span class="value-display" id="xValue2">–2.0</span>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-item">
+                            <div>f(x)</div>
+                            <div class="info-value" id="fx2">0.25</div>
+                        </div>
+                        <div class="info-item">
+                            <div>f'(x)</div>
+                            <div class="info-value" id="dfx2">0.17</div>
+                        </div>
+                        <div class="info-item">
+                            <div>f'/f</div>
+                            <div class="info-value" id="ratio2">0.693</div>
+                        </div>
+                    </div>
+                    <div class="ratio-badge under">Ableitung &lt; Funktion</div>
+                </div>
+                
+                <div class="slider-group green disabled" id="sliderGroup3">
+                    <h4>g(x) = 3<sup>x</sup></h4>
+                    <div class="slider-container">
+                        <label>x-Wert:</label>
+                        <input type="range" id="slider3" min="-2" max="2.3" step="0.05" value="-2">
+                        <span class="value-display" id="xValue3">–2.0</span>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-item">
+                            <div>g(x)</div>
+                            <div class="info-value" id="gx3">0.11</div>
+                        </div>
+                        <div class="info-item">
+                            <div>g'(x)</div>
+                            <div class="info-value" id="dgx3">0.12</div>
+                        </div>
+                        <div class="info-item">
+                            <div>g'/g</div>
+                            <div class="info-value" id="ratio3">1.099</div>
+                        </div>
+                    </div>
+                    <div class="ratio-badge over">Ableitung &gt; Funktion</div>
+                </div>
+            </div>
+        </div>
+
+        <table class="comparison-table">
+            <tr>
+                <th>Basis</th>
+                <th>Faktor k in f'(x) = k·f(x)</th>
+                <th>Beobachtung im Graphen</th>
+            </tr>
+            <tr>
+                <td class="blue-cell"><span class="math">a = 2</span></td>
+                <td class="blue-cell"><span class="math">ln(2) ≈ 0,693</span></td>
+                <td class="blue-cell">Ableitungskurve liegt <strong>unter</strong> der Funktion</td>
+            </tr>
+            <tr>
+                <td style="background: #fff9c4;"><span class="math">a = e ≈ 2,718</span></td>
+                <td style="background: #fff9c4;"><span class="math">ln(e) = 1</span></td>
+                <td style="background: #fff9c4;"><strong>Ableitungskurve = Funktion!</strong></td>
+            </tr>
+            <tr>
+                <td class="green-cell"><span class="math">a = 3</span></td>
+                <td class="green-cell"><span class="math">ln(3) ≈ 1,099</span></td>
+                <td class="green-cell">Ableitungskurve liegt <strong>über</strong> der Funktion</td>
+            </tr>
+        </table>
+
+        <div class="conclusion-box">
+            <h3>✦ Das Fazit</h3>
+            <p>Es gibt genau eine Basis zwischen 2 und 3, bei der die Ableitungskurve <em>identisch</em> mit der Funktionskurve ist:</p>
+            <div class="formula-box">
+                <span class="math">e = lim<sub>n→∞</sub> (1 + 1/n)<sup>n</sup> ≈ 2,71828...</span>
+            </div>
+            <p>Für <span class="math">f(x) = e<sup>x</sup></span> gilt die einzigartige Eigenschaft:</p>
+            <div class="formula-box">
+                <span class="math">f'(x) = e<sup>x</sup> = f(x)</span>
+            </div>
+            <p>Diese Eigenschaft macht <span class="math">e</span> zur "natürlichen" Basis – daher der Name <strong>natürliche Exponentialfunktion</strong>.</p>
+        </div>
+    </div>
+
+    <script>
+        // Mathematische Konstanten
+        const LN2 = Math.log(2);  // ≈ 0.693
+        const LN3 = Math.log(3);  // ≈ 1.099
+
+        // Koordinatensystem-Einstellungen
+        const xMin = -3, xMax = 4, yMin = -1, yMax = 12;
+        
+        // Tracking der Slider-Positionen für das Zeichnen
+        let maxX2 = -2;  // Startposition Slider 2^x
+        let maxX3 = -2;  // Startposition Slider 3^x
+        
+        // Toggle-Zustände
+        let showDerivative = false;
+        let showFunc3 = false;
+        let showFuncE = false;
+        let showTriangle = false;
+
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Skalierungsfunktionen
+        function toPixelX(x) {
+            return (x - xMin) / (xMax - xMin) * width;
+        }
+        
+        function toPixelY(y) {
+            return height - (y - yMin) / (yMax - yMin) * height;
+        }
+
+        // Koordinatensystem zeichnen
+        function drawAxes() {
+            const originX = toPixelX(0);
+            const originY = toPixelY(0);
+
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+
+            // x-Achse
+            ctx.beginPath();
+            ctx.moveTo(0, originY);
+            ctx.lineTo(width, originY);
+            ctx.stroke();
+
+            // y-Achse
+            ctx.beginPath();
+            ctx.moveTo(originX, 0);
+            ctx.lineTo(originX, height);
+            ctx.stroke();
+
+            // Gitterlinien und Beschriftungen
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            ctx.fillStyle = '#666';
+            ctx.font = '13px Arial';
+
+            // x-Achse Beschriftungen
+            for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+                const px = toPixelX(x);
+                ctx.beginPath();
+                ctx.moveTo(px, 0);
+                ctx.lineTo(px, height);
+                ctx.stroke();
+                if (x !== 0) {
+                    ctx.fillText(x.toString(), px - 5, originY + 18);
+                }
+            }
+
+            // y-Achse Beschriftungen
+            for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y += 2) {
+                const py = toPixelY(y);
+                ctx.beginPath();
+                ctx.moveTo(0, py);
+                ctx.lineTo(width, py);
+                ctx.stroke();
+                if (y !== 0) {
+                    ctx.fillText(y.toString(), originX + 8, py + 4);
+                }
+            }
+
+            ctx.fillText('0', originX + 8, originY + 18);
+        }
+
+        // Funktion zeichnen (vollständig)
+        function drawFullFunction(func, color, lineWidth = 2.5) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.setLineDash([]);
+
+            ctx.beginPath();
+            let started = false;
+
+            for (let px = 0; px <= width; px++) {
+                const x = xMin + px / width * (xMax - xMin);
+                const y = func(x);
+                const py = toPixelY(y);
+
+                if (py >= -50 && py <= height + 50) {
+                    if (!started) {
+                        ctx.moveTo(px, py);
+                        started = true;
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                } else {
+                    started = false;
+                }
+            }
+            ctx.stroke();
+        }
+
+        // Funktion teilweise zeichnen (bis maxX)
+        function drawPartialFunction(func, maxX, color, dashed = true) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2.5;
+            if (dashed) {
+                ctx.setLineDash([8, 4]);
+            } else {
+                ctx.setLineDash([]);
+            }
+
+            ctx.beginPath();
+            let started = false;
+
+            const startPx = toPixelX(xMin);
+            const endPx = toPixelX(maxX);
+
+            for (let px = startPx; px <= endPx && px <= width; px++) {
+                const x = xMin + px / width * (xMax - xMin);
+                const y = func(x);
+                const py = toPixelY(y);
+
+                if (py >= -50 && py <= height + 50) {
+                    if (!started) {
+                        ctx.moveTo(px, py);
+                        started = true;
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                } else {
+                    started = false;
+                }
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // Tangente zeichnen
+        function drawTangent(x0, y0, slope, color) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([6, 4]);
+
+            // Tangente nur im sichtbaren Bereich
+            const tangent = (x) => y0 + slope * (x - x0);
+            
+            ctx.beginPath();
+            let started = false;
+
+            for (let px = 0; px <= width; px++) {
+                const x = xMin + px / width * (xMax - xMin);
+                const y = tangent(x);
+                const py = toPixelY(y);
+
+                if (py >= 0 && py <= height) {
+                    if (!started) {
+                        ctx.moveTo(px, py);
+                        started = true;
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                }
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // Punkt zeichnen
+        function drawPoint(x, y, color) {
+            const px = toPixelX(x);
+            const py = toPixelY(y);
+
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(px, py, 8, 0, 2 * Math.PI);
+            ctx.fill();
+
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(px, py, 4, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        // Steigungsdreieck zeichnen
+        function drawSlopeTriangle(x0, y0, slope, color) {
+            // Dreieck: 1 Einheit nach rechts, slope Einheiten nach oben
+            const deltaX = 1;
+            const deltaY = slope;
+            
+            const px0 = toPixelX(x0);
+            const py0 = toPixelY(y0);
+            const px1 = toPixelX(x0 + deltaX);
+            const py1 = toPixelY(y0);  // horizontale Linie
+            const px2 = toPixelX(x0 + deltaX);
+            const py2 = toPixelY(y0 + deltaY);  // vertikale Linie zum Punkt auf Tangente
+
+            // Nur zeichnen wenn sichtbar
+            if (py2 < 0 || py0 > height || px1 > width) return;
+
+            // Dreieck füllen (halbtransparent)
+            ctx.fillStyle = color + '33';  // 20% opacity
+            ctx.beginPath();
+            ctx.moveTo(px0, py0);
+            ctx.lineTo(px1, py1);
+            ctx.lineTo(px2, py2);
+            ctx.closePath();
+            ctx.fill();
+
+            // Dreieck-Kanten zeichnen
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([]);
+
+            // Horizontale Linie (Δx = 1)
+            ctx.beginPath();
+            ctx.moveTo(px0, py0);
+            ctx.lineTo(px1, py1);
+            ctx.stroke();
+
+            // Vertikale Linie (Δy = slope)
+            ctx.beginPath();
+            ctx.moveTo(px1, py1);
+            ctx.lineTo(px2, py2);
+            ctx.stroke();
+
+            // Beschriftungen
+            ctx.fillStyle = color;
+            ctx.font = 'bold 14px Arial';
+            
+            // Δx = 1
+            ctx.fillText('1', (px0 + px1) / 2 - 5, py0 + 18);
+            
+            // Δy = konkreter Zahlenwert
+            const labelY = (py1 + py2) / 2;
+            ctx.fillText(slope.toFixed(2), px1 + 8, labelY + 5);
+        }
+
+        // Hauptzeichenfunktion
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            drawAxes();
+
+            // Funktionen
+            const f2 = (x) => Math.pow(2, x);
+            const df2 = (x) => LN2 * Math.pow(2, x);
+            const f3 = (x) => Math.pow(3, x);
+            const df3 = (x) => LN3 * Math.pow(3, x);
+            const fE = (x) => Math.exp(x);
+
+            // 2^x immer zeichnen
+            drawFullFunction(f2, '#2196F3', 3);
+
+            // 3^x nur wenn eingeschaltet
+            if (showFunc3) {
+                drawFullFunction(f3, '#4CAF50', 3);
+            }
+
+            // e^x nur wenn eingeschaltet (dicker, da besonders)
+            if (showFuncE) {
+                drawFullFunction(fE, '#FF9800', 4);
+            }
+
+            // Ableitungen nur wenn eingeschaltet UND Slider bewegt wurde
+            if (showDerivative) {
+                if (maxX2 > xMin) {
+                    drawPartialFunction(df2, maxX2, '#1565C0', true);
+                }
+                if (showFunc3 && maxX3 > xMin) {
+                    drawPartialFunction(df3, maxX3, '#2E7D32', true);
+                }
+                // e^x Ableitung ist identisch mit e^x - wird nicht extra gezeichnet
+            }
+
+            // Aktuelle Slider-Werte
+            const x2 = parseFloat(document.getElementById('slider2').value);
+            const x3 = parseFloat(document.getElementById('slider3').value);
+
+            // Punkte und Tangenten für 2^x
+            const y2 = f2(x2);
+            const slope2 = df2(x2);
+            drawTangent(x2, y2, slope2, '#FF5722');
+            if (showTriangle) {
+                drawSlopeTriangle(x2, y2, slope2, '#FF5722');
+            }
+            drawPoint(x2, y2, '#2196F3');
+
+            // Punkte und Tangenten für 3^x nur wenn eingeschaltet
+            if (showFunc3) {
+                const y3 = f3(x3);
+                const slope3 = df3(x3);
+                drawTangent(x3, y3, slope3, '#FF9800');
+                if (showTriangle) {
+                    drawSlopeTriangle(x3, y3, slope3, '#E65100');
+                }
+                drawPoint(x3, y3, '#4CAF50');
+            }
+        }
+
+        // Update-Funktionen
+        function updateSlider2(xVal) {
+            // Ableitung nur vorwärts zeichnen (erweitern)
+            if (xVal > maxX2) {
+                maxX2 = xVal;
+            }
+
+            const f2 = (x) => Math.pow(2, x);
+            const df2 = (x) => LN2 * Math.pow(2, x);
+
+            const y = f2(xVal);
+            const dy = df2(xVal);
+            const ratio = dy / y;
+
+            document.getElementById('xValue2').textContent = xVal.toFixed(1);
+            document.getElementById('fx2').textContent = y.toFixed(2);
+            document.getElementById('dfx2').textContent = dy.toFixed(2);
+            document.getElementById('ratio2').textContent = ratio.toFixed(3);
+
+            draw();
+        }
+
+        function updateSlider3(xVal) {
+            // Ableitung nur vorwärts zeichnen (erweitern)
+            if (xVal > maxX3) {
+                maxX3 = xVal;
+            }
+
+            const f3 = (x) => Math.pow(3, x);
+            const df3 = (x) => LN3 * Math.pow(3, x);
+
+            const y = f3(xVal);
+            const dy = df3(xVal);
+            const ratio = dy / y;
+
+            document.getElementById('xValue3').textContent = xVal.toFixed(1);
+            document.getElementById('gx3').textContent = y.toFixed(2);
+            document.getElementById('dgx3').textContent = dy.toFixed(2);
+            document.getElementById('ratio3').textContent = ratio.toFixed(3);
+
+            draw();
+        }
+
+        // Toggle Event Listener
+        document.getElementById('toggleDerivative').addEventListener('change', (e) => {
+            showDerivative = e.target.checked;
+            
+            // Legende aktualisieren
+            document.getElementById('legendDf2').classList.toggle('hidden', !showDerivative);
+            if (showFunc3) {
+                document.getElementById('legendDg3').classList.toggle('hidden', !showDerivative);
+            }
+            
+            draw();
+        });
+
+        document.getElementById('toggleTriangle').addEventListener('change', (e) => {
+            showTriangle = e.target.checked;
+            draw();
+        });
+
+        document.getElementById('toggleFunc3').addEventListener('change', (e) => {
+            showFunc3 = e.target.checked;
+            
+            // Slider-Gruppe aktivieren/deaktivieren
+            document.getElementById('sliderGroup3').classList.toggle('disabled', !showFunc3);
+            
+            // Legende aktualisieren
+            document.getElementById('legend3').classList.toggle('hidden', !showFunc3);
+            document.getElementById('legendDg3').classList.toggle('hidden', !showFunc3 || !showDerivative);
+            
+            draw();
+        });
+
+        document.getElementById('toggleFuncE').addEventListener('change', (e) => {
+            showFuncE = e.target.checked;
+            
+            // Legende aktualisieren
+            document.getElementById('legendE').classList.toggle('hidden', !showFuncE);
+            
+            draw();
+        });
+
+        // Slider Event Listener
+        document.getElementById('slider2').addEventListener('input', (e) => {
+            updateSlider2(parseFloat(e.target.value));
+        });
+
+        document.getElementById('slider3').addEventListener('input', (e) => {
+            updateSlider3(parseFloat(e.target.value));
+        });
+
+        // Dragging-Zustände
+        let isDragging2 = false;
+        let isDragging3 = false;
+
+        // Mausposition zu Koordinaten
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (e.clientX - rect.left) * scaleX,
+                y: (e.clientY - rect.top) * scaleY
+            };
+        }
+
+        // Prüfen ob Maus nahe einem Punkt ist
+        function isNearPoint(mouseX, mouseY, pointX, pointY, radius = 15) {
+            const px = toPixelX(pointX);
+            const py = toPixelY(pointY);
+            const dist = Math.sqrt((mouseX - px) ** 2 + (mouseY - py) ** 2);
+            return dist <= radius;
+        }
+
+        // Mouse down - Dragging starten
+        canvas.addEventListener('mousedown', (e) => {
+            const pos = getMousePos(e);
+            const x2 = parseFloat(document.getElementById('slider2').value);
+            const y2 = Math.pow(2, x2);
+            
+            if (isNearPoint(pos.x, pos.y, x2, y2)) {
+                isDragging2 = true;
+                canvas.style.cursor = 'grabbing';
+                return;
+            }
+            
+            if (showFunc3) {
+                const x3 = parseFloat(document.getElementById('slider3').value);
+                const y3 = Math.pow(3, x3);
+                if (isNearPoint(pos.x, pos.y, x3, y3)) {
+                    isDragging3 = true;
+                    canvas.style.cursor = 'grabbing';
+                }
+            }
+        });
+
+        // Mouse move - Punkt verschieben
+        canvas.addEventListener('mousemove', (e) => {
+            const pos = getMousePos(e);
+            
+            // Cursor ändern wenn über Punkt
+            if (!isDragging2 && !isDragging3) {
+                const x2 = parseFloat(document.getElementById('slider2').value);
+                const y2 = Math.pow(2, x2);
+                let nearPoint = isNearPoint(pos.x, pos.y, x2, y2);
+                
+                if (showFunc3 && !nearPoint) {
+                    const x3 = parseFloat(document.getElementById('slider3').value);
+                    const y3 = Math.pow(3, x3);
+                    nearPoint = isNearPoint(pos.x, pos.y, x3, y3);
+                }
+                
+                canvas.style.cursor = nearPoint ? 'grab' : 'default';
+            }
+            
+            if (isDragging2) {
+                // x-Wert aus Mausposition berechnen
+                let newX = xMin + pos.x / width * (xMax - xMin);
+                // Begrenzen auf Slider-Bereich
+                newX = Math.max(-2, Math.min(3, newX));
+                document.getElementById('slider2').value = newX;
+                updateSlider2(newX);
+            }
+            
+            if (isDragging3) {
+                let newX = xMin + pos.x / width * (xMax - xMin);
+                newX = Math.max(-2, Math.min(2.3, newX));
+                document.getElementById('slider3').value = newX;
+                updateSlider3(newX);
+            }
+        });
+
+        // Mouse up - Dragging beenden
+        canvas.addEventListener('mouseup', () => {
+            isDragging2 = false;
+            isDragging3 = false;
+            canvas.style.cursor = 'default';
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            isDragging2 = false;
+            isDragging3 = false;
+            canvas.style.cursor = 'default';
+        });
+
+        // Touch-Support für mobile Geräte
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        });
+
+        canvas.addEventListener('touchend', () => {
+            const mouseEvent = new MouseEvent('mouseup', {});
+            canvas.dispatchEvent(mouseEvent);
+        });
+
+        // Initialisierung
+        draw();
+        updateSlider2(-2);
+        updateSlider3(-2);
+    </script>
+</body>
+</html>
