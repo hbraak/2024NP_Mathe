@@ -393,6 +393,17 @@
             </div>
         </header>
 
+        <!-- Interaktive Visualisierungen -->
+        <div class="topic-section">
+            <div class="topic-header" style="background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);">
+                <span class="icon">🎮</span>
+                Interaktive Visualisierungen
+            </div>
+            <div class="competency-list" id="visualizations-list">
+                <!-- Wird dynamisch befüllt -->
+            </div>
+        </div>
+
         <!-- Thema 1: Ganzrationale Funktionen -->
         <div class="topic-section">
             <div class="topic-header">
@@ -846,8 +857,31 @@
             if (e.key === 'Escape') closeModal();
         });
 
+        // Liste der interaktiven Visualisierungen (neue Dateien hier eintragen)
+        const visualizations = [
+            { file: 'ableitungen_sin_cos.html', title: 'Ableitungen von Sinus & Cosinus', icon: '📈' },
+            { file: 'e-funktion-visualisierung-toggles.html', title: 'e-Funktion Visualisierung', icon: '📊' },
+            { file: 'exponentialfunktionen_logarithmus.html', title: 'Exponentialfunktionen & Logarithmus', icon: '🔢' },
+            { file: 'radioaktiver-zerfall-erweitert.html', title: 'Radioaktiver Zerfall', icon: '☢️' }
+        ];
+
+        function loadVisualizations() {
+            const list = document.getElementById('visualizations-list');
+            visualizations.forEach(viz => {
+                const item = document.createElement('div');
+                item.className = 'competency-item';
+                item.innerHTML = `
+                    <span style="font-size: 1.3rem; margin-right: 15px;">${viz.icon}</span>
+                    <span class="competency-text">${viz.title}</span>
+                    <a href="${viz.file}" class="task-btn" style="text-decoration: none;">Öffnen</a>
+                `;
+                list.appendChild(item);
+            });
+        }
+
         window.onload = function() {
             loadProgress();
+            loadVisualizations();
             
             // iOS Touch-Fix für Buttons
             document.querySelectorAll('.task-btn').forEach(function(btn) {
@@ -856,7 +890,7 @@
                     e.stopPropagation();
                     this.click();
                 }, {passive: false});
-            });
+            })
         };
     </script>
 </body>
