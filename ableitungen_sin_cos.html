@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ableitungen von sin und cos entdecken</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #00d9ff;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card h2 {
+            color: #00d9ff;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .graph-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .graph-box {
+            background: #0d1117;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        .graph-box h3 {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        canvas {
+            border-radius: 8px;
+            cursor: crosshair;
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        label {
+            font-weight: 500;
+        }
+        input[type="range"] {
+            width: 200px;
+            accent-color: #00d9ff;
+        }
+        .value-display {
+            background: #0d1117;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            min-width: 80px;
+            text-align: center;
+        }
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-color {
+            width: 30px;
+            height: 4px;
+            border-radius: 2px;
+        }
+        .discovery-box {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        .discovery-box h3 {
+            color: #00d9ff;
+            margin-bottom: 10px;
+        }
+        .quiz-section {
+            margin-top: 20px;
+        }
+        .quiz-question {
+            background: rgba(255,255,255,0.03);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .quiz-question p {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        .options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .option-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        .option-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+            border-color: #00d9ff;
+        }
+        .option-btn.correct {
+            background: rgba(0, 255, 100, 0.3);
+            border-color: #00ff64;
+        }
+        .option-btn.wrong {
+            background: rgba(255, 50, 50, 0.3);
+            border-color: #ff3232;
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .feedback.show {
+            display: block;
+        }
+        .feedback.success {
+            background: rgba(0, 255, 100, 0.1);
+            border: 1px solid #00ff64;
+        }
+        .feedback.error {
+            background: rgba(255, 50, 50, 0.1);
+            border: 1px solid #ff3232;
+        }
+        .steigung-tabelle {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .steigung-tabelle th, .steigung-tabelle td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .steigung-tabelle th {
+            background: rgba(0, 217, 255, 0.2);
+        }
+        .highlight-cell {
+            background: rgba(0, 217, 255, 0.1);
+            font-weight: bold;
+        }
+        .formula-box {
+            background: #0d1117;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.5em;
+            margin: 20px 0;
+            font-family: 'Times New Roman', serif;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .step.active {
+            background: #00d9ff;
+            color: #1a1a2e;
+        }
+        .step.completed {
+            background: #00ff64;
+            color: #1a1a2e;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            background: #00d9ff;
+            color: #1a1a2e;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover {
+            background: #00b8d9;
+            transform: translateY(-2px);
+        }
+        .nav-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .phase {
+            display: none;
+        }
+        .phase.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .graph-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            canvas {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📐 Ableitungen von sin(x) und cos(x)</h1>
+        <p class="subtitle">Entdecke selbst, wie die Ableitungen aussehen!</p>
+
+        <div class="step-indicator">
+            <div class="step active" data-step="1">1</div>
+            <div class="step" data-step="2">2</div>
+            <div class="step" data-step="3">3</div>
+            <div class="step" data-step="4">4</div>
+        </div>
+
+        <!-- Phase 1: Entdeckung sin -->
+        <div class="phase active" id="phase1">
+            <div class="card">
+                <h2>🔍 Phase 1: Die Ableitung von sin(x) entdecken</h2>
+                
+                <div class="discovery-box">
+                    <h3>💡 Deine Aufgabe</h3>
+                    <p>Bewege den Schieberegler und beobachte die <strong>Steigung der Tangente</strong> (orange Linie) an verschiedenen Stellen. Welche bekannte Funktion beschreibt diese Steigungen?</p>
+                </div>
+
+                <div class="controls">
+                    <div class="control-group">
+                        <label>x-Wert:</label>
+                        <input type="range" id="xSlider1" min="-6.28" max="6.28" step="0.1" value="0">
+                        <span class="value-display" id="xValue1">0.00</span>
+                    </div>
+                </div>
+
+                <div class="graph-container">
+                    <div class="graph-box">
+                        <h3>f(x) = sin(x) mit Tangente</h3>
+                        <canvas id="sinCanvas" width="500" height="350"></canvas>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #00d9ff;"></div>
+                        <span>sin(x)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ff9500;"></div>
+                        <span>Tangente</span>
+                    </div>
+                </div>
+
+                <table class="steigung-tabelle">
+                    <tr>
+                        <th>x</th>
+                        <th>sin(x)</th>
+                        <th>Steigung bei x</th>
+                        <th>🤔 Was fällt auf?</th>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td class="highlight-cell" id="slope0">1.00</td>
+                        <td>cos(0) = ?</td>
+                    </tr>
+                    <tr>
+                        <td>π/2 ≈ 1.57</td>
+                        <td>1</td>
+                        <td class="highlight-cell" id="slopePi2">0.00</td>
+                        <td>cos(π/2) = ?</td>
+                    </tr>
+                    <tr>
+                        <td>π ≈ 3.14</td>
+                        <td>0</td>
+                        <td class="highlight-cell" id="slopePi">-1.00</td>
+                        <td>cos(π) = ?</td>
+                    </tr>
+                    <tr>
+                        <td>3π/2 ≈ 4.71</td>
+                        <td>-1</td>
+                        <td class="highlight-cell" id="slope3Pi2">0.00</td>
+                        <td>cos(3π/2) = ?</td>
+                    </tr>
+                </table>
+
+                <div class="quiz-section">
+                    <div class="quiz-question">
+                        <p><strong>Frage:</strong> Welche Funktion beschreibt die Steigung von sin(x)?</p>
+                        <div class="options">
+                            <button class="option-btn" data-answer="wrong">sin(x)</button>
+                            <button class="option-btn" data-answer="correct">cos(x)</button>
+                            <button class="option-btn" data-answer="wrong">-sin(x)</button>
+                            <button class="option-btn" data-answer="wrong">-cos(x)</button>
+                        </div>
+                        <div class="feedback" id="feedback1"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" disabled>← Zurück</button>
+                <button class="nav-btn" onclick="nextPhase(2)">Weiter →</button>
+            </div>
+        </div>
+
+        <!-- Phase 2: Verifikation sin -->
+        <div class="phase" id="phase2">
+            <div class="card">
+                <h2>✅ Phase 2: Überprüfung — sin'(x) = cos(x)</h2>
+                
+                <div class="discovery-box">
+                    <h3>🎯 Vergleiche die Graphen</h3>
+                    <p>Links siehst du sin(x) mit der Steigung an jeder Stelle. Rechts die Funktion cos(x). Sind sie identisch?</p>
+                </div>
+
+                <div class="graph-container">
+                    <div class="graph-box">
+                        <h3>sin(x) und seine Steigungen</h3>
+                        <canvas id="sinDerivCanvas" width="450" height="300"></canvas>
+                    </div>
+                    <div class="graph-box">
+                        <h3>cos(x)</h3>
+                        <canvas id="cosCompareCanvas" width="450" height="300"></canvas>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #00d9ff;"></div>
+                        <span>sin(x)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #00ff64;"></div>
+                        <span>Steigung / cos(x)</span>
+                    </div>
+                </div>
+
+                <div class="formula-box">
+                    <strong>Ergebnis:</strong> [sin(x)]' = cos(x)
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="nextPhase(1)">← Zurück</button>
+                <button class="nav-btn" onclick="nextPhase(3)">Weiter →</button>
+            </div>
+        </div>
+
+        <!-- Phase 3: Entdeckung cos -->
+        <div class="phase" id="phase3">
+            <div class="card">
+                <h2>🔍 Phase 3: Die Ableitung von cos(x) entdecken</h2>
+                
+                <div class="discovery-box">
+                    <h3>💡 Jetzt bist du dran!</h3>
+                    <p>Untersuche die Steigung von cos(x). Achtung: Diesmal ist es etwas trickreicher!</p>
+                </div>
+
+                <div class="controls">
+                    <div class="control-group">
+                        <label>x-Wert:</label>
+                        <input type="range" id="xSlider2" min="-6.28" max="6.28" step="0.1" value="0">
+                        <span class="value-display" id="xValue2">0.00</span>
+                    </div>
+                </div>
+
+                <div class="graph-container">
+                    <div class="graph-box">
+                        <h3>f(x) = cos(x) mit Tangente</h3>
+                        <canvas id="cosCanvas" width="500" height="350"></canvas>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ff6b6b;"></div>
+                        <span>cos(x)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ff9500;"></div>
+                        <span>Tangente</span>
+                    </div>
+                </div>
+
+                <table class="steigung-tabelle">
+                    <tr>
+                        <th>x</th>
+                        <th>cos(x)</th>
+                        <th>Steigung bei x</th>
+                        <th>🤔 Vergleiche mit...</th>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>1</td>
+                        <td class="highlight-cell" id="cosSlope0">0.00</td>
+                        <td>sin(0) = 0, also -sin(0) = ?</td>
+                    </tr>
+                    <tr>
+                        <td>π/2 ≈ 1.57</td>
+                        <td>0</td>
+                        <td class="highlight-cell" id="cosSlopePi2">-1.00</td>
+                        <td>sin(π/2) = 1, also -sin(π/2) = ?</td>
+                    </tr>
+                    <tr>
+                        <td>π ≈ 3.14</td>
+                        <td>-1</td>
+                        <td class="highlight-cell" id="cosSlopePi">0.00</td>
+                        <td>sin(π) = 0, also -sin(π) = ?</td>
+                    </tr>
+                    <tr>
+                        <td>3π/2 ≈ 4.71</td>
+                        <td>0</td>
+                        <td class="highlight-cell" id="cosSlope3Pi2">1.00</td>
+                        <td>sin(3π/2) = -1, also -sin(3π/2) = ?</td>
+                    </tr>
+                </table>
+
+                <div class="quiz-section">
+                    <div class="quiz-question">
+                        <p><strong>Frage:</strong> Welche Funktion beschreibt die Steigung von cos(x)?</p>
+                        <div class="options">
+                            <button class="option-btn" data-answer="wrong" data-quiz="2">sin(x)</button>
+                            <button class="option-btn" data-answer="wrong" data-quiz="2">cos(x)</button>
+                            <button class="option-btn" data-answer="correct" data-quiz="2">-sin(x)</button>
+                            <button class="option-btn" data-answer="wrong" data-quiz="2">-cos(x)</button>
+                        </div>
+                        <div class="feedback" id="feedback2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="nextPhase(2)">← Zurück</button>
+                <button class="nav-btn" onclick="nextPhase(4)">Weiter →</button>
+            </div>
+        </div>
+
+        <!-- Phase 4: Zusammenfassung -->
+        <div class="phase" id="phase4">
+            <div class="card">
+                <h2>🎉 Phase 4: Zusammenfassung</h2>
+                
+                <div class="graph-container">
+                    <div class="graph-box">
+                        <h3>Alle Funktionen im Überblick</h3>
+                        <canvas id="summaryCanvas" width="700" height="400"></canvas>
+                    </div>
+                </div>
+
+                <div class="legend" style="justify-content: center;">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #00d9ff;"></div>
+                        <span>sin(x)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #00ff64;"></div>
+                        <span>cos(x) = sin'(x)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ff6b6b;"></div>
+                        <span>-sin(x) = cos'(x)</span>
+                    </div>
+                </div>
+
+                <div class="formula-box">
+                    <div style="margin-bottom: 15px;"><strong>[sin(x)]' = cos(x)</strong></div>
+                    <div><strong>[cos(x)]' = -sin(x)</strong></div>
+                </div>
+
+                <div class="discovery-box">
+                    <h3>🧠 Merkhilfe: Der Ableitungskreis</h3>
+                    <p style="text-align: center; font-size: 1.2em; margin: 15px 0;">
+                        sin → cos → -sin → -cos → sin → ...
+                    </p>
+                    <p>Jede Ableitung führt zur nächsten Funktion im Kreis!</p>
+                </div>
+
+                <div class="quiz-section">
+                    <div class="quiz-question">
+                        <p><strong>Bonusfrage:</strong> Was ist die zweite Ableitung von sin(x)?</p>
+                        <div class="options">
+                            <button class="option-btn" data-answer="wrong" data-quiz="3">sin(x)</button>
+                            <button class="option-btn" data-answer="wrong" data-quiz="3">cos(x)</button>
+                            <button class="option-btn" data-answer="correct" data-quiz="3">-sin(x)</button>
+                            <button class="option-btn" data-answer="wrong" data-quiz="3">-cos(x)</button>
+                        </div>
+                        <div class="feedback" id="feedback3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="nextPhase(3)">← Zurück</button>
+                <button class="nav-btn" onclick="location.reload()">🔄 Neu starten</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Canvas setup helpers
+        function setupCanvas(canvas, xRange, yRange) {
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            const padding = 40;
+            
+            return {
+                ctx, w, h, padding,
+                toCanvasX: (x) => padding + (x - xRange[0]) / (xRange[1] - xRange[0]) * (w - 2*padding),
+                toCanvasY: (y) => h - padding - (y - yRange[0]) / (yRange[1] - yRange[0]) * (h - 2*padding),
+                xRange, yRange
+            };
+        }
+
+        function drawAxes(setup) {
+            const {ctx, w, h, padding, toCanvasX, toCanvasY, xRange, yRange} = setup;
+            ctx.strokeStyle = '#444';
+            ctx.lineWidth = 1;
+            
+            // X axis
+            ctx.beginPath();
+            ctx.moveTo(padding, toCanvasY(0));
+            ctx.lineTo(w - padding, toCanvasY(0));
+            ctx.stroke();
+            
+            // Y axis
+            ctx.beginPath();
+            ctx.moveTo(toCanvasX(0), padding);
+            ctx.lineTo(toCanvasX(0), h - padding);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#888';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            
+            // X labels
+            for (let x = Math.ceil(xRange[0]); x <= xRange[1]; x++) {
+                if (x !== 0) {
+                    ctx.fillText(x, toCanvasX(x), toCanvasY(0) + 15);
+                }
+            }
+            
+            // Y labels
+            ctx.textAlign = 'right';
+            for (let y = Math.ceil(yRange[0]); y <= yRange[1]; y++) {
+                if (y !== 0) {
+                    ctx.fillText(y, toCanvasX(0) - 5, toCanvasY(y) + 4);
+                }
+            }
+            
+            // Pi markers
+            ctx.fillStyle = '#666';
+            ctx.textAlign = 'center';
+            ctx.fillText('π', toCanvasX(Math.PI), toCanvasY(0) + 15);
+            ctx.fillText('-π', toCanvasX(-Math.PI), toCanvasY(0) + 15);
+            ctx.fillText('2π', toCanvasX(2*Math.PI), toCanvasY(0) + 15);
+            ctx.fillText('-2π', toCanvasX(-2*Math.PI), toCanvasY(0) + 15);
+        }
+
+        function drawFunction(setup, fn, color, lineWidth = 2) {
+            const {ctx, w, padding, toCanvasX, toCanvasY, xRange} = setup;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.beginPath();
+            
+            const steps = 500;
+            const dx = (xRange[1] - xRange[0]) / steps;
+            
+            for (let i = 0; i <= steps; i++) {
+                const x = xRange[0] + i * dx;
+                const y = fn(x);
+                const cx = toCanvasX(x);
+                const cy = toCanvasY(y);
+                
+                if (i === 0) ctx.moveTo(cx, cy);
+                else ctx.lineTo(cx, cy);
+            }
+            ctx.stroke();
+        }
+
+        function drawTangent(setup, x, fn, dfn, color = '#ff9500') {
+            const {ctx, toCanvasX, toCanvasY, xRange} = setup;
+            const y = fn(x);
+            const slope = dfn(x);
+            
+            // Tangent line
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            const dx = 1.5;
+            const x1 = x - dx;
+            const x2 = x + dx;
+            const y1 = y + slope * (x1 - x);
+            const y2 = y + slope * (x2 - x);
+            
+            ctx.moveTo(toCanvasX(x1), toCanvasY(y1));
+            ctx.lineTo(toCanvasX(x2), toCanvasY(y2));
+            ctx.stroke();
+            
+            // Point
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(toCanvasX(x), toCanvasY(y), 6, 0, 2*Math.PI);
+            ctx.fill();
+            
+            // Slope label
+            ctx.fillStyle = '#ff9500';
+            ctx.font = 'bold 14px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(`m = ${slope.toFixed(2)}`, toCanvasX(x) + 10, toCanvasY(y) - 10);
+        }
+
+        // Phase 1: sin with tangent
+        function drawSinPhase1(x) {
+            const canvas = document.getElementById('sinCanvas');
+            const setup = setupCanvas(canvas, [-7, 7], [-2, 2]);
+            const {ctx, w, h} = setup;
+            
+            ctx.clearRect(0, 0, w, h);
+            drawAxes(setup);
+            drawFunction(setup, Math.sin, '#00d9ff');
+            drawTangent(setup, x, Math.sin, Math.cos);
+            
+            document.getElementById('xValue1').textContent = x.toFixed(2);
+        }
+
+        // Phase 2: sin and derivative comparison
+        function drawPhase2() {
+            // Left: sin and its derivative
+            const canvas1 = document.getElementById('sinDerivCanvas');
+            const setup1 = setupCanvas(canvas1, [-7, 7], [-2, 2]);
+            setup1.ctx.clearRect(0, 0, setup1.w, setup1.h);
+            drawAxes(setup1);
+            drawFunction(setup1, Math.sin, '#00d9ff');
+            drawFunction(setup1, Math.cos, '#00ff64');
+            
+            // Right: cos
+            const canvas2 = document.getElementById('cosCompareCanvas');
+            const setup2 = setupCanvas(canvas2, [-7, 7], [-2, 2]);
+            setup2.ctx.clearRect(0, 0, setup2.w, setup2.h);
+            drawAxes(setup2);
+            drawFunction(setup2, Math.cos, '#00ff64');
+        }
+
+        // Phase 3: cos with tangent
+        function drawCosPhase3(x) {
+            const canvas = document.getElementById('cosCanvas');
+            const setup = setupCanvas(canvas, [-7, 7], [-2, 2]);
+            const {ctx, w, h} = setup;
+            
+            ctx.clearRect(0, 0, w, h);
+            drawAxes(setup);
+            drawFunction(setup, Math.cos, '#ff6b6b');
+            drawTangent(setup, x, Math.cos, (x) => -Math.sin(x));
+            
+            document.getElementById('xValue2').textContent = x.toFixed(2);
+        }
+
+        // Phase 4: Summary
+        function drawSummary() {
+            const canvas = document.getElementById('summaryCanvas');
+            const setup = setupCanvas(canvas, [-7, 7], [-2, 2]);
+            const {ctx, w, h} = setup;
+            
+            ctx.clearRect(0, 0, w, h);
+            drawAxes(setup);
+            drawFunction(setup, Math.sin, '#00d9ff', 3);
+            drawFunction(setup, Math.cos, '#00ff64', 3);
+            drawFunction(setup, (x) => -Math.sin(x), '#ff6b6b', 3);
+        }
+
+        // Navigation
+        let currentPhase = 1;
+        
+        function nextPhase(phase) {
+            document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+            document.getElementById('phase' + phase).classList.add('active');
+            
+            document.querySelectorAll('.step').forEach((s, i) => {
+                s.classList.remove('active');
+                if (i + 1 < phase) s.classList.add('completed');
+                else s.classList.remove('completed');
+                if (i + 1 === phase) s.classList.add('active');
+            });
+            
+            currentPhase = phase;
+            
+            if (phase === 2) drawPhase2();
+            if (phase === 3) drawCosPhase3(0);
+            if (phase === 4) drawSummary();
+        }
+
+        // Quiz handling
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const isCorrect = this.dataset.answer === 'correct';
+                const quizNum = this.dataset.quiz || '1';
+                const feedback = document.getElementById('feedback' + quizNum);
+                
+                // Reset all buttons in this question
+                this.parentElement.querySelectorAll('.option-btn').forEach(b => {
+                    b.classList.remove('correct', 'wrong');
+                });
+                
+                if (isCorrect) {
+                    this.classList.add('correct');
+                    feedback.className = 'feedback show success';
+                    feedback.innerHTML = '✅ Richtig! Gut gemacht!';
+                } else {
+                    this.classList.add('wrong');
+                    feedback.className = 'feedback show error';
+                    feedback.innerHTML = '❌ Nicht ganz. Schau dir die Tabelle nochmal genau an!';
+                }
+            });
+        });
+
+        // Step indicators clickable
+        document.querySelectorAll('.step').forEach(step => {
+            step.addEventListener('click', function() {
+                nextPhase(parseInt(this.dataset.step));
+            });
+        });
+
+        // Sliders
+        document.getElementById('xSlider1').addEventListener('input', function() {
+            drawSinPhase1(parseFloat(this.value));
+        });
+
+        document.getElementById('xSlider2').addEventListener('input', function() {
+            drawCosPhase3(parseFloat(this.value));
+        });
+
+        // Initial draw
+        drawSinPhase1(0);
+    </script>
+</body>
+</html>
