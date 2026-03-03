@@ -172,10 +172,32 @@
         </header>
         
         <div class="material-grid">
+            <a href="index_eFunktionen_Q3.html" class="material-card" data-url="index_eFunktionen_Q3.html">
+                <div class="card-header">
+                    <div class="card-icon green">📋</div>
+                    <div class="card-title">Lernliste: Q3 — e-Funktionen & Kurvendiskussion</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Interaktive Checkliste zur Klausurvorbereitung Q3: e-Funktion, Kettenregel, Produktregel, Kurvendiskussion mit e-Funktionen. Mit Übungsaufgaben und Lösungen.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">e-Funktion</span>
+                            <span class="tag">Produktregel</span>
+                            <span class="tag">Kettenregel</span>
+                            <span class="tag">Kurvendiskussion</span>
+                            <span class="tag">Klausur Q3</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-q3"></div>
+                </div>
+            </a>
+
             <a href="lernliste-analysis-q2.html" class="material-card" data-url="lernliste-analysis-q2.html">
                 <div class="card-header">
                     <div class="card-icon purple">📋</div>
-                    <div class="card-title">Lernliste: Analysis Q2 — GRF & Kurvendiskussion</div>
+                    <div class="card-title">Lernliste: Q2 — GRF & Kurvendiskussion</div>
                 </div>
                 <div class="card-content">
                     <div class="card-text">
@@ -296,6 +318,7 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-q3', 'index_eFunktionen_Q3.html');
             generateQR('qr-lernliste', 'lernliste-analysis-q2.html');
             generateQR('qr-sincos', 'ableitungen_sin_cos.html');
             generateQR('qr-efunktion', 'e-funktion-visualisierung-toggles.html');
