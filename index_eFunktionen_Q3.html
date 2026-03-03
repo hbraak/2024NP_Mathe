@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernliste Mathematik 12NP – e-Funktionen & Kurvendiskussion</title>
+
+<!-- MathJax -->
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+
+<style>
+  :root {
+    --blue:    #1a56a0;
+    --blue-lt: #e8f0fb;
+    --orange:  #d9660a;
+    --org-lt:  #fff3e8;
+    --green:   #1a7a3c;
+    --grn-lt:  #e6f5ec;
+    --purple:  #6b2fa0;
+    --pur-lt:  #f3ebfb;
+    --red:     #b52020;
+    --red-lt:  #fdeaea;
+    --gray:    #4a4a4a;
+    --border:  #ccc;
+    --bg:      #f7f8fc;
+    --white:   #ffffff;
+    --shadow:  0 2px 8px rgba(0,0,0,.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--gray);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* ---- HEADER ---- */
+  header {
+    background: linear-gradient(135deg, var(--blue) 0%, #0d3a70 100%);
+    color: #fff;
+    padding: 1.8rem 1.5rem 1.4rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  header h1 { font-size: 1.55rem; font-weight: 700; margin-bottom: .25rem; }
+  header p  { font-size: .9rem;  opacity: .85; }
+
+  /* ---- PROGRESS ---- */
+  #progress-bar-wrap {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: .8rem 1.5rem;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; gap: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  }
+  #progress-text { font-size: .9rem; white-space: nowrap; font-weight: 600; }
+  #progress-bar-outer {
+    flex: 1; height: 10px; background: #dde3ef; border-radius: 5px; overflow: hidden;
+  }
+  #progress-bar-inner {
+    height: 100%; width: 0%; background: linear-gradient(90deg, var(--green), #4caf7a);
+    border-radius: 5px; transition: width .4s ease;
+  }
+
+  /* ---- MAIN ---- */
+  main { max-width: 860px; margin: 1.5rem auto; padding: 0 1rem; }
+
+  /* ---- SECTION ---- */
+  .section {
+    background: var(--white);
+    border-radius: 10px;
+    margin-bottom: 1.4rem;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex; align-items: center; gap: .6rem;
+    padding: .85rem 1.2rem;
+    font-size: 1rem; font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header .icon { font-size: 1.3rem; }
+
+  .s-blue   .section-header { background: var(--blue-lt); color: var(--blue); }
+  .s-orange .section-header { background: var(--org-lt);  color: var(--orange); }
+  .s-green  .section-header { background: var(--grn-lt);  color: var(--green); }
+  .s-purple .section-header { background: var(--pur-lt);  color: var(--purple); }
+  .s-red    .section-header { background: var(--red-lt);  color: var(--red); }
+
+  /* ---- COMPETENCY ITEM ---- */
+  .comp-item {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .75rem 1.2rem;
+    border-bottom: 1px solid #eef0f5;
+    transition: background .15s;
+  }
+  .comp-item:last-child { border-bottom: none; }
+  .comp-item:hover { background: #f5f7ff; }
+  .comp-item.done { background: #f0fdf4; }
+  .comp-item.done .comp-text { text-decoration: line-through; color: #888; }
+
+  .comp-check {
+    width: 20px; height: 20px; border-radius: 4px;
+    border: 2px solid #9ab; cursor: pointer;
+    flex-shrink: 0; appearance: none;
+    transition: all .2s;
+  }
+  .comp-check:checked {
+    background: var(--green);
+    border-color: var(--green);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath fill='white' d='M1 5l3.5 3.5L11 1'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: center;
+  }
+  .comp-text { flex: 1; font-size: .93rem; }
+
+  .btn-ueben {
+    padding: .32rem .85rem;
+    border: none; border-radius: 6px;
+    font-size: .8rem; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+    transition: all .18s;
+    color: #fff;
+  }
+  .s-blue   .btn-ueben { background: var(--blue); }
+  .s-orange .btn-ueben { background: var(--orange); }
+  .s-green  .btn-ueben { background: var(--green); }
+  .s-purple .btn-ueben { background: var(--purple); }
+  .s-red    .btn-ueben { background: var(--red); }
+  .btn-ueben:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
+  /* ---- RESET ---- */
+  #reset-btn {
+    display: block; margin: .5rem auto 2rem;
+    padding: .5rem 1.4rem; border-radius: 8px;
+    border: 2px solid #bbc; background: #fff;
+    font-size: .85rem; cursor: pointer; color: var(--gray);
+    transition: all .18s;
+  }
+  #reset-btn:hover { background: #fee; border-color: #c55; color: #c55; }
+
+  /* ---- MODAL OVERLAY ---- */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.55); z-index: 200;
+    align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--white);
+    border-radius: 12px;
+    width: 100%; max-width: 720px;
+    max-height: 90vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 8px 40px rgba(0,0,0,.3);
+    overflow: hidden;
+  }
+
+  .modal-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .9rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    background: #f0f4ff;
+  }
+  .modal-top h2 { font-size: 1rem; font-weight: 700; color: var(--blue); }
+  .modal-close {
+    background: none; border: none; font-size: 1.5rem;
+    cursor: pointer; color: #666; line-height: 1; padding: 0 .3rem;
+    transition: color .15s;
+  }
+  .modal-close:hover { color: #c00; }
+
+  /* Tabs */
+  .modal-tabs {
+    display: flex; border-bottom: 2px solid #e0e4f0;
+    padding: 0 1.2rem;
+    background: #fafbff;
+  }
+  .tab-btn {
+    padding: .55rem 1rem; border: none; background: none;
+    font-size: .88rem; font-weight: 600; cursor: pointer;
+    color: #888; border-bottom: 3px solid transparent;
+    margin-bottom: -2px; transition: all .15s;
+  }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab-btn:hover:not(.active) { color: var(--blue); }
+
+  .modal-body { padding: 1.2rem; overflow-y: auto; flex: 1; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Aufgabe styling */
+  .aufgabe-box {
+    background: #fff8f0;
+    border-left: 4px solid var(--orange);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: .8rem;
+    font-size: .93rem;
+    line-height: 1.7;
+  }
+
+  /* Lösung styling */
+  .loesung-box {
+    background: var(--grn-lt);
+    border-left: 4px solid var(--green);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: .8rem;
+    font-size: .93rem;
+    line-height: 1.8;
+  }
+  .loesung-box .step {
+    margin: .4rem 0;
+    padding-left: .3rem;
+  }
+  .loesung-box .result {
+    font-weight: 700;
+    color: var(--green);
+    margin-top: .6rem;
+    padding: .4rem .8rem;
+    background: rgba(26,122,60,.08);
+    border-radius: 5px;
+    display: inline-block;
+  }
+
+  /* KI-Hilfe */
+  .ki-label {
+    font-size: .85rem;
+    color: #666;
+    margin-bottom: .7rem;
+    line-height: 1.5;
+  }
+  .ki-prompt {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: .8rem;
+    font-size: .82rem;
+    font-family: monospace;
+    white-space: pre-wrap;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+  .ki-buttons {
+    display: flex; flex-wrap: wrap; gap: .5rem;
+  }
+  .ki-btn {
+    padding: .4rem .9rem;
+    border: none; border-radius: 7px;
+    font-size: .82rem; font-weight: 600;
+    cursor: pointer; transition: all .18s;
+    display: flex; align-items: center; gap: .35rem;
+  }
+  .ki-copy { background: #e0e5f5; color: #334; }
+  .ki-copy:hover { background: #ccd3f0; }
+  .ki-google { background: #4285f4; color: #fff; }
+  .ki-google:hover { background: #3070d4; }
+  .ki-gpt { background: #10a37f; color: #fff; }
+  .ki-gpt:hover { background: #0c8a6b; }
+  .ki-claude { background: #d97941; color: #fff; }
+  .ki-claude:hover { background: #c06530; }
+
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%);
+    background: #333; color: #fff;
+    padding: .5rem 1.2rem; border-radius: 20px;
+    font-size: .85rem; opacity: 0;
+    transition: opacity .3s; pointer-events: none; z-index: 300;
+  }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.2rem; }
+    .modal { max-height: 95vh; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📐 Mathematik 12NP – e-Funktionen &amp; Kurvendiskussion</h1>
+  <p>Lore-Lorentz-Schule &nbsp;|&nbsp; Klausurvorbereitung</p>
+</header>
+
+<div id="progress-bar-wrap">
+  <span id="progress-text">0 / 15 Kompetenzen</span>
+  <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+</div>
+
+<main>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 1: Produkt- & Kettenregel
+  ══════════════════════════════════════════════════════ -->
+  <div class="section s-blue">
+    <div class="section-header"><span class="icon">🔗</span> Produkt- &amp; Kettenregel</div>
+
+    <div class="comp-item" id="ci-1">
+      <input type="checkbox" class="comp-check" id="cb-1">
+      <label class="comp-text" for="cb-1">
+        Ich kann die <strong>Produktregel</strong> $(u \cdot v)' = u' \cdot v + u \cdot v'$ korrekt anwenden.
+      </label>
+      <button class="btn-ueben" onclick="openModal(1)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-2">
+      <input type="checkbox" class="comp-check" id="cb-2">
+      <label class="comp-text" for="cb-2">
+        Ich kann die <strong>Kettenregel</strong> $(f(g(x)))' = f'(g(x)) \cdot g'(x)$ korrekt anwenden.
+      </label>
+      <button class="btn-ueben" onclick="openModal(2)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-3">
+      <input type="checkbox" class="comp-check" id="cb-3">
+      <label class="comp-text" for="cb-3">
+        Ich kann <strong>Produkt- und Kettenregel kombiniert</strong> anwenden und das Ergebnis vereinfachen.
+      </label>
+      <button class="btn-ueben" onclick="openModal(3)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-4">
+      <input type="checkbox" class="comp-check" id="cb-4">
+      <label class="comp-text" for="cb-4">
+        Ich kann <strong>Fehler in Ableitungsberechnungen</strong> erkennen, benennen und korrigieren.
+      </label>
+      <button class="btn-ueben" onclick="openModal(4)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-5">
+      <input type="checkbox" class="comp-check" id="cb-5">
+      <label class="comp-text" for="cb-5">
+        Ich kann aus einer gegebenen Ableitung $f'(x)$ die ursprüngliche Funktion $f(x)$ bestimmen (<strong>rückwärts denken</strong>).
+      </label>
+      <button class="btn-ueben" onclick="openModal(5)">Üben</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 2: Extrempunkte
+  ══════════════════════════════════════════════════════ -->
+  <div class="section s-orange">
+    <div class="section-header"><span class="icon">⛰️</span> Extrempunkte bei e-Funktionen</div>
+
+    <div class="comp-item" id="ci-6">
+      <input type="checkbox" class="comp-check" id="cb-6">
+      <label class="comp-text" for="cb-6">
+        Ich kann den <strong>Satz vom Nullprodukt</strong> bei e-Funktionen anwenden (da $e^x \neq 0$).
+      </label>
+      <button class="btn-ueben" onclick="openModal(6)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-7">
+      <input type="checkbox" class="comp-check" id="cb-7">
+      <label class="comp-text" for="cb-7">
+        Ich kann Hoch- und Tiefpunkte mit dem <strong>Vorzeichenwechselkriterium (VZW)</strong> von $f'$ bestimmen.
+      </label>
+      <button class="btn-ueben" onclick="openModal(7)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-8">
+      <input type="checkbox" class="comp-check" id="cb-8">
+      <label class="comp-text" for="cb-8">
+        Ich kann die <strong>hinreichende Bedingung</strong> über $f''(x_E)$ zur Klassifikation von Extrempunkten einsetzen.
+      </label>
+      <button class="btn-ueben" onclick="openModal(8)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-9">
+      <input type="checkbox" class="comp-check" id="cb-9">
+      <label class="comp-text" for="cb-9">
+        Ich kann Extremwertaufgaben im <strong>Sachkontext</strong> lösen und das Ergebnis interpretieren.
+      </label>
+      <button class="btn-ueben" onclick="openModal(9)">Üben</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 3: Wendepunkte & Krümmung
+  ══════════════════════════════════════════════════════ -->
+  <div class="section s-green">
+    <div class="section-header"><span class="icon">🔄</span> Wendepunkte &amp; Krümmung</div>
+
+    <div class="comp-item" id="ci-10">
+      <input type="checkbox" class="comp-check" id="cb-10">
+      <label class="comp-text" for="cb-10">
+        Ich kann die <strong>zweite Ableitung</strong> bei e-Funktionen korrekt berechnen.
+      </label>
+      <button class="btn-ueben" onclick="openModal(10)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-11">
+      <input type="checkbox" class="comp-check" id="cb-11">
+      <label class="comp-text" for="cb-11">
+        Ich kann <strong>Wendepunkte</strong> bestimmen und mit dem VZW-Kriterium von $f''$ bestätigen.
+      </label>
+      <button class="btn-ueben" onclick="openModal(11)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-12">
+      <input type="checkbox" class="comp-check" id="cb-12">
+      <label class="comp-text" for="cb-12">
+        Ich kann <strong>Krümmungsintervalle</strong> angeben und den Zusammenhang zum Vorzeichen von $f''$ erklären.
+      </label>
+      <button class="btn-ueben" onclick="openModal(12)">Üben</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 4: Vollständige Kurvendiskussion
+  ══════════════════════════════════════════════════════ -->
+  <div class="section s-purple">
+    <div class="section-header"><span class="icon">📊</span> Vollständige Kurvendiskussion</div>
+
+    <div class="comp-item" id="ci-13">
+      <input type="checkbox" class="comp-check" id="cb-13">
+      <label class="comp-text" for="cb-13">
+        Ich kann alle Schritte einer <strong>vollständigen Kurvendiskussion</strong> bei $f(x) = p(x) \cdot e^{g(x)}$ durchführen.
+      </label>
+      <button class="btn-ueben" onclick="openModal(13)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-14">
+      <input type="checkbox" class="comp-check" id="cb-14">
+      <label class="comp-text" for="cb-14">
+        Ich kann die <strong>Gaußsche Glockenkurve</strong> analysieren und die Parameter $\mu$ und $\sigma$ ablesen und berechnen.
+      </label>
+      <button class="btn-ueben" onclick="openModal(14)">Üben</button>
+    </div>
+
+  </div>
+
+  <!-- SECTION 5: Anwendungsaufgaben -->
+  <div class="section s-red">
+    <div class="section-header"><span class="icon">🌍</span> Anwendungsaufgaben</div>
+
+    <div class="comp-item" id="ci-15">
+      <input type="checkbox" class="comp-check" id="cb-15">
+      <label class="comp-text" for="cb-15">
+        Ich kann eine <strong>Abkühlungskurve</strong> (Newtonsches Abkühlungsgesetz) analysieren und interpretieren.
+      </label>
+      <button class="btn-ueben" onclick="openModal(15)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-16">
+      <input type="checkbox" class="comp-check" id="cb-16">
+      <label class="comp-text" for="cb-16">
+        Ich kann <strong>Gewinnfunktionen</strong> mit e-Funktionen analysieren und das Gewinnmaximum bestimmen.
+      </label>
+      <button class="btn-ueben" onclick="openModal(16)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-17">
+      <input type="checkbox" class="comp-check" id="cb-17">
+      <label class="comp-text" for="cb-17">
+        Ich kann <strong>Lernkurven</strong> (Gedächtnismodelle) mit e-Funktionen modellieren und auswerten.
+      </label>
+      <button class="btn-ueben" onclick="openModal(17)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-18">
+      <input type="checkbox" class="comp-check" id="cb-18">
+      <label class="comp-text" for="cb-18">
+        Ich kann <strong>radioaktiven Zerfall</strong> mit e-Funktionen beschreiben und Halbwertszeiten berechnen.
+      </label>
+      <button class="btn-ueben" onclick="openModal(18)">Üben</button>
+    </div>
+
+    <div class="comp-item" id="ci-19">
+      <input type="checkbox" class="comp-check" id="cb-19">
+      <label class="comp-text" for="cb-19">
+        ⭐&nbsp; Ich kann eine <strong>vollständige Modellierung</strong> im Sachkontext (Epidemie-Modell) mit e-Funktionen durchführen.
+      </label>
+      <button class="btn-ueben" onclick="openModal(19)">Üben</button>
+    </div>
+  </div>
+
+  <button id="reset-btn" onclick="resetAll()">🔄 Fortschritt zurücksetzen</button>
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     MODAL
+══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-top">
+      <h2 id="modal-title">Aufgabe</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="tab-btn active" onclick="switchTab('aufgabe')">📝 Aufgabe</button>
+      <button class="tab-btn"        onclick="switchTab('loesung')">▶ Lösung</button>
+      <button class="tab-btn"        onclick="switchTab('ki')">🤖 KI-Hilfe</button>
+    </div>
+    <div class="modal-body">
+      <div id="panel-aufgabe" class="tab-panel active"></div>
+      <div id="panel-loesung" class="tab-panel"></div>
+      <div id="panel-ki"      class="tab-panel"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ In Zwischenablage kopiert!</div>
+
+<script>
+/* ─────────────────────────────────────────
+   DATA: tasks, solutions, AI prompts
+─────────────────────────────────────────── */
+const DATA = {
+
+  1: {
+    title: "Aufgabe 1 – Produktregel",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Bestimmen Sie die Ableitung $f'(x)$ der folgenden Funktionen mithilfe der <strong>Produktregel</strong>.
+        Vereinfachen Sie Ihr Ergebnis soweit möglich.<br><br>
+        <strong>a)</strong> $f(x) = x^3 \\cdot e^{-x}$<br><br>
+        <strong>b)</strong> $f(x) = (x+1) \\cdot e^{x^2}$<br><br>
+        <strong>c)</strong> $f(x) = x^2 \\cdot \\cos(3x)$
+      </div>
+      <p style="font-size:.85rem;color:#777;">Zur Erinnerung: $(u \\cdot v)' = u' \\cdot v + u \\cdot v'$</p>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $f(x) = x^3 \\cdot e^{-x}$<br>
+        <div class="step">$u = x^3 \\Rightarrow u' = 3x^2$ &emsp; $v = e^{-x} \\Rightarrow v' = -e^{-x}$</div>
+        <div class="step">$f'(x) = 3x^2 \\cdot e^{-x} + x^3 \\cdot (-e^{-x})$</div>
+        <div class="step">$= e^{-x}(3x^2 - x^3)$</div>
+        <div class="result">$f'(x) = x^2 e^{-x}(3-x)$</div><br>
+
+        <strong>b)</strong> $f(x) = (x+1) \\cdot e^{x^2}$ &emsp; <em>(Kettenregel für $e^{x^2}$!)</em><br>
+        <div class="step">$u' = 1$ &emsp; $v' = 2x \\cdot e^{x^2}$</div>
+        <div class="step">$f'(x) = 1 \\cdot e^{x^2} + (x+1) \\cdot 2x \\cdot e^{x^2}$</div>
+        <div class="result">$f'(x) = e^{x^2}(1 + 2x^2 + 2x)$</div><br>
+
+        <strong>c)</strong> $f(x) = x^2 \\cdot \\cos(3x)$ &emsp; <em>(Kettenregel für $\\cos(3x)$!)</em><br>
+        <div class="step">$u' = 2x$ &emsp; $v' = -3\\sin(3x)$</div>
+        <div class="result">$f'(x) = 2x\\cos(3x) - 3x^2\\sin(3x)$</div>
+      </div>
+    `,
+    prompt: `Ich lerne Mathematik (12. Klasse) und übe die Produktregel.
+Aufgabe: Bestimme f'(x) mithilfe der Produktregel (u·v)' = u'·v + u·v'.
+a) f(x) = x³ · e^(-x)
+b) f(x) = (x+1) · e^(x²)
+c) f(x) = x² · cos(3x)
+
+Erkläre jeden Schritt ausführlich und zeige, wann du zusätzlich die Kettenregel brauchst.`
+  },
+
+  2: {
+    title: "Aufgabe 2 – Kettenregel",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Bestimmen Sie jeweils $f'(x)$ mithilfe der <strong>Kettenregel</strong>.<br><br>
+        <strong>a)</strong> $f(x) = e^{-x^2}$<br><br>
+        <strong>b)</strong> $f(x) = \\sin(2x)$<br><br>
+        <strong>c)</strong> $f(x) = (2x+1)^5$<br><br>
+        <strong>d)</strong> $f(x) = \\sqrt{x^2+1}$
+      </div>
+      <p style="font-size:.85rem;color:#777;">Zur Erinnerung: $(f(g(x)))' = f'(g(x)) \\cdot g'(x)$ &emsp; (äußere × innere Ableitung)</p>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $f(x) = e^{-x^2}$: äußere: $e^u$, innere: $u = -x^2$, $u' = -2x$<br>
+        <div class="result">$f'(x) = e^{-x^2} \\cdot (-2x) = -2x\\,e^{-x^2}$</div><br>
+
+        <strong>b)</strong> $f(x) = \\sin(2x)$: äußere: $\\sin(u)$, innere: $u=2x$, $u'=2$<br>
+        <div class="result">$f'(x) = \\cos(2x) \\cdot 2 = 2\\cos(2x)$</div><br>
+
+        <strong>c)</strong> $f(x) = (2x+1)^5$: äußere: $u^5$, innere: $u=2x+1$, $u'=2$<br>
+        <div class="result">$f'(x) = 5(2x+1)^4 \\cdot 2 = 10(2x+1)^4$</div><br>
+
+        <strong>d)</strong> $f(x) = \\sqrt{x^2+1} = (x^2+1)^{1/2}$: innere: $u'=2x$<br>
+        <div class="result">$f'(x) = \\dfrac{1}{2\\sqrt{x^2+1}} \\cdot 2x = \\dfrac{x}{\\sqrt{x^2+1}}$</div>
+      </div>
+    `,
+    prompt: `Ich übe die Kettenregel in Mathematik (12. Klasse).
+Schema: (f(g(x)))' = f'(g(x)) · g'(x), also äußere Ableitung × innere Ableitung.
+Aufgabe: Bestimme f'(x).
+a) f(x) = e^(-x²)
+b) f(x) = sin(2x)
+c) f(x) = (2x+1)^5
+d) f(x) = √(x²+1)
+
+Erkläre bei jeder Aufgabe: Was ist die äußere Funktion? Was die innere? Wie lautet die innere Ableitung?`
+  },
+
+  3: {
+    title: "Aufgabe 3 – Produkt- & Kettenregel kombiniert",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Bestimmen Sie $f'(x)$ und vereinfachen Sie das Ergebnis vollständig.<br><br>
+        <strong>a)</strong> $f(x) = x \\cdot e^{-x^2}$<br><br>
+        <strong>b)</strong> $f(x) = x^2 \\cdot e^{-\\frac{1}{2}x^2}$<br><br>
+        <strong>c)</strong> $\\star$ &nbsp; $f(x) = x \\cdot \\sqrt{x+1}$
+      </div>
+      <p style="font-size:.85rem;color:#777;"><em>Tipp: Zuerst Produktregel anwenden, dabei bei der Ableitung des zweiten Faktors die Kettenregel nicht vergessen!</em></p>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $f(x) = x \\cdot e^{-x^2}$<br>
+        <div class="step">$u = x,\\ u' = 1$ &emsp; $v = e^{-x^2},\\ v' = -2x \\cdot e^{-x^2}$</div>
+        <div class="step">$f'(x) = 1 \\cdot e^{-x^2} + x \\cdot (-2x) \\cdot e^{-x^2}$</div>
+        <div class="result">$f'(x) = e^{-x^2}(1 - 2x^2)$</div><br>
+
+        <strong>b)</strong> $f(x) = x^2 \\cdot e^{-x^2/2}$<br>
+        <div class="step">$u=x^2,\\ u'=2x$ &emsp; $v = e^{-x^2/2},\\ v' = -x \\cdot e^{-x^2/2}$</div>
+        <div class="step">$f'(x) = 2x \\cdot e^{-x^2/2} + x^2 \\cdot (-x) \\cdot e^{-x^2/2}$</div>
+        <div class="result">$f'(x) = x \\cdot e^{-x^2/2}(2-x^2)$</div><br>
+
+        <strong>c)</strong> $f(x) = x \\cdot \\sqrt{x+1}$<br>
+        <div class="step">$u=x,\\ u'=1$ &emsp; $v=\\sqrt{x+1},\\ v'=\\dfrac{1}{2\\sqrt{x+1}}$</div>
+        <div class="step">$f'(x) = \\sqrt{x+1} + \\dfrac{x}{2\\sqrt{x+1}} = \\dfrac{2(x+1)+x}{2\\sqrt{x+1}}$</div>
+        <div class="result">$f'(x) = \\dfrac{3x+2}{2\\sqrt{x+1}}$</div>
+      </div>
+    `,
+    prompt: `Ich übe die Kombination von Produkt- und Kettenregel (Mathematik 12. Klasse).
+Wenn in einem Produkt ein Faktor eine verkettete Funktion ist, braucht man beide Regeln.
+
+Aufgabe: Bestimme f'(x) und vereinfache.
+a) f(x) = x · e^(-x²)
+b) f(x) = x² · e^(-x²/2)
+c) f(x) = x · √(x+1)
+
+Zeige alle Schritte: Welche Regel wird wo angewendet? Wie wird ausgeklammert/vereinfacht?`
+  },
+
+  4: {
+    title: "Aufgabe 4 – Fehlersuche",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Ein Schüler hat die folgenden Ableitungen berechnet. Leider hat er <strong>Fehler gemacht</strong>!<br>
+        Finden Sie den Fehler, erklären Sie kurz was falsch ist, und berechnen Sie die richtige Ableitung.<br><br>
+        <strong>a)</strong> $f(x) = x^2 \\cdot e^{3x}$<br>
+        Schülerlösung: $f'(x) = 2x \\cdot e^{3x} + x^2 \\cdot e^{3x} = e^{3x}(2x + x^2)$<br><br>
+        <strong>b)</strong> $f(x) = x^2 \\cdot \\cos(2x)$<br>
+        Schülerlösung: $f'(x) = 2x \\cdot \\cos(2x) + x^2 \\cdot \\sin(2x)$<br><br>
+        <strong>c)</strong> $f(x) = (2x+1)^5$<br>
+        Schülerlösung: $f'(x) = 5(2x+1)^4$
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> Fehler: Bei $e^{3x}$ wurde die Kettenregel vergessen — $(e^{3x})' = 3e^{3x}$, nicht $e^{3x}$.<br>
+        <div class="result">$f'(x) = 2x \\cdot e^{3x} + x^2 \\cdot 3e^{3x} = e^{3x}(2x + 3x^2) = x \\cdot e^{3x}(2+3x)$</div><br>
+
+        <strong>b)</strong> Gleich zwei Fehler!<br>
+        (1) Die Ableitung von $\\cos$ ist $-\\sin$, nicht $+\\sin$.<br>
+        (2) Kettenregel bei $\\cos(2x)$: der Faktor 2 fehlt.<br>
+        <div class="result">$f'(x) = 2x \\cdot \\cos(2x) + x^2 \\cdot (-\\sin(2x)) \\cdot 2 = 2x\\cos(2x) - 2x^2\\sin(2x)$</div><br>
+
+        <strong>c)</strong> Fehler: Kettenregel vergessen! Die innere Ableitung $(2x+1)' = 2$ fehlt.<br>
+        <div class="result">$f'(x) = 5(2x+1)^4 \\cdot 2 = 10(2x+1)^4$</div>
+      </div>
+    `,
+    prompt: `Ich übe das Finden von Fehlern bei Ableitungen (Mathematik 12. Klasse).
+
+Aufgabe: Finde den Fehler, erkläre was falsch ist, und bestimme die richtige Ableitung.
+
+a) f(x) = x² · e^(3x) → Schülerlösung: f'(x) = e^(3x)(2x + x²)
+b) f(x) = x² · cos(2x) → Schülerlösung: f'(x) = 2x·cos(2x) + x²·sin(2x)
+c) f(x) = (2x+1)^5 → Schülerlösung: f'(x) = 5(2x+1)^4
+
+Benenne für jeden Fehler genau die Regel (Ketten-/Produktregel), die verletzt wurde.`
+  },
+
+  5: {
+    title: "Aufgabe 5 – Rückwärts denken",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Sie sehen die <strong>Ableitung</strong> $f'(x)$. Bestimmen Sie die ursprüngliche Funktion $f(x)$.<br><br>
+        <strong>a)</strong> $f'(x) = 2\\cos(2x)$<br><br>
+        <strong>b)</strong> $f'(x) = e^x(1+x)$<br><br>
+        <strong>c)</strong> $f'(x) = e^{-x}(1-x)$<br><br>
+        <strong>d)</strong> $\\star$ &nbsp; $f'(x) = 3x^2 \\cdot e^{x^3}$
+      </div>
+      <p style="font-size:.85rem;color:#777;"><em>Tipp: Überlegen Sie, welche Regel (Produkt-/Kettenregel) angewendet wurde.</em></p>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $f'(x) = 2\\cos(2x)$: innere Funktion $2x$, Ableitung $2$, äußere Funktion $\\sin$<br>
+        <div class="result">$f(x) = \\sin(2x)$</div><br>
+
+        <strong>b)</strong> $f'(x) = e^x(1+x) = 1 \\cdot e^x + x \\cdot e^x$ → Produktregel mit $u=x$, $v=e^x$<br>
+        <div class="result">$f(x) = x \\cdot e^x$</div><br>
+
+        <strong>c)</strong> $f'(x) = e^{-x}(1-x) = 1 \\cdot e^{-x} + x \\cdot (-e^{-x}) = e^{-x} - x \\cdot e^{-x}$<br>
+        → Produktregel mit $u=x$, $v=e^{-x}$ ergibt $u' \\cdot v + u \\cdot v' = e^{-x} + x(-e^{-x})$ ✓<br>
+        <div class="result">$f(x) = x \\cdot e^{-x}$</div><br>
+
+        <strong>d)</strong> $f'(x) = 3x^2 \\cdot e^{x^3}$: innere Funktion $x^3$, Ableitung $3x^2$ → Kettenregel mit $e^{x^3}$<br>
+        <div class="result">$f(x) = e^{x^3}$</div>
+      </div>
+    `,
+    prompt: `Ich übe das "Rückwärtsdenken" bei Ableitungen – gegeben ist f'(x), gesucht ist f(x).
+
+a) f'(x) = 2cos(2x)
+b) f'(x) = e^x(1+x)
+c) f'(x) = e^(-x)(1-x)
+d) f'(x) = 3x² · e^(x³)
+
+Erkläre bei jeder Aufgabe: Welche Ableitungsregel wurde verwendet? Welche Funktion f ergibt diese Ableitung?`
+  },
+
+  6: {
+    title: "Aufgabe 6 – Satz vom Nullprodukt",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Lösen Sie die folgenden Gleichungen mithilfe des <strong>Satzes vom Nullprodukt</strong>.<br>
+        Begründen Sie jeweils, warum der e-Faktor weggelassen werden kann.<br><br>
+        <strong>a)</strong> $f'(x) = e^{-x} \\cdot (-x^2 + 4x - 2) = 0$<br><br>
+        <strong>b)</strong> $f'(x) = e^{-x/2} \\cdot x(4-x) = 0$<br><br>
+        <strong>c)</strong> $f(x) = (x^2 - 2x) \\cdot e^{-x} = 0$
+      </div>
+      <p style="font-size:.85rem;color:#777;"><em>Merke: $e^x > 0$ für alle $x \\in \\mathbb{R}$ — der e-Faktor kann niemals Null werden!</em></p>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> Da $e^{-x} > 0$ für alle $x$, gilt:<br>
+        $-x^2 + 4x - 2 = 0 \\Leftrightarrow x^2 - 4x + 2 = 0$<br>
+        $x = \\dfrac{4 \\pm \\sqrt{16-8}}{2} = 2 \\pm \\sqrt{2}$<br>
+        <div class="result">$x_1 = 2 - \\sqrt{2} \\approx 0{,}59$ &emsp; $x_2 = 2 + \\sqrt{2} \\approx 3{,}41$</div><br>
+
+        <strong>b)</strong> Da $e^{-x/2} > 0$, gilt: $x(4-x) = 0$<br>
+        Nullprodukt: $x = 0$ oder $4-x = 0$<br>
+        <div class="result">$x_1 = 0$ &emsp; $x_2 = 4$</div><br>
+
+        <strong>c)</strong> Da $e^{-x} > 0$, gilt: $x^2 - 2x = 0$<br>
+        $x(x-2) = 0$ (nochmal Nullprodukt!)<br>
+        <div class="result">$x_1 = 0$ &emsp; $x_2 = 2$</div>
+      </div>
+    `,
+    prompt: `Ich lerne den Satz vom Nullprodukt bei e-Funktionen (Mathematik 12. Klasse).
+
+Satz: a·b = 0 genau dann wenn a = 0 oder b = 0.
+Wichtig: e^x ist für alle x∈ℝ positiv, kann also niemals 0 werden!
+
+Aufgabe: Löse die Gleichungen und erkläre das Vorgehen.
+a) e^(-x) · (-x² + 4x - 2) = 0
+b) e^(-x/2) · x(4-x) = 0
+c) (x² - 2x) · e^(-x) = 0`
+  },
+
+  7: {
+    title: "Aufgabe 7 – VZW-Kriterium für Extrempunkte",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Bestimmen Sie alle <strong>Hochpunkte und Tiefpunkte</strong> der Funktion
+        $$f(x) = (x^2 - 2x) \\cdot e^{-x}$$
+        mithilfe des Vorzeichenwechselkriteriums. Geben Sie die Koordinaten der Extrempunkte an.
+      </div>
+      <p style="font-size:.85rem;color:#777;"><em>Tipp: Schritt 1: f'(x) berechnen. Schritt 2: f'(x)=0 lösen. Schritt 3: VZW von f' prüfen.</em></p>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>1. Ableitung:</strong><br>
+        $f'(x) = (2x-2)e^{-x} + (x^2-2x)(-e^{-x}) = e^{-x}(-x^2+4x-2)$<br><br>
+
+        <strong>2. Nullstellen:</strong> $-x^2+4x-2 = 0 \\Rightarrow x_{1,2} = 2 \\pm \\sqrt{2}$<br><br>
+
+        <strong>3. VZW-Tabelle:</strong><br>
+        <div class="step">
+          Probe: $f'(0) = 1 \\cdot (-2) < 0$ &emsp; $f'(2) = e^{-2} \\cdot 2 > 0$ &emsp; $f'(5) = e^{-5}(-7) < 0$
+        </div>
+        <table style="border-collapse:collapse;margin:.5rem 0;font-size:.85rem;">
+          <tr>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$x$</td>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$\\cdots$</td>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$x_1 \\approx 0{,}59$</td>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$\\cdots$</td>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$x_2 \\approx 3{,}41$</td>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$\\cdots$</td>
+          </tr>
+          <tr>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$f'(x)$</td>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$-$</td>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$0$</td>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$+$</td>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$0$</td>
+            <td style="padding:.2rem .5rem;border:1px solid #ccc;">$-$</td>
+          </tr>
+        </table>
+        VZW $- \\to +$ bei $x_1$: <strong>Tiefpunkt</strong> &emsp; VZW $+ \\to -$ bei $x_2$: <strong>Hochpunkt</strong><br><br>
+
+        <strong>y-Werte:</strong> $f(2-\\sqrt{2}) \\approx -0{,}46$ &emsp; $f(2+\\sqrt{2}) \\approx 0{,}16$<br>
+        <div class="result">$T(2-\\sqrt{2}\\,|{-}0{,}46) \\approx (0{,}59\\,|{-}0{,}46)$ &emsp; $H(2+\\sqrt{2}\\,|\\,0{,}16) \\approx (3{,}41\\,|\\,0{,}16)$</div>
+      </div>
+    `,
+    prompt: `Ich bestimme Extrempunkte mit dem Vorzeichenwechselkriterium (Mathematik 12. Klasse).
+
+Funktion: f(x) = (x²-2x)·e^(-x)
+
+Gehe vor wie folgt:
+1. f'(x) berechnen (Produktregel)
+2. f'(x) = 0 lösen (Satz vom Nullprodukt)
+3. VZW-Tabelle erstellen: Probe-Werte links/rechts der Nullstellen in f' einsetzen
+4. Tiefpunkt: f' wechselt von - nach +; Hochpunkt: von + nach -
+5. y-Koordinaten berechnen
+
+Erkläre die VZW-Tabelle ausführlich.`
+  },
+
+  8: {
+    title: "Aufgabe 8 – Hinreichende Bedingung mit f''",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Gegeben ist $f(x) = x^2 \\cdot e^{-x}$.<br><br>
+        <strong>a)</strong> Berechnen Sie $f'(x)$ und bestimmen Sie alle Nullstellen von $f'$.<br><br>
+        <strong>b)</strong> Berechnen Sie $f''(x)$.<br><br>
+        <strong>c)</strong> Weisen Sie mithilfe der <strong>hinreichenden Bedingung</strong> nach, ob es sich bei den gefundenen Stellen um Hoch- oder Tiefpunkte handelt.<br><br>
+        <strong>d)</strong> Geben Sie die Koordinaten der Extrempunkte an.
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $f'(x) = 2x \\cdot e^{-x} + x^2 \\cdot (-e^{-x}) = e^{-x} \\cdot x(2-x)$<br>
+        Nullstellen: $x_1 = 0$ und $x_2 = 2$<br><br>
+
+        <strong>b)</strong> $f''(x) = e^{-x}(x^2 - 4x + 2)$ <em>(via Produktregel)</em><br><br>
+
+        <strong>c)</strong> Hinreichende Bedingung: $f''(x_E) \\neq 0$<br>
+        $f''(0) = e^0 \\cdot 2 = 2 > 0 \\Rightarrow$ <strong>Tiefpunkt</strong><br>
+        $f''(2) = e^{-2}(4-8+2) = -2e^{-2} < 0 \\Rightarrow$ <strong>Hochpunkt</strong><br><br>
+
+        <strong>d)</strong> $f(0) = 0$ &emsp; $f(2) = 4e^{-2} \\approx 0{,}54$<br>
+        <div class="result">Tiefpunkt: $T(0\\,|\\,0)$ &emsp; Hochpunkt: $H(2\\,|\\,4e^{-2}) \\approx (2\\,|\\,0{,}54)$</div>
+      </div>
+    `,
+    prompt: `Ich übe die hinreichende Bedingung für Extrempunkte (Mathematik 12. Klasse).
+
+Funktion: f(x) = x² · e^(-x)
+
+Hinreichende Bedingung:
+- f''(x_E) < 0: Hochpunkt
+- f''(x_E) > 0: Tiefpunkt
+
+Aufgabe: Berechne f'(x), löse f'(x)=0, berechne f''(x), setze die Nullstellen ein und klassifiziere die Extrempunkte. Erkläre jeden Schritt.`
+  },
+
+  9: {
+    title: "Aufgabe 9 – Sachkontext Medikament",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Nach Einnahme eines Schmerzmittels wird die Wirkstoffkonzentration im Blut modelliert durch:
+        $$c(t) = 5t \\cdot e^{-0{,}5\\,t} \\qquad (t \\text{ in Stunden})$$
+        <strong>a)</strong> Berechnen Sie $c'(t)$ und bestimmen Sie, wann die Konzentration maximal ist.<br><br>
+        <strong>b)</strong> Wie hoch ist die maximale Konzentration? Geben Sie die Einheit an.<br><br>
+        <strong>c)</strong> Bestimmen Sie den Wendepunkt und erklären Sie seine Bedeutung im Sachzusammenhang.
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $c'(t) = 5 \\cdot e^{-0{,}5t} + 5t \\cdot (-0{,}5) \\cdot e^{-0{,}5t} = 5e^{-0{,}5t}(1 - 0{,}5t)$<br>
+        $c'(t) = 0 \\Rightarrow 1 - 0{,}5t = 0 \\Rightarrow t = 2$<br>
+        <div class="result">Nach $t = 2$ Stunden ist die Konzentration maximal.</div><br>
+
+        <strong>b)</strong> $c(2) = 5 \\cdot 2 \\cdot e^{-1} = \\dfrac{10}{e} \\approx 3{,}68\\,\\text{mg/L}$<br>
+        <div class="result">$c_{\\max} \\approx 3{,}68\\,\\text{mg/L}$</div><br>
+
+        <strong>c)</strong> $c''(t) = 5e^{-0{,}5t}(0{,}25t - 1) = 0 \\Rightarrow t = 4$<br>
+        $c(4) = 20e^{-2} \\approx 2{,}71\\,\\text{mg/L}$<br>
+        <div class="result">Wendepunkt $W(4\\,|\\,2{,}71)$: Nach 4 Stunden verlangsamt sich der Konzentrationsabfall.</div>
+      </div>
+    `,
+    prompt: `Ich löse eine Sachaufgabe zur Kurvendiskussion (Mathematik 12. Klasse, Medikamentenabbau).
+
+Funktion: c(t) = 5t · e^(-0,5t) [Konzentration in mg/L, t in Stunden]
+
+Aufgaben:
+a) Wann ist die Konzentration maximal? (c'(t) = 0 lösen)
+b) Wie hoch ist das Maximum?
+c) Wendepunkt bestimmen und im Sachkontext interpretieren: Was bedeutet der Wendepunkt für den Abbau des Medikaments?`
+  },
+
+  10: {
+    title: "Aufgabe 10 – Zweite Ableitung",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Berechnen Sie die zweite Ableitung $f''(x)$ der folgenden Funktionen. Vereinfachen Sie.<br><br>
+        <strong>a)</strong> $f(x) = e^{-x^2}$<br><br>
+        <strong>b)</strong> $f(x) = x \\cdot e^{-x}$<br><br>
+        <strong>c)</strong> $f(x) = (x-1) \\cdot e^x$
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $f(x) = e^{-x^2}$<br>
+        $f'(x) = -2x \\cdot e^{-x^2}$<br>
+        $f''(x) = -2 \\cdot e^{-x^2} + (-2x) \\cdot (-2x) \\cdot e^{-x^2}$<br>
+        <div class="result">$f''(x) = e^{-x^2}(4x^2 - 2)$</div><br>
+
+        <strong>b)</strong> $f(x) = x \\cdot e^{-x}$<br>
+        $f'(x) = e^{-x}(1-x)$<br>
+        $f''(x) = -e^{-x}(1-x) + e^{-x}(-1)$<br>
+        <div class="result">$f''(x) = e^{-x}(x-2)$</div><br>
+
+        <strong>c)</strong> $f(x) = (x-1) \\cdot e^x$<br>
+        $f'(x) = e^x + (x-1)e^x = x \\cdot e^x$<br>
+        $f''(x) = 1 \\cdot e^x + x \\cdot e^x$<br>
+        <div class="result">$f''(x) = e^x(1+x)$</div>
+      </div>
+    `,
+    prompt: `Ich übe die Berechnung der zweiten Ableitung bei e-Funktionen (Mathematik 12. Klasse).
+
+a) f(x) = e^(-x²)
+b) f(x) = x · e^(-x)
+c) f(x) = (x-1) · e^x
+
+Erkläre jeden Schritt: Was ist f'(x)? Wie wird Produktregel auf f' angewendet um f'' zu erhalten? Wie wird ausgeklammert?`
+  },
+
+  11: {
+    title: "Aufgabe 11 – Wendepunkte bestimmen",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Bestimmen Sie alle <strong>Wendepunkte</strong> der Funktion $f(x) = (x-1) \\cdot e^x$<br><br>
+        Gehen Sie vor wie folgt:<br>
+        1. Berechnen Sie $f''(x)$ und $f'''(x)$.<br>
+        2. Lösen Sie $f''(x) = 0$.<br>
+        3. Prüfen Sie mit dem VZW-Kriterium (oder mit $f'''$), ob ein Wendepunkt vorliegt.<br>
+        4. Geben Sie die Koordinaten des Wendepunkts an.
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>Ableitungen:</strong><br>
+        $f'(x) = x \\cdot e^x$ (s. Aufgabe 10c)<br>
+        $f''(x) = e^x(1+x)$<br>
+        $f'''(x) = e^x(1+x) + e^x = e^x(2+x)$<br><br>
+
+        <strong>Nullstelle von f'':</strong><br>
+        $f''(x) = 0 \\Rightarrow e^x(1+x) = 0 \\Rightarrow 1+x = 0 \\Rightarrow x_W = -1$<br><br>
+
+        <strong>Bestätigung:</strong><br>
+        $f'''(-1) = e^{-1}(2-1) = \\frac{1}{e} \\neq 0 \\checkmark$ → es ist ein Wendepunkt<br><br>
+
+        <strong>y-Koordinate:</strong><br>
+        $y_W = f(-1) = (-1-1) \\cdot e^{-1} = -\\frac{2}{e} \\approx -0{,}74$<br>
+        <div class="result">Wendepunkt: $W\\!\\left(-1\\,\\middle|\\,-\\dfrac{2}{e}\\right) \\approx (-1\\,|\\,-0{,}74)$</div>
+      </div>
+    `,
+    prompt: `Ich bestimme Wendepunkte bei e-Funktionen (Mathematik 12. Klasse).
+
+Funktion: f(x) = (x-1) · e^x
+
+Schritte:
+1. f'(x) und f''(x) berechnen
+2. f''(x) = 0 lösen (Satz vom Nullprodukt!)
+3. f'''(x_W) ≠ 0 prüfen (hinreichende Bedingung) oder VZW-Kriterium anwenden
+4. y-Wert berechnen
+
+Erkläre ausführlich, warum f'''(x_W) ≠ 0 ein Wendepunkt bestätigt.`
+  },
+
+  12: {
+    title: "Aufgabe 12 – Krümmungsintervalle",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Gegeben ist $f(x) = x \\cdot e^{-x}$.<br><br>
+        Es ist bekannt: $f''(x) = e^{-x}(x-2)$.<br><br>
+        <strong>a)</strong> Bestimmen Sie, für welche $x$ gilt: $f''(x) > 0$ und $f''(x) < 0$.<br><br>
+        <strong>b)</strong> Geben Sie die <strong>Krümmungsintervalle</strong> an und erklären Sie den geometrischen Sinn.<br><br>
+        <strong>c)</strong> Wo liegt der Wendepunkt?
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>Vorzeichen von $f''(x) = e^{-x}(x-2)$:</strong><br>
+        Da $e^{-x} > 0$ immer, gilt: Vorzeichen von $f''$ = Vorzeichen von $(x-2)$.<br><br>
+
+        $x < 2$: $x-2 < 0 \\Rightarrow f''(x) < 0$ → rechtsgekrümmt ($\\cap$)<br>
+        $x > 2$: $x-2 > 0 \\Rightarrow f''(x) > 0$ → linksgekrümmt ($\\cup$)<br><br>
+
+        <strong>b)</strong><br>
+        <div class="step">Rechtsgekrümmt (Konkav): $x \\in (-\\infty;\\ 2)$</div>
+        <div class="step">Linksgekrümmt (Konvex): $x \\in (2;\\ +\\infty)$</div>
+        Geometrisch: Links von 2 öffnet die Kurve nach unten (wie $\\cap$), rechts nach oben (wie $\\cup$).<br><br>
+
+        <strong>c)</strong> VZW von $f''$ bei $x=2$: $f''$ wechselt von $-$ nach $+$<br>
+        $y_W = f(2) = 2e^{-2} \\approx 0{,}27$<br>
+        <div class="result">Wendepunkt: $W(2\\,|\\,2e^{-2}) \\approx (2\\,|\\,0{,}27)$</div>
+      </div>
+    `,
+    prompt: `Ich übe Krümmungsintervalle und Wendepunkte (Mathematik 12. Klasse).
+
+f(x) = x · e^(-x), f''(x) = e^(-x)(x-2)
+
+Aufgaben:
+a) Für welche x gilt f'' > 0 (linksgekrümmt/konvex) und f'' < 0 (rechtsgekrümmt/konkav)?
+b) Gib die Krümmungsintervalle an. Was bedeutet das geometrisch für den Graphen?
+c) Wo liegt der Wendepunkt?
+
+Erkläre den Zusammenhang: f''(x) > 0 → konvex (∪) und f''(x) < 0 → konkav (∩).`
+  },
+
+  13: {
+    title: "Aufgabe 13 – Vollständige Kurvendiskussion",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Führen Sie eine <strong>vollständige Kurvendiskussion</strong> der Funktion
+        $$f(x) = x^2 \\cdot e^{-\\frac{1}{2}x}$$
+        Bestimmen Sie: Nullstellen, Extrempunkte (mit VZW), Wendepunkte (mit VZW), Verhalten für $x \\to \\pm \\infty$.
+      </div>
+      <p style="font-size:.85rem;color:#777;"><em>Schritt 1: Ableitungen. Schritt 2: Nullstellen. Schritt 3: Extrempunkte. Schritt 4: Wendepunkte. Schritt 5: Grenzverhalten.</em></p>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>Ableitungen:</strong><br>
+        $f'(x) = e^{-x/2} \\cdot \\dfrac{x(4-x)}{2}$<br>
+        $f''(x) = e^{-x/2} \\cdot \\dfrac{x^2-8x+8}{4}$<br><br>
+
+        <strong>Nullstellen:</strong> $x^2 = 0$ → $N_1(0|0)$, da $e^{-x/2} \\neq 0$ &emsp; (doppelte Nullstelle: Berührt x-Achse)<br><br>
+
+        <strong>Extrempunkte:</strong> $f'(x) = 0 \\Rightarrow x(4-x) = 0 \\Rightarrow x_1=0,\\ x_2=4$<br>
+        $f''(0) = e^0 \\cdot 2 = 2 > 0 \\Rightarrow T(0|0)$<br>
+        $f''(4) = e^{-2} \\cdot (-2) < 0 \\Rightarrow H(4|16e^{-2}) \\approx (4|2{,}17)$<br><br>
+
+        <strong>Wendepunkte:</strong> $x^2-8x+8 = 0 \\Rightarrow x = 4 \\pm 2\\sqrt{2}$<br>
+        $W_1(4-2\\sqrt{2}\\,|\\ldots) \\approx (1{,}17\\,|\\ldots)$ und $W_2(4+2\\sqrt{2}\\,|\\ldots) \\approx (6{,}83\\,|\\ldots)$<br><br>
+
+        <strong>Grenzverhalten:</strong><br>
+        $x \\to +\\infty$: e-Funktion dominiert: $f(x) \\to 0$ (von oben)<br>
+        $x \\to -\\infty$: $e^{-x/2} \\to \\infty$, $x^2 \\to \\infty$: $f(x) \\to +\\infty$<br>
+        <div class="result">$T(0|0)$; $H(4|16e^{-2})$; $W_{1,2}(4 \\pm 2\\sqrt{2}|\\ldots)$</div>
+      </div>
+    `,
+    prompt: `Ich übe die vollständige Kurvendiskussion (Mathematik 12. Klasse).
+
+Funktion: f(x) = x² · e^(-x/2)
+
+Führe alle Schritte durch:
+1. f'(x) und f''(x) bestimmen (Produktregel!)
+2. Nullstellen (Satz vom Nullprodukt)
+3. Extrempunkte: f'(x)=0 lösen, VZW oder f'' einsetzen
+4. Wendepunkte: f''(x)=0 lösen, VZW bestätigen
+5. Grenzverhalten für x→+∞ und x→-∞
+
+Erkläre warum x^n · e^(-x) → 0 für x→+∞.`
+  },
+
+  14: {
+    title: "Aufgabe 14 – Gaußsche Glockenkurve",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Die Dichtefunktion der Normalverteilung lautet:
+        $$\\varphi(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} \\cdot e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$$
+        Für die Körpergröße von Männern gilt: $\\mu = 180\\,\\text{cm}$, $\\sigma = 7\\,\\text{cm}$.<br><br>
+        <strong>a)</strong> Bestimmen Sie den <strong>Hochpunkt</strong> der Glockenkurve. Interpretieren Sie das Ergebnis.<br><br>
+        <strong>b)</strong> Die Wendepunkte liegen bei $x = \\mu \\pm \\sigma$. Berechnen Sie die konkreten Werte.<br><br>
+        <strong>c)</strong> Welcher Anteil der Männer liegt zwischen den Wendepunkten?
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a) Hochpunkt:</strong><br>
+        $\\varphi'(x) = 0 \\Rightarrow -(x-180) = 0 \\Rightarrow x_H = 180$<br>
+        $\\varphi''(x_H) < 0 \\Rightarrow$ Hochpunkt ✓<br>
+        Interpretation: Am häufigsten tritt die Körpergröße $\\mu = 180\\,\\text{cm}$ auf (der Modus ist gleich dem Erwartungswert).<br>
+        <div class="result">$H\\!\\left(180\\,\\middle|\\,\\frac{1}{7\\sqrt{2\\pi}}\\right) \\approx (180\\,|\\,0{,}057)$</div><br>
+
+        <strong>b) Wendepunkte:</strong><br>
+        $x_W = \\mu \\pm \\sigma = 180 \\pm 7$<br>
+        <div class="result">$W_1(173\\,|\\ldots)$ und $W_2(187\\,|\\ldots)$</div><br>
+
+        <strong>c) 68%-Regel:</strong><br>
+        <div class="result">Etwa 68% aller Männer sind zwischen 173 cm und 187 cm groß.</div><br>
+        Zusatz: $\\mu \\pm 2\\sigma$: 166–194 cm (≈ 95%) &emsp; $\\mu \\pm 3\\sigma$: 159–201 cm (≈ 99,7%)
+      </div>
+    `,
+    prompt: `Ich verbinde Analysis mit Statistik am Beispiel der Gaußschen Glockenkurve (Mathematik 12. Klasse).
+
+φ(x) = (1/(σ√(2π))) · e^(-(x-μ)²/(2σ²)), mit μ=180, σ=7
+
+Aufgaben:
+a) Berechne den Hochpunkt. Was ist seine statistische Bedeutung?
+b) Zeige, dass die Wendepunkte bei x = μ ± σ = 173 und 187 liegen.
+c) Was bedeutet die 68%-Regel (1-σ-Intervall)?
+
+Erkläre den Zusammenhang: Hochpunkt = Erwartungswert, Wendepunktabstand = Standardabweichung.`
+  },
+
+  15: {
+    title: "Aufgabe 16 – Abkühlungsgesetz",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Eine Tasse Tee hat beim Hinstellen eine Temperatur von 95°C. Die Raumtemperatur beträgt 20°C.
+        Die Abkühlungsfunktion lautet:
+        $$T(t) = 20 + 75 \\cdot e^{-0{,}04\\,t} \\qquad (t \\text{ in Minuten})$$
+        <strong>a)</strong> Überprüfen Sie: Welche Temperatur hat der Tee zum Zeitpunkt $t = 0$?<br><br>
+        <strong>b)</strong> Berechnen Sie $T'(t)$ und bestimmen Sie, wie schnell der Tee nach 10 Minuten abkühlt. Geben Sie die Einheit an.<br><br>
+        <strong>c)</strong> Nach wie vielen Minuten hat der Tee genau 50°C? (Gleichung lösen)<br><br>
+        <strong>d)</strong> Erklären Sie, warum $T(t)$ keinen Hochpunkt hat, obwohl die Funktion einen Grenzwert besitzt.
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $T(0) = 20 + 75 \\cdot e^0 = 20 + 75 = 95\\,^\\circ\\text{C}$ ✓<br><br>
+        <strong>b)</strong> $T'(t) = 75 \\cdot (-0{,}04) \\cdot e^{-0{,}04t} = -3 \\cdot e^{-0{,}04t}$<br>
+        $T'(10) = -3 \\cdot e^{-0{,}4} \\approx -3 \\cdot 0{,}670 \\approx -2{,}01\\,\\frac{^\\circ\\text{C}}{\\text{min}}$<br>
+        <div class="result">Nach 10 Minuten kühlt der Tee mit ca. $2{,}0\\,\\frac{^\\circ\\text{C}}{\\text{min}}$ ab.</div><br>
+        <strong>c)</strong> $20 + 75 \\cdot e^{-0{,}04t} = 50$<br>
+        $e^{-0{,}04t} = \\dfrac{30}{75} = 0{,}4$ &emsp; $\\Rightarrow$ &emsp; $-0{,}04t = \\ln(0{,}4)$<br>
+        <div class="result">$t = \\dfrac{-\\ln(0{,}4)}{0{,}04} \\approx 22{,}9\\,\\text{min}$</div><br>
+        <strong>d)</strong> $T'(t) = -3 \\cdot e^{-0{,}04t}$ ist für alle $t$ negativ, da $e^{\\ldots} > 0$ und Faktor $-3 < 0$.<br>
+        Die Funktion fällt streng monoton — kein Vorzeichenwechsel von $T'$, also kein Extrempunkt.
+        Der Grenzwert $\\lim_{t\\to\\infty} T(t) = 20\\,^\\circ\\text{C}$ ist eine Asymptote, kein Hochpunkt.
+      </div>
+    `,
+    prompt: `Ich löse eine Anwendungsaufgabe zum Newtonschen Abkühlungsgesetz (Mathematik 12. Klasse).
+
+Funktion: T(t) = 20 + 75·e^(-0,04t) [Temperatur in °C, t in Minuten]
+
+Aufgaben:
+a) T(0) überprüfen
+b) T'(t) berechnen (Kettenregel!), T'(10) mit Einheit interpretieren
+c) T(t) = 50 lösen: Exponentialgleichung → Logarithmus anwenden
+d) Warum hat T(t) keinen Hochpunkt, obwohl es einen Grenzwert gibt?
+
+Erkläre den Schritt von der Exponentialgleichung zur Logarithmusrechnung ausführlich.`
+  },
+
+  16: {
+    title: "Aufgabe 17 – Gewinnfunktion",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Ein Unternehmen modelliert seinen Tagesgewinn (in Tausend €) in Abhängigkeit vom Verkaufspreis $x$ (in €):
+        $$G(x) = (x - 10) \\cdot e^{-0{,}1x} \\qquad (x \\geq 0)$$
+        <strong>a)</strong> Berechnen Sie $G'(x)$.<br><br>
+        <strong>b)</strong> Bestimmen Sie den optimalen Verkaufspreis (Gewinnmaximum).<br><br>
+        <strong>c)</strong> Wie hoch ist der maximale Tagesgewinn in Euro?<br><br>
+        <strong>d)</strong> Bei welchem Preis macht das Unternehmen keinen Gewinn? ($G(x) = 0$)
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $G'(x) = 1 \\cdot e^{-0{,}1x} + (x-10)(-0{,}1)e^{-0{,}1x} = e^{-0{,}1x}(1 - 0{,}1(x-10))$<br>
+        $= e^{-0{,}1x}(2 - 0{,}1x)$<br><br>
+        <strong>b)</strong> $G'(x) = 0 \\Rightarrow 2 - 0{,}1x = 0 \\Rightarrow x^* = 20$<br>
+        $G''(x) = e^{-0{,}1x}(0{,}1x - 3)$, &emsp; $G''(20) = e^{-2}(-1) < 0 \\Rightarrow$ Hochpunkt ✓<br>
+        <div class="result">Optimaler Verkaufspreis: $x^* = 20$ €</div><br>
+        <strong>c)</strong> $G(20) = (20-10) \\cdot e^{-2} = 10e^{-2} \\approx 1{,}353$<br>
+        <div class="result">Maximaler Tagesgewinn: ≈ 1353 €</div><br>
+        <strong>d)</strong> $G(x) = 0 \\Rightarrow (x-10) \\cdot e^{-0{,}1x} = 0$<br>
+        Da $e^{-0{,}1x} \\neq 0$: &emsp; $x - 10 = 0 \\Rightarrow x = 10$<br>
+        <div class="result">Bei einem Preis von genau 10 € ist der Gewinn null (Gewinnschwelle).</div>
+      </div>
+    `,
+    prompt: `Ich löse eine wirtschaftliche Anwendungsaufgabe mit e-Funktionen (Mathematik 12. Klasse).
+
+Gewinnfunktion: G(x) = (x-10)·e^(-0,1x) [Gewinn in T€, x = Preis in €]
+
+Aufgaben:
+a) G'(x) berechnen (Produkt- + Kettenregel)
+b) Gewinnmaximum: G'(x) = 0 lösen, mit G'' als Hochpunkt bestätigen
+c) Maximalen Gewinn berechnen und in Euro umrechnen
+d) Nullstelle (Gewinnschwelle) bestimmen
+
+Erkläre die wirtschaftliche Bedeutung jedes Ergebnisses.`
+  },
+
+  17: {
+    title: "Aufgabe 18 – Lernkurve",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Der Lernfortschritt beim Vokabellernen wird modelliert durch:
+        $$L(t) = 100 \\cdot (1 - e^{-0{,}2t}) \\qquad (t \\text{ in Stunden})$$
+        $L(t)$ gibt den prozentualen Anteil der behaltenen Vokabeln an.<br><br>
+        <strong>a)</strong> Berechnen Sie $L(0)$ und $\\lim_{t \\to \\infty} L(t)$. Interpretieren Sie die Ergebnisse.<br><br>
+        <strong>b)</strong> Berechnen Sie $L'(t)$. Wie schnell lernt man nach 5 Stunden?<br><br>
+        <strong>c)</strong> Zeigen Sie: $L'(t) = 0{,}2 \\cdot (100 - L(t))$. Was bedeutet das inhaltlich?<br><br>
+        <strong>d)</strong> Nach wie vielen Stunden hat man 80% der Vokabeln behalten?
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $L(0) = 100(1-e^0) = 0\\%$ — am Anfang kennt man keine Vokabeln.<br>
+        $\\lim_{t\\to\\infty} L(t) = 100(1-0) = 100\\%$ — theoretisches Maximum: alle Vokabeln (asymptotisch).<br><br>
+        <strong>b)</strong> $L'(t) = 100 \\cdot 0{,}2 \\cdot e^{-0{,}2t} = 20 \\cdot e^{-0{,}2t}$<br>
+        $L'(5) = 20 \\cdot e^{-1} \\approx 7{,}36\\,\\frac{\\%}{\\text{h}}$<br>
+        <div class="result">Nach 5 Stunden steigt der Lernfortschritt noch mit ca. $7{,}4\\,\\%/\\text{h}$.</div><br>
+        <strong>c)</strong> $0{,}2 \\cdot (100 - L(t)) = 0{,}2 \\cdot 100e^{-0{,}2t} = 20e^{-0{,}2t} = L'(t)$ ✓<br>
+        <em>Inhaltlich:</em> Die Lernrate ist proportional zum <strong>noch nicht gelernten</strong> Anteil.<br>
+        Je mehr man schon kann, desto langsamer geht es voran.<br><br>
+        <strong>d)</strong> $100(1-e^{-0{,}2t}) = 80 \\Rightarrow e^{-0{,}2t} = 0{,}2 \\Rightarrow -0{,}2t = \\ln(0{,}2)$<br>
+        <div class="result">$t = \\dfrac{\\ln 5}{0{,}2} \\approx 8{,}05\\,\\text{h}$</div>
+      </div>
+    `,
+    prompt: `Ich analysiere eine Lernkurve mit e-Funktionen (Mathematik 12. Klasse).
+
+Funktion: L(t) = 100·(1 - e^(-0,2t)) [Lernfortschritt in %, t in Stunden]
+
+Aufgaben:
+a) L(0) und Grenzwert für t→∞ berechnen und sinnvoll interpretieren
+b) L'(t) berechnen (Kettenregel!), L'(5) mit Einheit angeben
+c) Zeigen: L'(t) = 0,2·(100 - L(t)) — was bedeutet das inhaltlich?
+d) t für L(t) = 80 bestimmen (Exponentialgleichung → ln)
+
+Erkläre, warum die Lernrate mit zunehmender Zeit abnimmt.`
+  },
+
+  18: {
+    title: "Aufgabe 19 – Radioaktiver Zerfall",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>Aufgabe (Klausurstil):</strong><br><br>
+        Eine radioaktive Substanz zerfällt nach dem Gesetz:
+        $$N(t) = N_0 \\cdot e^{-\\lambda t}$$
+        Für Jod-131 gilt: Halbwertszeit $T_{1/2} = 8{,}02$ Tage, Anfangsmenge $N_0 = 400\\,\\text{mg}$.<br><br>
+        <strong>a)</strong> Berechnen Sie die Zerfallskonstante $\\lambda$.<br>
+        <em>Hinweis: Aus $N(T_{1/2}) = \\frac{N_0}{2}$ folgt $\\lambda = \\frac{\\ln 2}{T_{1/2}}$.</em><br><br>
+        <strong>b)</strong> Stellen Sie die konkrete Funktion $N(t)$ auf.<br><br>
+        <strong>c)</strong> Berechnen Sie $N'(t)$. Wie viel Substanz zerfällt am 1. Tag pro Tag?<br><br>
+        <strong>d)</strong> Nach wie vielen Tagen sind noch 10 mg vorhanden?
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $e^{-\\lambda \\cdot 8{,}02} = 0{,}5 \\Rightarrow -\\lambda \\cdot 8{,}02 = \\ln(0{,}5) = -\\ln 2$<br>
+        <div class="result">$\\lambda = \\dfrac{\\ln 2}{8{,}02} \\approx 0{,}0864\\,\\text{d}^{-1}$</div><br>
+        <strong>b)</strong>
+        <div class="result">$N(t) = 400 \\cdot e^{-0{,}0864\\,t}$</div><br>
+        <strong>c)</strong> $N'(t) = 400 \\cdot (-0{,}0864) \\cdot e^{-0{,}0864t} = -34{,}56 \\cdot e^{-0{,}0864t}$<br>
+        $N'(1) = -34{,}56 \\cdot e^{-0{,}0864} \\approx -31{,}8\\,\\text{mg/d}$<br>
+        <div class="result">Am ersten Tag zerfallen ca. $31{,}8\\,\\text{mg}$ pro Tag.</div><br>
+        <strong>d)</strong> $400 \\cdot e^{-0{,}0864t} = 10 \\Rightarrow e^{-0{,}0864t} = 0{,}025$<br>
+        $-0{,}0864t = \\ln(0{,}025) \\Rightarrow t = \\dfrac{-\\ln(0{,}025)}{0{,}0864} = \\dfrac{\\ln 40}{0{,}0864}$<br>
+        <div class="result">$t \\approx 42{,}7\\,\\text{Tage}$</div>
+      </div>
+    `,
+    prompt: `Ich löse eine Aufgabe zum radioaktiven Zerfall (Mathematik 12. Klasse).
+
+Zerfallsgesetz: N(t) = N₀·e^(-λt), Jod-131: T₁/₂ = 8,02 Tage, N₀ = 400 mg
+
+Aufgaben:
+a) Zerfallskonstante λ aus N(T₁/₂) = N₀/2 herleiten
+b) Konkrete Funktion N(t) aufstellen
+c) N'(t) berechnen und N'(1) mit Einheit interpretieren
+d) Zeitpunkt für N(t) = 10 mg berechnen (Exponentialgleichung mit ln)
+
+Erkläre: Was ist der Unterschied zwischen Halbwertszeit und Zerfallskonstante?`
+  },
+
+  19: {
+    title: "⭐ Aufgabe 20 – Epidemie-Modell",
+    aufgabe: `
+      <div class="aufgabe-box">
+        <strong>⭐ Aufgabe (Klausurstil – anspruchsvoll):</strong><br><br>
+        Die Ausbreitung einer Krankheit in einer Stadt wird modelliert durch:
+        $$I(t) = \\frac{5000}{1 + 499 \\cdot e^{-0{,}3t}} \\qquad (t \\text{ in Tagen})$$
+        <em>Hinweis: Schreiben Sie $I(t) = 5000 \\cdot (1 + 499 \\cdot e^{-0{,}3t})^{-1}$ und wenden Sie die Kettenregel an.</em><br><br>
+        <strong>a)</strong> Berechnen Sie $I(0)$. Wie viele Menschen sind zu Beginn infiziert?<br><br>
+        <strong>b)</strong> Berechnen Sie $\\lim_{t \\to \\infty} I(t)$. Wie viele Menschen erkranken insgesamt?<br><br>
+        <strong>c)</strong> Berechnen Sie $I'(t)$.<br><br>
+        <strong>d)</strong> Bestimmen Sie den Wendepunkt. An welchem Tag ist die Ausbreitungsrate am größten?
+      </div>
+    `,
+    loesung: `
+      <div class="loesung-box">
+        <strong>a)</strong> $I(0) = \\dfrac{5000}{1+499} = \\dfrac{5000}{500} = 10$<br>
+        <div class="result">Zu Beginn sind 10 Personen infiziert.</div><br>
+        <strong>b)</strong> Für $t \\to \\infty$: $e^{-0{,}3t} \\to 0$, daher $I(t) \\to \\dfrac{5000}{1} = 5000$<br>
+        <div class="result">Maximal erkranken 5000 Personen (Kapazitätsgrenze der Ausbreitung).</div><br>
+        <strong>c)</strong> Sei $u = 1 + 499e^{-0{,}3t}$, dann $u' = -149{,}7 \\cdot e^{-0{,}3t}$<br>
+        $I'(t) = 5000 \\cdot (-1) \\cdot u^{-2} \\cdot u' = \\dfrac{5000 \\cdot 149{,}7 \\cdot e^{-0{,}3t}}{(1+499\\,e^{-0{,}3t})^2}$<br>
+        <div class="result">$I'(t) = \\dfrac{748500 \\cdot e^{-0{,}3t}}{(1+499\\,e^{-0{,}3t})^2} > 0$ für alle $t$</div><br>
+        <strong>d)</strong> Der Wendepunkt liegt bei $I(t) = \\frac{5000}{2} = 2500$:<br>
+        $\\dfrac{5000}{1+499\\,e^{-0{,}3t}} = 2500 \\Rightarrow 1+499\\,e^{-0{,}3t} = 2$<br>
+        $e^{-0{,}3t} = \\dfrac{1}{499} \\Rightarrow t = \\dfrac{\\ln 499}{0{,}3} \\approx \\dfrac{6{,}21}{0{,}3}$<br>
+        <div class="result">Wendepunkt bei $t \\approx 20{,}7$ Tagen — an Tag 21 ist die Infektionsrate am höchsten.</div>
+      </div>
+    `,
+    prompt: `Ich löse eine anspruchsvolle Aufgabe zum logistischen Wachstum / Epidemie-Modell (Mathematik 12. Klasse).
+
+Funktion: I(t) = 5000 / (1 + 499·e^(-0,3t))
+Umformen: I(t) = 5000·(1 + 499·e^(-0,3t))^(-1)
+
+Aufgaben:
+a) I(0) berechnen – wie viele sind am Anfang infiziert?
+b) Grenzwert für t→∞ – was bedeutet er inhaltlich?
+c) I'(t) mit Kettenregel auf (...)^(-1) berechnen
+d) Wendepunkt: I(t) = 2500 setzen, nach t lösen
+
+Erkläre: Was ist logistisches Wachstum? Warum gibt es eine Kapazitätsgrenze? Was bedeutet der Wendepunkt für die Epidemie?`
+  }
+};
+
+/* ─────────────────────────────────────────
+   MODAL LOGIC
+─────────────────────────────────────────── */
+let currentTab = 'aufgabe';
+let currentId  = null;
+
+function openModal(id) {
+  currentId = id;
+  const d = DATA[id];
+
+  document.getElementById('modal-title').textContent = d.title;
+  document.getElementById('panel-aufgabe').innerHTML = d.aufgabe;
+  document.getElementById('panel-loesung').innerHTML = d.loesung;
+  document.getElementById('panel-ki').innerHTML = buildKiPanel(d.prompt);
+
+  switchTab('aufgabe');
+  document.getElementById('modal-overlay').classList.add('open');
+
+  // Re-typeset MathJax
+  if (window.MathJax) {
+    MathJax.typesetPromise([document.querySelector('.modal')]).catch(() => {});
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function closeOnOverlay(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function switchTab(name) {
+  currentTab = name;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    const tabs = ['aufgabe','loesung','ki'];
+    b.classList.toggle('active', tabs[i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'panel-' + name);
+  });
+}
+
+function buildKiPanel(prompt) {
+  const enc = encodeURIComponent(prompt);
+  return `
+    <p class="ki-label">Kopieren Sie den Prompt und öffnen Sie einen KI-Assistenten Ihrer Wahl:</p>
+    <div class="ki-prompt">${escHtml(prompt)}</div>
+    <div class="ki-buttons">
+      <button class="ki-btn ki-copy" onclick="copyPrompt(\`${escJs(prompt)}\`)">📋 Kopieren</button>
+      <button class="ki-btn ki-google" onclick="copyAndOpen(\`${escJs(prompt)}\`, 'https://gemini.google.com/')">🔍 Gemini</button>
+      <button class="ki-btn ki-gpt" onclick="copyAndOpen(\`${escJs(prompt)}\`, 'https://chatgpt.com/')">💬 ChatGPT</button>
+      <button class="ki-btn ki-claude" onclick="copyAndOpen(\`${escJs(prompt)}\`, 'https://claude.ai/new')">🧠 Claude</button>
+    </div>`;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escJs(s) {
+  return s.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');
+}
+function copyPrompt(txt) {
+  navigator.clipboard.writeText(txt).then(() => showToast()).catch(() => {});
+}
+function copyAndOpen(txt, url) {
+  navigator.clipboard.writeText(txt).then(() => {
+    showToast('✓ Prompt kopiert – gleich wird der Tab geöffnet');
+    setTimeout(() => window.open(url, '_blank'), 800);
+  }).catch(() => window.open(url, '_blank'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg || '✓ In Zwischenablage kopiert!';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ─────────────────────────────────────────
+   PROGRESS
+─────────────────────────────────────────── */
+const TOTAL = 19;
+const STORE_KEY = 'mathe12np_efkt_v2';
+
+function loadState() {
+  try {
+    const d = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+    for (let i = 1; i <= TOTAL; i++) {
+      const cb = document.getElementById('cb-' + i);
+      if (cb && d[i]) {
+        cb.checked = true;
+        document.getElementById('ci-' + i).classList.add('done');
+      }
+    }
+  } catch(e) {}
+  updateProgress();
+}
+
+function saveState() {
+  const d = {};
+  for (let i = 1; i <= TOTAL; i++) {
+    const cb = document.getElementById('cb-' + i);
+    if (cb && cb.checked) d[i] = true;
+  }
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(d)); } catch(e) {}
+}
+
+function updateProgress() {
+  let done = 0;
+  for (let i = 1; i <= TOTAL; i++) {
+    const cb = document.getElementById('cb-' + i);
+    if (cb && cb.checked) done++;
+  }
+  document.getElementById('progress-text').textContent = done + ' / ' + TOTAL + ' Kompetenzen';
+  document.getElementById('progress-bar-inner').style.width = (done / TOTAL * 100) + '%';
+}
+
+function resetAll() {
+  if (!confirm('Fortschritt wirklich zurücksetzen?')) return;
+  for (let i = 1; i <= TOTAL; i++) {
+    const cb = document.getElementById('cb-' + i);
+    if (cb) cb.checked = false;
+    const ci = document.getElementById('ci-' + i);
+    if (ci) ci.classList.remove('done');
+  }
+  try { localStorage.removeItem(STORE_KEY); } catch(e) {}
+  updateProgress();
+}
+
+// Checkbox change handlers
+document.querySelectorAll('.comp-check').forEach(cb => {
+  cb.addEventListener('change', function() {
+    const id = this.id.replace('cb-','');
+    const ci = document.getElementById('ci-' + id);
+    if (ci) ci.classList.toggle('done', this.checked);
+    saveState();
+    updateProgress();
+  });
+});
+
+// Keyboard close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// Init
+loadState();
+</script>
+</body>
+</html>
