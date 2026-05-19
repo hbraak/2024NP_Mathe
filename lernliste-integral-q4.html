@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernliste Q4: Integralrechnung</title>
+
+<!-- MathJax -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)'], ['$','$']], displayMath: [['\\[','\\]'], ['$$','$$']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #f5f2eb;
+  --surface: #ffffff;
+  --surface2: #f0ece2;
+  --border: #d4cfc4;
+  --text: #1a1915;
+  --text-muted: #6b6760;
+  --accent: #2b4c8c;
+  --accent-light: #dce6f5;
+  --green: #1a6b3a;
+  --green-light: #d4edde;
+  --yellow-light: #fdf5d0;
+  --formula-bg: #0f1923;
+  --afb1: #1a5c8c;  --afb1-bg: #dceef8;
+  --afb2: #7a5200;  --afb2-bg: #fef0cc;
+  --afb3: #7a1a1a;  --afb3-bg: #fde8e8;
+  --star: #b06000;  --star-bg: #fff0d0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* -- Header -- */
+header {
+  background: var(--accent);
+  color: white;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.22);
+}
+.header-inner {
+  max-width: 920px; margin: 0 auto;
+  padding: 16px 24px 8px;
+}
+.header-school { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.header-title  { font-size: 1.3rem; font-weight: 700; margin: 3px 0 4px; }
+.header-sub    { font-size: 0.8rem; opacity: 0.78; font-family: 'IBM Plex Serif', serif; font-style: italic; }
+.progress-wrap { max-width: 920px; margin: 0 auto; padding: 6px 24px 14px; }
+.progress-label { font-size: 0.73rem; color: rgba(255,255,255,0.7); display: flex; justify-content: space-between; margin-bottom: 4px; }
+.progress-track { height: 7px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
+.progress-fill  { height: 100%; background: #7ecba0; border-radius: 4px; transition: width .5s; width: 0; }
+
+/* -- AFB legend -- */
+.afb-legend {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+}
+.afb-legend-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+.afb-legend-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.afb-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  border-radius: 4px; padding: 3px 9px; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.04em;
+  border: 1.5px solid transparent;
+}
+.afb1 { background: var(--afb1-bg); color: var(--afb1); border-color: #9ac4de; }
+.afb2 { background: var(--afb2-bg); color: var(--afb2); border-color: #e8c96a; }
+.afb3 { background: var(--afb3-bg); color: var(--afb3); border-color: #e8a0a0; }
+.star-pill { background: var(--star-bg); color: var(--star); border-color: #e8c070; }
+
+/* -- Formula strip -- */
+.formula-strip {
+  background: var(--formula-bg);
+  color: #c8e8ff;
+  padding: 10px 0;
+  overflow-x: auto;
+}
+.formula-strip-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.formula-strip-label { font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.fchip {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px; padding: 3px 10px;
+  font-size: 0.82rem; white-space: nowrap;
+  color: #ddf0ff;
+}
+.fchip .mjx-container { display: inline !important; }
+
+/* -- Main -- */
+main { max-width: 920px; margin: 0 auto; padding: 26px 24px 60px; }
+
+/* -- Section -- */
+.section { margin-bottom: 26px; }
+.section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.section-icon {
+  width: 32px; height: 32px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; flex-shrink: 0;
+}
+.s-stamm      .section-icon { background: #e0f0ff; }
+.s-hauptsatz  .section-icon { background: #fdecd8; }
+.s-bestimmt   .section-icon { background: #f5f0d8; }
+.s-anfang     .section-icon { background: #dce6f5; }
+.s-anwendung  .section-icon { background: #ece0f5; }
+.s-flaeche    .section-icon { background: #dff0e8; }
+.s-symmetrie  .section-icon { background: #fde8e8; }
+.section-title { font-size: 0.98rem; font-weight: 700; }
+.section-count { font-size: 0.72rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-left: auto; }
+
+/* -- Cards -- */
+.card-list { display: flex; flex-direction: column; gap: 5px; }
+
+.comp-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  display: flex; align-items: stretch;
+  transition: border-color .18s, box-shadow .18s;
+  overflow: hidden;
+}
+.comp-card:hover { border-color: #a8bed8; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.comp-card.done { background: var(--green-light); border-color: #a0d4b8; }
+.comp-card.done .comp-text { text-decoration: line-through; color: #3a7a54; opacity: 0.72; }
+.comp-card.star-card { border-color: #e0c060; background: var(--yellow-light); }
+.comp-card.star-card.done { background: var(--green-light); border-color: #a0d4b8; }
+
+/* Checkbox */
+.comp-check {
+  width: 46px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.comp-check:hover { background: rgba(0,0,0,0.03); }
+.checkbox {
+  width: 19px; height: 19px;
+  border: 2px solid var(--border); border-radius: 4px;
+  background: white; display: flex; align-items: center; justify-content: center;
+  pointer-events: none; transition: all .15s;
+}
+.comp-card.done .checkbox { background: var(--green); border-color: var(--green); }
+.checkbox::after {
+  content: ''; display: none;
+  width: 4px; height: 8px;
+  border: 2px solid white; border-top: none; border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+.comp-card.done .checkbox::after { display: block; }
+
+/* Body */
+.comp-body { flex: 1; padding: 9px 10px; min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-text { font-size: 0.875rem; line-height: 1.45; flex: 1; min-width: 160px; }
+.comp-text .mjx-container { display: inline !important; }
+
+/* AFB badge on card */
+.card-afb { flex-shrink: 0; }
+
+/* Ueben button */
+.comp-btn {
+  padding: 0 14px; background: none; border: none;
+  border-left: 1.5px solid var(--border);
+  color: var(--accent); font-size: 0.76rem; font-weight: 700;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer; white-space: nowrap; letter-spacing: 0.03em;
+  transition: background .14s;
+}
+.comp-btn:hover { background: var(--accent-light); }
+
+/* -- Modal -- */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(10,10,14,0.54); z-index: 500;
+  justify-content: center; align-items: flex-start;
+  padding: 36px 14px 20px; overflow-y: auto;
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 12px;
+  width: 100%; max-width: 640px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+  animation: slideUp .2s ease; overflow: hidden;
+}
+@keyframes slideUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+.modal-head {
+  background: var(--accent); color: white;
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+}
+.modal-head h3 { font-size: 0.93rem; font-weight: 600; }
+.modal-close {
+  background: rgba(255,255,255,0.15); border: none; color: white;
+  width: 26px; height: 26px; border-radius: 5px; cursor: pointer; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: rgba(255,255,255,0.28); }
+
+.modal-tabs { display: flex; border-bottom: 2px solid var(--border); background: var(--surface2); }
+.mtab {
+  flex: 1; padding: 9px 8px; border: none; background: none;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+  color: var(--text-muted); cursor: pointer;
+  border-bottom: 2.5px solid transparent; margin-bottom: -2px;
+  transition: color .14s;
+}
+.mtab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
+
+.modal-body { padding: 18px 20px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Task / solution content */
+.task-box {
+  background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 13px 15px; font-size: 0.875rem; line-height: 1.65;
+  margin-bottom: 12px;
+}
+.task-box p { margin-bottom: 5px; }
+.task-box p:last-child { margin-bottom: 0; }
+.given {
+  display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.8em;
+  background: rgba(0,0,0,0.06); padding: 7px 10px; border-radius: 5px; margin: 7px 0;
+  line-height: 1.7;
+}
+.subtasks {
+  margin: 8px 0 4px; display: flex; flex-direction: column; gap: 5px;
+}
+.subtask {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 0.875rem; line-height: 1.55;
+}
+.subtask-label {
+  flex-shrink: 0; width: 20px;
+  font-weight: 700; color: var(--accent);
+}
+.subtask-body { flex: 1; }
+.hint-box {
+  background: rgba(43,76,140,0.07); border-left: 3px solid var(--accent);
+  border-radius: 0 5px 5px 0; padding: 5px 10px;
+  font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;
+  font-style: italic;
+}
+.sol-toggle {
+  width: 100%; background: none; border: 1.5px solid var(--border); border-radius: 6px;
+  padding: 8px 14px; font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.8rem; font-weight: 600; color: var(--text-muted); cursor: pointer;
+  margin-bottom: 10px; transition: all .14s; text-align: left;
+}
+.sol-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sol-box {
+  display: none; background: var(--green-light); border: 1.5px solid #a0d4b8;
+  border-radius: 8px; padding: 13px 15px; font-size: 0.855rem; line-height: 1.65;
+}
+.sol-box.open { display: block; animation: fadeIn .18s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.sol-step { display: flex; gap: 8px; margin-bottom: 9px; }
+.sol-step:last-child { margin-bottom: 0; }
+.snum {
+  width: 19px; height: 19px; flex-shrink: 0; margin-top: 2px;
+  background: var(--green); color: white; border-radius: 50%;
+  font-size: 0.67rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.sol-step .mjx-container { display: inline !important; }
+.fbox {
+  display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.82em;
+  background: rgba(255,255,255,0.72); padding: 3px 8px; border-radius: 4px; margin: 2px 0;
+}
+.result {
+  display: inline-block; background: var(--green); color: white;
+  border-radius: 5px; padding: 5px 12px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.83em; font-weight: 600; margin-top: 8px;
+}
+.dmath { text-align: center; margin: 8px 0; overflow-x: auto; }
+
+/* Prompt tab */
+.prompt-box {
+  background: var(--formula-bg); color: #c8e8ff;
+  border-radius: 8px; padding: 13px 15px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.77rem; line-height: 1.65;
+  white-space: pre-wrap; max-height: 230px; overflow-y: auto; margin-bottom: 12px;
+}
+.ai-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.ai-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 13px; border: 1.5px solid var(--border); border-radius: 6px;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; text-decoration: none; background: white; color: var(--text);
+  transition: all .14s;
+}
+.ai-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.ai-btn.copy { background: var(--accent); color: white; border-color: var(--accent); }
+.ai-btn.copy:hover { background: #1e3d74; }
+
+/* Footer */
+footer {
+  text-align: center; color: var(--text-muted); font-size: 0.73rem;
+  padding: 18px; border-top: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.05em;
+}
+
+@media(max-width:500px) {
+  main { padding: 18px 14px 40px; }
+  .comp-btn { padding: 0 9px; font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="header-school">Lore-Lorentz-Schule &nbsp;&middot;&nbsp; Mathematik 12NP</div>
+    <div class="header-title">Lernliste: Integralrechnung</div>
+    <div class="header-sub">Klausurvorbereitung Q4 &nbsp;&middot;&nbsp; Stammfunktionen, Hauptsatz &amp; Anwendungen &nbsp;&middot;&nbsp; AFB I&ndash;III</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Ihr Fortschritt</span>
+      <span id="prog-text">0 von 0 Kompetenzen</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+</header>
+
+<!-- AFB LEGENDE -->
+<div class="afb-legend">
+  <div class="afb-legend-inner">
+    <span class="afb-legend-label">Anforderungsbereiche:</span>
+    <span class="afb-pill afb1">AFB I &nbsp;Reproduktion</span>
+    <span class="afb-pill afb2">AFB II &nbsp;Transfer</span>
+    <span class="afb-pill afb3">AFB III &nbsp;Reflexion</span>
+    <span class="afb-pill star-pill">&#9733; Knobelaufgabe</span>
+  </div>
+</div>
+
+<!-- FORMELLEISTE -->
+<div class="formula-strip">
+  <div class="formula-strip-inner">
+    <span class="formula-strip-label">Formeln</span>
+    <span class="fchip">\(\int x^n\,dx = \frac{x^{n+1}}{n+1}+C\)</span>
+    <span class="fchip">\(\int e^{kx}\,dx = \frac{1}{k}e^{kx}+C\)</span>
+    <span class="fchip">\(\int \sin(kx)\,dx = -\frac{1}{k}\cos(kx)+C\)</span>
+    <span class="fchip">\(\int_a^b f(x)\,dx = F(b)-F(a)\)</span>
+    <span class="fchip">\(A = \int_a^b |f(x)|\,dx\)</span>
+  </div>
+</div>
+
+<main>
+
+<!-- 1. STAMMFUNKTIONEN BILDEN -->
+<div class="section s-stamm">
+  <div class="section-header">
+    <div class="section-icon">&#x1F504;</div>
+    <div class="section-title">Stammfunktionen bilden</div>
+    <div class="section-count" id="cnt-stamm"></div>
+  </div>
+  <div class="card-list" id="sec-stamm">
+
+    <div class="comp-card" data-id="s1" data-sec="stamm">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Stammfunktion von Polynomen mit der Potenzregel bilden: \(\int x^n\,dx = \frac{x^{n+1}}{n+1}+C\).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('s1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="s2" data-sec="stamm">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Stammfunktion von \(e^{kx}\) bilden und den Faktor \(1/k\) korrekt bestimmen, auch bei negativem \(k\).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('s2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="s3" data-sec="stamm">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Stammfunktionen von \(\sin(kx)\) und \(\cos(kx)\) angeben.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('s3')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="s4" data-sec="stamm">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann bei zusammengesetzten Funktionen (Summen, konstante Faktoren) die Stammfunktion bilden.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('s4')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 2. HAUPTSATZ DER INTEGRALRECHNUNG -->
+<div class="section s-hauptsatz">
+  <div class="section-header">
+    <div class="section-icon">&#x1F4D0;</div>
+    <div class="section-title">Hauptsatz der Integralrechnung</div>
+    <div class="section-count" id="cnt-hauptsatz"></div>
+  </div>
+  <div class="card-list" id="sec-hauptsatz">
+
+    <div class="comp-card" data-id="h1" data-sec="hauptsatz">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Hauptsatz formulieren: \(\int_a^b f(x)\,dx = F(b) - F(a)\) und die Schreibweise \([F(x)]_a^b\) anwenden.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('h1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="h2" data-sec="hauptsatz">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann begr&uuml;nden, warum sich die Integrationskonstante \(C\) beim bestimmten Integral herausk&uuml;rzt.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('h2')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 3. BESTIMMTES INTEGRAL BERECHNEN -->
+<div class="section s-bestimmt">
+  <div class="section-header">
+    <div class="section-icon">&#x1F4CA;</div>
+    <div class="section-title">Bestimmtes Integral berechnen</div>
+    <div class="section-count" id="cnt-bestimmt"></div>
+  </div>
+  <div class="card-list" id="sec-bestimmt">
+
+    <div class="comp-card" data-id="b1" data-sec="bestimmt">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann bestimmte Integrale von Polynomen berechnen: Stammfunktion bilden, Grenzen einsetzen, Differenz bilden.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('b1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="b2" data-sec="bestimmt">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann bestimmte Integrale mit e-Funktionen und trigonometrischen Funktionen berechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('b2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="b3" data-sec="bestimmt">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann das Ergebnis eines bestimmten Integrals als Fl&auml;che unter der Kurve interpretieren und im Diagramm deuten.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('b3')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 4. INTEGRATIONSKONSTANTE & ANFANGSBEDINGUNG -->
+<div class="section s-anfang">
+  <div class="section-header">
+    <div class="section-icon">&#x1F3AF;</div>
+    <div class="section-title">Integrationskonstante &amp; Anfangsbedingung</div>
+    <div class="section-count" id="cnt-anfang"></div>
+  </div>
+  <div class="card-list" id="sec-anfang">
+
+    <div class="comp-card" data-id="a1" data-sec="anfang">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Integrationskonstante \(C\) aus einer Anfangsbedingung bestimmen (z.&nbsp;B. \(v(0)=5\,\text{m/s}\)).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('a1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="a2" data-sec="anfang">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann physikalisch begr&uuml;nden, warum eine Anfangsbedingung n&ouml;tig ist (unendlich viele Stammfunktionen).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('a2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="a3" data-sec="anfang">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Spannarbeit einer Feder \(W(s)=\int F(s)\,ds\) mit der Bedingung \(W(0)=0\) berechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('a3')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 5. ANWENDUNGEN -->
+<div class="section s-anwendung">
+  <div class="section-header">
+    <div class="section-icon">&#x2699;&#xFE0F;</div>
+    <div class="section-title">Anwendungen</div>
+    <div class="section-count" id="cnt-anwendung"></div>
+  </div>
+  <div class="card-list" id="sec-anwendung">
+
+    <div class="comp-card" data-id="p1" data-sec="anwendung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann aus einer Geschwindigkeitsfunktion \(v(t)\) den zur&uuml;ckgelegten Weg als Integral \(s=\int v(t)\,dt\) berechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('p1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="p2" data-sec="anwendung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann aus einer Stromst&auml;rkefunktion \(I(t)\) die geflossene Ladung \(Q=\int I(t)\,dt\) berechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('p2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="p3" data-sec="anwendung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann aus einer Leistungsfunktion \(P(t)\) die erzeugte Energie \(E=\int P(t)\,dt\) berechnen (z.&nbsp;B. Solarmodul).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('p3')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="p4" data-sec="anwendung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Kondensatorentladung \(I(t)=I_0\cdot e^{-t/\tau}\) integrieren und die Gesamtladung \(Q_\infty=\tau\cdot I_0\) herleiten.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('p4')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 6. ORIENTIERTER FLAECHENINHALT -->
+<div class="section s-flaeche">
+  <div class="section-header">
+    <div class="section-icon">&#x1F4C8;</div>
+    <div class="section-title">Orientierter Fl&auml;cheninhalt</div>
+    <div class="section-count" id="cnt-flaeche"></div>
+  </div>
+  <div class="card-list" id="sec-flaeche">
+
+    <div class="comp-card" data-id="f1" data-sec="flaeche">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann unterscheiden: Das orientierte Integral \(\int_a^b f(x)\,dx\) z&auml;hlt Fl&auml;chen unterhalb der x-Achse negativ, der echte Fl&auml;cheninhalt \(\int_a^b |f(x)|\,dx\) z&auml;hlt alles positiv.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('f1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="f2" data-sec="flaeche">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann ohne Rechnung vorhersagen, ob ein Integral positiv, negativ oder null ist (Lage zur x-Achse, Symmetrie).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('f2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="f3" data-sec="flaeche">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den echten Fl&auml;cheninhalt berechnen: Nullstellen bestimmen, Intervall aufteilen, Teilintegrale einzeln berechnen, Betr&auml;ge addieren.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('f3')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="f4" data-sec="flaeche">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann bei mehreren Vorzeichenwechseln systematisch den Fl&auml;cheninhalt berechnen und den typischen Fehler erkl&auml;ren (orientiertes statt echtes Integral).</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('f4')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 7. SYMMETRIE & VERTIEFUNG -->
+<div class="section s-symmetrie">
+  <div class="section-header">
+    <div class="section-icon">&#x1F300;</div>
+    <div class="section-title">Symmetrie &amp; Vertiefung</div>
+    <div class="section-count" id="cnt-symmetrie"></div>
+  </div>
+  <div class="card-list" id="sec-symmetrie">
+
+    <div class="comp-card" data-id="y1" data-sec="symmetrie">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann begr&uuml;nden, warum \(\int_{-a}^a f(x)\,dx = 0\) f&uuml;r ungerade Funktionen gilt (Punktsymmetrie) und \(\int_{-a}^a f(x)\,dx = 2\int_0^a f(x)\,dx\) f&uuml;r gerade Funktionen.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('y1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card star-card" data-id="y2" data-sec="symmetrie">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">&#9733; Ich kann die obere Integrationsgrenze \(b\) als Unbekannte behandeln und aus einer Gleichung \(\int_0^b f(x)\,dx = 0\) bestimmen.</span>
+        <span class="afb-pill star-pill card-afb">&#9733; AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('y2')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+</main>
+<footer>Lore-Lorentz-Schule &nbsp;&middot;&nbsp; Mathematik 12NP &nbsp;&middot;&nbsp; Q4</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="m-title">&Uuml;bungsaufgabe</h3>
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" onclick="switchTab(0)">&#x1F4DD; Aufgabe</button>
+      <button class="mtab" onclick="switchTab(1)">&#x2705; L&ouml;sung</button>
+      <button class="mtab" onclick="switchTab(2)">&#x1F916; KI-Prompt</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-panel active" id="tp0"></div>
+      <div class="tab-panel" id="tp1"></div>
+      <div class="tab-panel" id="tp2"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// -----------------------------------------
+// TASK DATA
+// -----------------------------------------
+const T = {
+
+s1:{title:"Stammfunktionen von Polynomen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Bestimmen Sie jeweils die Stammfunktion \\(F(x)\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(f(x) = 3x^2\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(f(x) = x^4 - 2x\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(f(x) = 5\\sqrt{x} = 5x^{1/2}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">\\(f(x) = \\dfrac{1}{x^2} = x^{-2}\\)</span></div>
+  </div>
+  <div class="hint-box">Potenzregel: \\(\\int x^n\\,dx = \\dfrac{x^{n+1}}{n+1} + C\\) (f\\u00fcr \\(n \\neq -1\\))</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( \\int 3x^2\\,dx = 3 \\cdot \\dfrac{x^3}{3} + C = x^3 + C \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( \\int (x^4 - 2x)\\,dx = \\dfrac{x^5}{5} - 2 \\cdot \\dfrac{x^2}{2} + C = \\dfrac{x^5}{5} - x^2 + C \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( \\int 5x^{1/2}\\,dx = 5 \\cdot \\dfrac{x^{3/2}}{3/2} + C = 5 \\cdot \\dfrac{2}{3}\\,x^{3/2} + C = \\dfrac{10}{3}\\,x^{3/2} + C \\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\( \\int x^{-2}\\,dx = \\dfrac{x^{-1}}{-1} + C = -\\dfrac{1}{x} + C \\)
+</div></div>
+<div class="result">Potenzregel: Exponent +1, durch neuen Exponent teilen, +C</div>`,
+prompt:`Ich \u00fcbe Stammfunktionen von Polynomen (Mathematik Klasse 12, Integralrechnung). Erstelle 5 Aufgaben mit Potenzregel, auch mit gebrochenen und negativen Exponenten. Vollst\u00e4ndige L\u00f6sungen.`},
+
+s2:{title:"Stammfunktion von e-Funktionen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Bestimmen Sie jeweils die Stammfunktion.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(f(x) = e^{3x}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(f(x) = 4e^{-2x}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(f(t) = e^{-t/0{,}5} = e^{-2t}\\)</span></div>
+  </div>
+  <div class="hint-box">Regel: \\(\\int e^{kx}\\,dx = \\dfrac{1}{k}\\,e^{kx} + C\\)</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( \\int e^{3x}\\,dx = \\dfrac{1}{3}\\,e^{3x} + C \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( \\int 4e^{-2x}\\,dx = 4 \\cdot \\dfrac{1}{-2}\\,e^{-2x} + C = -2\\,e^{-2x} + C \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( \\int e^{-2t}\\,dt = \\dfrac{1}{-2}\\,e^{-2t} + C = -\\dfrac{1}{2}\\,e^{-2t} + C \\)
+</div></div>
+<div class="result">Bei negativem k wird der Faktor 1/k negativ!</div>`,
+prompt:`Ich \u00fcbe Stammfunktionen von e-Funktionen (Mathe Klasse 12). Erstelle 4 Aufgaben mit verschiedenen k (positiv, negativ, Bruch). Vollst\u00e4ndige L\u00f6sungen.`},
+
+s3:{title:"Stammfunktionen von sin und cos (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Bestimmen Sie jeweils die Stammfunktion.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(f(x) = \\sin(2x)\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(f(x) = 3\\cos(\\pi x)\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(f(t) = \\sin\\!\\left(\\dfrac{\\pi}{6}\\,t\\right)\\)</span></div>
+  </div>
+  <div class="hint-box">\\(\\int \\sin(kx)\\,dx = -\\dfrac{1}{k}\\cos(kx)+C\\), \\quad \\(\\int \\cos(kx)\\,dx = \\dfrac{1}{k}\\sin(kx)+C\\)</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( \\int \\sin(2x)\\,dx = -\\dfrac{1}{2}\\cos(2x) + C \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( \\int 3\\cos(\\pi x)\\,dx = 3 \\cdot \\dfrac{1}{\\pi}\\sin(\\pi x) + C = \\dfrac{3}{\\pi}\\sin(\\pi x) + C \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( \\int \\sin\\!\\left(\\dfrac{\\pi}{6}\\,t\\right)dt = -\\dfrac{1}{\\pi/6}\\cos\\!\\left(\\dfrac{\\pi}{6}\\,t\\right) + C = -\\dfrac{6}{\\pi}\\cos\\!\\left(\\dfrac{\\pi}{6}\\,t\\right) + C \\)
+</div></div>
+<div class="result">sin integriert gibt -cos (mit 1/k), cos integriert gibt +sin (mit 1/k)</div>`,
+prompt:`Ich \u00fcbe Stammfunktionen von sin(kx) und cos(kx) (Mathe Klasse 12). Erstelle 4 Aufgaben mit verschiedenen k. Vollst\u00e4ndige L\u00f6sungen.`},
+
+s4:{title:"Zusammengesetzte Funktionen integrieren (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Bestimmen Sie die Stammfunktion:</p>
+  <div class="dmath">\\( \\int \\left(2x^3 - 3\\sin(x) + e^x\\right) dx \\)</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Integrieren Sie jeden Summanden einzeln (Summenregel).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Fassen Sie das Ergebnis zusammen.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Kontrollieren Sie durch Ableiten.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( \\int 2x^3\\,dx = 2 \\cdot \\dfrac{x^4}{4} = \\dfrac{x^4}{2} \\)
+  <br>\\( \\int (-3\\sin(x))\\,dx = -3 \\cdot (-\\cos(x)) = 3\\cos(x) \\)
+  <br>\\( \\int e^x\\,dx = e^x \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <div class="dmath">\\( F(x) = \\dfrac{x^4}{2} + 3\\cos(x) + e^x + C \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( F'(x) = 4 \\cdot \\dfrac{x^3}{2} - 3\\sin(x) + e^x = 2x^3 - 3\\sin(x) + e^x = f(x) \\; \\checkmark \\)
+</div></div>
+<div class="result">Summenregel + Faktorregel: Gliedweise integrieren</div>`,
+prompt:`Ich \u00fcbe das Integrieren zusammengesetzter Funktionen (Mathe Klasse 12). Erstelle 3 Aufgaben mit Summen aus Polynomen, e-Funktionen und trigonometrischen Funktionen. Vollst\u00e4ndige L\u00f6sungen mit Probe.`},
+
+h1:{title:"Hauptsatz anwenden (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Berechnen Sie die folgenden bestimmten Integrale mit dem Hauptsatz \\(\\int_a^b f(x)\\,dx = [F(x)]_a^b = F(b) - F(a)\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(\\displaystyle\\int_1^3 2x\\,dx\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(\\displaystyle\\int_0^\\pi \\sin(x)\\,dx\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(\\displaystyle\\int_0^1 e^x\\,dx\\)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( F(x) = x^2 \\)
+  <div class="dmath">\\( [x^2]_1^3 = 3^2 - 1^2 = 9 - 1 = 8 \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( F(x) = -\\cos(x) \\)
+  <div class="dmath">\\( [-\\cos(x)]_0^\\pi = -\\cos(\\pi) - (-\\cos(0)) = -(-1) - (-1) = 1 + 1 = 2 \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( F(x) = e^x \\)
+  <div class="dmath">\\( [e^x]_0^1 = e^1 - e^0 = e - 1 \\approx 1{,}718 \\)</div>
+</div></div>
+<div class="result">Schema: Stammfunktion bilden, obere Grenze minus untere Grenze</div>`,
+prompt:`Ich \u00fcbe den Hauptsatz der Integralrechnung (Mathe Klasse 12). Erstelle 4 bestimmte Integrale (Polynom, sin, cos, e-Funktion). Vollst\u00e4ndige L\u00f6sungen mit Zwischenschritten.`},
+
+h2:{title:"Warum f\u00e4llt C weg? (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Die allgemeine Stammfunktion von \\(f(x) = 2x\\) ist \\(F(x) = x^2 + C\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(\\int_1^3 2x\\,dx\\) mit der Stammfunktion \\(F(x) = x^2 + C\\). Zeigen Sie, dass \\((F(3)+C) - (F(1)+C) = F(3) - F(1)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erkl\\u00e4ren Sie in eigenen Worten, warum sich \\(C\\) herausk\\u00fcrzt.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Was bedeutet das f\\u00fcr die Berechnung bestimmter Integrale? Braucht man \\(C\\)?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( F(b) - F(a) = (b^2 + C) - (a^2 + C) = b^2 + C - a^2 - C = b^2 - a^2 \\)
+  <div class="dmath">\\( (3^2 + C) - (1^2 + C) = 9 + C - 1 - C = 8 \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Beim bestimmten Integral bildet man eine <strong>Differenz</strong> \\(F(b) - F(a)\\). Die Konstante \\(C\\) wird bei beiden Auswertungen addiert und anschlie\\u00dfend subtrahiert \u2014 sie hebt sich <strong>immer</strong> auf.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Bei bestimmten Integralen kann man \\(C\\) weglassen (\\(C = 0\\) setzen). \\(C\\) wird nur beim <strong>unbestimmten</strong> Integral (Stammfunktion) ben\\u00f6tigt.
+</div></div>
+<div class="result">Bestimmtes Integral: C f\u00e4llt immer weg, da F(b)+C - (F(a)+C) = F(b)-F(a)</div>`,
+prompt:`Ich \u00fcbe die Rolle der Integrationskonstante C (Mathe Klasse 12). Erkl\u00e4re: Warum f\u00e4llt C beim bestimmten Integral weg? Erstelle eine Erkl\u00e4rungsaufgabe.`},
+
+b1:{title:"Bestimmte Integrale von Polynomen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Berechnen Sie die folgenden bestimmten Integrale.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(\\displaystyle\\int_{-2}^{2} (x^2 - 1)\\,dx\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(\\displaystyle\\int_0^4 \\left(3t - \\dfrac{t^2}{2}\\right)\\,dt\\)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( F(x) = \\dfrac{x^3}{3} - x \\)
+  <div class="dmath">\\( \\left[\\dfrac{x^3}{3} - x\\right]_{-2}^{2} = \\left(\\dfrac{8}{3} - 2\\right) - \\left(\\dfrac{-8}{3} - (-2)\\right) = \\dfrac{2}{3} - \\left(-\\dfrac{2}{3}\\right) = \\dfrac{4}{3} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( F(t) = \\dfrac{3t^2}{2} - \\dfrac{t^3}{6} \\)
+  <div class="dmath">\\( \\left[\\dfrac{3t^2}{2} - \\dfrac{t^3}{6}\\right]_0^4 = \\left(\\dfrac{48}{2} - \\dfrac{64}{6}\\right) - 0 = 24 - \\dfrac{32}{3} = \\dfrac{72 - 32}{3} = \\dfrac{40}{3} \\approx 13{,}33 \\)</div>
+</div></div>
+<div class="result">a) 4/3 &asymp; 1,33 &emsp; b) 40/3 &asymp; 13,33</div>`,
+prompt:`Ich \u00fcbe bestimmte Integrale von Polynomen (Mathe Klasse 12). Erstelle 4 Aufgaben mit verschiedenen Grenzen (auch negative). Vollst\u00e4ndige L\u00f6sungen.`},
+
+b2:{title:"Bestimmte Integrale mit e und trig. Funktionen (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Berechnen Sie die folgenden bestimmten Integrale.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(\\displaystyle\\int_0^2 e^{-x}\\,dx\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(\\displaystyle\\int_0^{\\pi/2} \\cos(x)\\,dx\\)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( F(x) = -e^{-x} \\)
+  <div class="dmath">\\( [-e^{-x}]_0^2 = -e^{-2} - (-e^{0}) = -e^{-2} + 1 = 1 - e^{-2} \\approx 1 - 0{,}135 = 0{,}865 \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( F(x) = \\sin(x) \\)
+  <div class="dmath">\\( [\\sin(x)]_0^{\\pi/2} = \\sin\\!\\left(\\dfrac{\\pi}{2}\\right) - \\sin(0) = 1 - 0 = 1 \\)</div>
+</div></div>
+<div class="result">a) 1 - e^(-2) &asymp; 0,865 &emsp; b) 1</div>`,
+prompt:`Ich \u00fcbe bestimmte Integrale mit e-Funktionen und trigonometrischen Funktionen (Mathe Klasse 12). Erstelle 4 Aufgaben. Vollst\u00e4ndige L\u00f6sungen.`},
+
+b3:{title:"Integral als Fl\u00e4che deuten (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Fahrzeug bremst. Die Geschwindigkeit ist \\(v(t) = 20 - 5t\\) (in m/s).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Nach welcher Zeit \\(t_0\\) steht das Fahrzeug?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(\\int_0^4 v(t)\\,dt\\). Was bedeutet das Ergebnis physikalisch?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Skizzieren Sie \\(v(t)\\) und deuten Sie das Integral als Dreieckfl\\u00e4che. Stimmt das Ergebnis?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( v(t_0) = 0 \\): \\( 20 - 5t_0 = 0 \\Rightarrow t_0 = 4\\,\\text{s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( F(t) = 20t - \\dfrac{5t^2}{2} \\)
+  <div class="dmath">\\( \\left[20t - \\dfrac{5t^2}{2}\\right]_0^4 = 80 - \\dfrac{80}{2} = 80 - 40 = 40\\,\\text{m} \\)</div>
+  Das Integral gibt den <strong>Bremsweg</strong> an: Das Fahrzeug legt 40 m zur\\u00fcck, bis es steht.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Der Graph von \\(v(t) = 20 - 5t\\) ist eine Gerade von \\((0;\\,20)\\) nach \\((4;\\,0)\\).
+  <br>Dreieckfl\\u00e4che: \\( A = \\dfrac{1}{2} \\cdot 4 \\cdot 20 = 40\\,\\text{m} \\; \\checkmark \\)
+</div></div>
+<div class="result">Bremsweg = 40 m (Dreieckfl\u00e4che unter v(t))</div>`,
+prompt:`Ich \u00fcbe die Interpretation bestimmter Integrale als Fl\u00e4che (Mathe Klasse 12). Erstelle 2 Aufgaben mit physikalischem Kontext (Geschwindigkeit-Zeit-Diagramm). Vollst\u00e4ndige L\u00f6sungen.`},
+
+a1:{title:"Integrationskonstante aus Anfangsbedingung (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein K\\u00f6rper hat die Beschleunigung \\(a(t) = 2t\\) (in m/s\\(^2\\)).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Bestimmen Sie \\(v(t) = \\int a(t)\\,dt\\) mit der Anfangsbedingung \\(v(0) = 5\\,\\text{m/s}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Bestimmen Sie \\(s(t) = \\int v(t)\\,dt\\) mit \\(s(0) = 0\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \\(s(3)\\).</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( v(t) = \\int 2t\\,dt = t^2 + C_1 \\)
+  <br>Anfangsbedingung: \\( v(0) = 0 + C_1 = 5 \\Rightarrow C_1 = 5 \\)
+  <div class="dmath">\\( v(t) = t^2 + 5 \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( s(t) = \\int (t^2 + 5)\\,dt = \\dfrac{t^3}{3} + 5t + C_2 \\)
+  <br>Anfangsbedingung: \\( s(0) = 0 + 0 + C_2 = 0 \\Rightarrow C_2 = 0 \\)
+  <div class="dmath">\\( s(t) = \\dfrac{t^3}{3} + 5t \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( s(3) = \\dfrac{27}{3} + 15 = 9 + 15 = 24\\,\\text{m} \\)
+</div></div>
+<div class="result">v(t) = t\u00b2 + 5, s(t) = t\u00b3/3 + 5t, s(3) = 24 m</div>`,
+prompt:`Ich \u00fcbe die Bestimmung der Integrationskonstante aus Anfangsbedingungen (Mathe Klasse 12). Erstelle 2 Aufgaben: a(t) \u2192 v(t) \u2192 s(t). Vollst\u00e4ndige L\u00f6sungen.`},
+
+a2:{title:"Warum braucht man eine Anfangsbedingung? (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Gegeben ist \\(f(x) = 2x\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Geben Sie drei verschiedene Stammfunktionen von \\(f(x)\\) an.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Skizzieren Sie alle drei Stammfunktionen in einem Koordinatensystem. Was f\\u00e4llt auf?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erkl\\u00e4ren Sie: Warum gibt es unendlich viele Stammfunktionen und warum braucht man eine Anfangsbedingung, um eine eindeutige auszuw\\u00e4hlen?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( F_1(x) = x^2 \\), \\quad \\( F_2(x) = x^2 + 3 \\), \\quad \\( F_3(x) = x^2 - 7 \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Alle drei Graphen sind <strong>Parabeln gleicher Form</strong>, die nur in der H\\u00f6he (y-Richtung) verschoben sind. Sie sind <strong>parallel</strong> zueinander.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Jede Funktion der Form \\(F(x) = x^2 + C\\) hat die Ableitung \\(F'(x) = 2x = f(x)\\), egal welchen Wert \\(C\\) hat. Es gibt also <strong>unendlich viele</strong> Stammfunktionen. Erst eine Bedingung wie \\(F(0) = 5\\) legt \\(C\\) fest: \\(0 + C = 5 \\Rightarrow C = 5\\).
+</div></div>
+<div class="result">Unendlich viele Stammfunktionen \u2014 Anfangsbedingung w\u00e4hlt genau eine aus</div>`,
+prompt:`Ich \u00fcbe die Bedeutung der Integrationskonstante C (Mathe Klasse 12). Erkl\u00e4re graphisch und algebraisch, warum es unendlich viele Stammfunktionen gibt. Neue Aufgabe.`},
+
+a3:{title:"Spannarbeit einer Feder (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine Feder hat die Federkonstante \\(D = 150\\,\\text{N/m}\\). Die Federkraft ist \\(F(s) = D \\cdot s = 150\\,s\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Spannarbeit \\(W = \\int_{s_1}^{s_2} F(s)\\,ds\\) f\\u00fcr \\(s_1 = 0{,}05\\,\\text{m}\\) bis \\(s_2 = 0{,}20\\,\\text{m}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die Arbeit zum Spannen von \\(s = 0\\) bis \\(s = 0{,}20\\,\\text{m}\\). Vergleichen Sie.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erkl\\u00e4ren Sie, warum \\(W(0) = 0\\) als Anfangsbedingung sinnvoll ist.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( W = \\int_{0{,}05}^{0{,}20} 150\\,s\\,ds = \\left[\\dfrac{150\\,s^2}{2}\\right]_{0{,}05}^{0{,}20} = 75\\,s^2 \\Big|_{0{,}05}^{0{,}20} \\)
+  <div class="dmath">\\( = 75 \\cdot 0{,}04 - 75 \\cdot 0{,}0025 = 3{,}0 - 0{,}1875 = 2{,}8125\\,\\text{J} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( W = \\int_0^{0{,}20} 150\\,s\\,ds = 75 \\cdot 0{,}04 - 0 = 3{,}0\\,\\text{J} \\)
+  <br>Von 0 bis 0,20 m: 3,0 J. Von 0,05 bis 0,20 m: 2,81 J. Die Differenz (0,19 J) ist die Arbeit zum Vorspannen auf 5 cm.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Im entspannten Zustand (\\(s = 0\\)) ist keine Arbeit gespeichert. Daher ist \\(W(0) = 0\\) der nat\\u00fcrliche Bezugspunkt. Das entspricht \\(C = 0\\) in \\(W(s) = \\frac{D}{2}s^2 + C\\).
+</div></div>
+<div class="result">W = 2,81 J (von 5 cm bis 20 cm), W = 3,0 J (von 0 bis 20 cm)</div>`,
+prompt:`Ich \u00fcbe Spannarbeit einer Feder als Integral (Mathe Klasse 12). Erstelle 2 Aufgaben: W = \u222b F(s) ds mit verschiedenen Grenzen und Federkonstanten. Vollst\u00e4ndige L\u00f6sungen.`},
+
+p1:{title:"Bremsweg aus v(t) (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Fahrzeug hat die Geschwindigkeit \\(v(t) = 8 - 2t\\) (in m/s).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Wann kommt das Fahrzeug zum Stehen (\\(v(t_0) = 0\\))?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie den Bremsweg \\(s = \\int_0^{t_0} v(t)\\,dt\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Kontrollieren Sie das Ergebnis mit der Dreiecksfl\\u00e4che.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( 8 - 2t_0 = 0 \\Rightarrow t_0 = 4\\,\\text{s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( s = \\int_0^4 (8 - 2t)\\,dt = \\left[8t - t^2\\right]_0^4 = (32 - 16) - 0 = 16\\,\\text{m} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Dreieck mit Grundseite \\(4\\,\\text{s}\\) und H\\u00f6he \\(8\\,\\text{m/s}\\):
+  <div class="dmath">\\( A = \\dfrac{1}{2} \\cdot 4 \\cdot 8 = 16\\,\\text{m} \\; \\checkmark \\)</div>
+</div></div>
+<div class="result">Bremsweg = 16 m</div>`,
+prompt:`Ich \u00fcbe den Bremsweg als Integral der Geschwindigkeit (Mathe Klasse 12). Erstelle 2 Aufgaben mit linearer Geschwindigkeitsfunktion. Vollst\u00e4ndige L\u00f6sungen.`},
+
+p2:{title:"Ladung aus Stromst\u00e4rke (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Durch einen Widerstand flie\\u00dft ein zeitabh\\u00e4ngiger Strom \\(I(t) = 0{,}5 - 0{,}1\\,t\\) (in Ampere) f\\u00fcr \\(t \\in [0;\\,5\\,\\text{s}]\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die geflossene Ladung \\(Q = \\int_0^5 I(t)\\,dt\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Geben Sie \\(Q\\) in Coulomb an und interpretieren Sie das Ergebnis.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( Q = \\int_0^5 (0{,}5 - 0{,}1\\,t)\\,dt = \\left[0{,}5\\,t - 0{,}05\\,t^2\\right]_0^5 \\)
+  <div class="dmath">\\( = (2{,}5 - 1{,}25) - 0 = 1{,}25\\,\\text{C} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( Q = 1{,}25\\,\\text{C} = 1{,}25\\,\\text{As} \\)
+  <br>In 5 Sekunden flie\\u00dfen 1,25 Coulomb Ladung. Der Strom nimmt linear von 0,5 A auf 0 A ab.
+</div></div>
+<div class="result">Q = 1,25 C (= 1,25 As)</div>`,
+prompt:`Ich \u00fcbe die Berechnung der elektrischen Ladung als Integral der Stromst\u00e4rke (Mathe Klasse 12). Erstelle 2 Aufgaben mit linearer und exponentieller Stromst\u00e4rke. Vollst\u00e4ndige L\u00f6sungen.`},
+
+p3:{title:"Energie aus Leistung \u2014 Solarmodul (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Solarmodul liefert die Leistung \\(P(t) = 300 \\cdot \\sin\\!\\left(\\dfrac{\\pi}{12}\\,t\\right)\\) Watt f\\u00fcr \\(t \\in [0;\\,12\\,\\text{h}]\\) (Sonnenstunden).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die erzeugte Energie \\(E = \\int_0^{12} P(t)\\,dt\\) in Wattstunden (Wh).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Rechnen Sie \\(E\\) in kWh um.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Vergleichen Sie mit dem Tagesverbrauch eines Haushalts (ca. 10 kWh). Wie viele Module w\\u00e4ren n\\u00f6tig?</span></div>
+  </div>
+  <div class="hint-box">Achtung: \\(t\\) ist hier in Stunden, daher ist das Ergebnis direkt in Wh.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( E = \\int_0^{12} 300 \\cdot \\sin\\!\\left(\\dfrac{\\pi}{12}\\,t\\right)dt = 300 \\cdot \\left[-\\dfrac{12}{\\pi}\\cos\\!\\left(\\dfrac{\\pi}{12}\\,t\\right)\\right]_0^{12} \\)
+  <div class="dmath">\\( = 300 \\cdot \\left(-\\dfrac{12}{\\pi}\\right)\\left[\\cos(\\pi) - \\cos(0)\\right] = 300 \\cdot \\left(-\\dfrac{12}{\\pi}\\right)(-1 - 1) \\)</div>
+  <div class="dmath">\\( = 300 \\cdot \\dfrac{12}{\\pi} \\cdot 2 = \\dfrac{7200}{\\pi} \\approx 2292\\,\\text{Wh} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( E \\approx 2{,}29\\,\\text{kWh} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( \\dfrac{10}{2{,}29} \\approx 4{,}4 \\) \u2192 Man br\\u00e4uchte mindestens <strong>5 Module</strong>.
+</div></div>
+<div class="result">E = 7200/\u03c0 Wh \u2248 2,29 kWh pro Modul pro Tag</div>`,
+prompt:`Ich \u00fcbe Energie als Integral der Leistung (Mathe Klasse 12). Erstelle 2 Aufgaben mit Solarmodul und Windkraft. Leistung als Funktion der Zeit, Energie in kWh. Vollst\u00e4ndige L\u00f6sungen.`},
+
+p4:{title:"Kondensatorentladung (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Ein Kondensator entl\\u00e4dt sich \\u00fcber einen Widerstand. Der Strom ist \\(I(t) = I_0 \\cdot e^{-t/\\tau}\\) mit \\(I_0 = 30\\,\\text{mA} = 0{,}030\\,\\text{A}\\) und \\(\\tau = 0{,}5\\,\\text{s}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Ladung \\(Q(t_1) = \\int_0^{t_1} I(t)\\,dt\\) f\\u00fcr \\(t_1 = 4\\,\\text{s}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die Gesamtladung \\(Q_\\infty = \\int_0^\\infty I(t)\\,dt\\) und zeigen Sie: \\(Q_\\infty = \\tau \\cdot I_0\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Vergleichen Sie \\(Q(4\\,\\text{s})\\) mit \\(Q_\\infty\\). Wie viel Prozent der Ladung sind nach 4 s geflossen?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( Q(t_1) = \\int_0^{t_1} 0{,}030 \\cdot e^{-t/0{,}5}\\,dt = 0{,}030 \\cdot \\left[-0{,}5 \\cdot e^{-t/0{,}5}\\right]_0^{4} \\)
+  <div class="dmath">\\( = 0{,}030 \\cdot (-0{,}5)\\left(e^{-8} - e^{0}\\right) = 0{,}015 \\cdot (1 - e^{-8}) \\)</div>
+  \\( e^{-8} \\approx 0{,}000\\,335 \\), also \\( Q(4) \\approx 0{,}015 \\cdot 0{,}999\\,665 \\approx 0{,}014\\,995\\,\\text{C} \\approx 15{,}0\\,\\text{mC} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( Q_\\infty = \\int_0^\\infty I_0 \\cdot e^{-t/\\tau}\\,dt = I_0 \\cdot [-\\tau \\cdot e^{-t/\\tau}]_0^\\infty = I_0 \\cdot \\tau \\cdot (1 - 0) \\)
+  <div class="dmath">\\( Q_\\infty = \\tau \\cdot I_0 = 0{,}5 \\cdot 0{,}030 = 0{,}015\\,\\text{C} = 15\\,\\text{mC} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( \\dfrac{Q(4)}{Q_\\infty} = 1 - e^{-8} \\approx 0{,}999\\,7 \\approx 99{,}97\\,\\% \\)
+  <br>Nach \\(4\\,\\text{s} = 8\\tau\\) sind praktisch 100 % der Ladung geflossen.
+</div></div>
+<div class="result">Q\u221e = \u03c4 \u00b7 I\u2080 = 15 mC, nach 8\u03c4 sind 99,97 % geflossen</div>`,
+prompt:`Ich \u00fcbe die Integration der Kondensatorentladung I(t)=I\u2080\u00b7e^(-t/\u03c4) (Mathe Klasse 12, AFB III). Herleitung Q\u221e=\u03c4\u00b7I\u2080. Neue Aufgabe mit anderen Werten.`},
+
+f1:{title:"Orientiertes vs. echtes Integral (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Gegeben ist \\(f(x) = x\\) auf dem Intervall \\([-2;\\,2]\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie das orientierte Integral \\(\\int_{-2}^{2} x\\,dx\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie den echten Fl\\u00e4cheninhalt \\(A = \\int_{-2}^{2} |x|\\,dx\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erkl\\u00e4ren Sie den Unterschied.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( \\int_{-2}^{2} x\\,dx = \\left[\\dfrac{x^2}{2}\\right]_{-2}^{2} = \\dfrac{4}{2} - \\dfrac{4}{2} = 0 \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( A = \\int_{-2}^{0} |x|\\,dx + \\int_{0}^{2} |x|\\,dx = \\int_{-2}^{0} (-x)\\,dx + \\int_{0}^{2} x\\,dx \\)
+  <div class="dmath">\\( = \\left[-\\dfrac{x^2}{2}\\right]_{-2}^{0} + \\left[\\dfrac{x^2}{2}\\right]_{0}^{2} = (0 - (-2)) + (2 - 0) = 2 + 2 = 4 \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Beim <strong>orientierten</strong> Integral heben sich die Fl\\u00e4chen ober- und unterhalb der x-Achse auf (\\(+2\\) und \\(-2\\) ergeben 0). Beim <strong>echten</strong> Fl\\u00e4cheninhalt z\\u00e4hlt man alle Fl\\u00e4chen positiv: \\(2 + 2 = 4\\).
+</div></div>
+<div class="result">Orientiert: 0, Echter Fl\u00e4cheninhalt: 4</div>`,
+prompt:`Ich \u00fcbe den Unterschied orientiertes Integral vs. echter Fl\u00e4cheninhalt (Mathe Klasse 12). Erstelle 2 Aufgaben mit Funktionen, die die x-Achse schneiden. Vollst\u00e4ndige L\u00f6sungen.`},
+
+f2:{title:"Vorzeichen eines Integrals vorhersagen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Sagen Sie <strong>ohne Rechnung</strong> vorher, ob das Integral positiv, negativ oder null ist. Begr\\u00fcnden Sie.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(\\int_0^3 x^2\\,dx\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(\\int_0^2 (x - 3)\\,dx\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(\\int_{-1}^{1} x^3\\,dx\\)</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">\\(\\int_0^{2\\pi} \\sin(x)\\,dx\\)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <strong>Positiv.</strong> \\(x^2 \\geq 0\\) auf \\([0;\\,3]\\), der Graph liegt komplett \\u00fcber der x-Achse.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <strong>Negativ.</strong> \\(x - 3 < 0\\) f\\u00fcr alle \\(x \\in [0;\\,2]\\), der Graph liegt komplett unter der x-Achse.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  <strong>Null.</strong> \\(x^3\\) ist eine ungerade Funktion (punktsymmetrisch zum Ursprung). \\u00dcber einem symmetrischen Intervall \\([-1;\\,1]\\) heben sich die Fl\\u00e4chen auf.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  <strong>Null.</strong> \\(\\sin(x)\\) hat eine positive Halbwelle \\([0;\\,\\pi]\\) und eine negative Halbwelle \\([\\pi;\\,2\\pi]\\), die sich exakt aufheben.
+</div></div>
+<div class="result">a) positiv, b) negativ, c) null (ungerade), d) null (Symmetrie)</div>`,
+prompt:`Ich \u00fcbe das Vorhersagen des Vorzeichens von Integralen ohne Rechnung (Mathe Klasse 12). Erstelle 5 Aufgaben mit verschiedenen Funktionstypen. Begr\u00fcndungen mit Symmetrie und Lage zur x-Achse.`},
+
+f3:{title:"Echter Fl\u00e4cheninhalt \u2014 Nullstellen und Aufteilen (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Gegeben ist \\(f(x) = x^2 - 4\\) auf \\([-3;\\,3]\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Bestimmen Sie die Nullstellen von \\(f\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Teilen Sie das Intervall \\([-3;\\,3]\\) an den Nullstellen auf und bestimmen Sie das Vorzeichen von \\(f\\) in jedem Teilintervall.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie den echten Fl\\u00e4cheninhalt \\(A = |I_1| + |I_2| + |I_3|\\).</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( x^2 - 4 = 0 \\Rightarrow x = \\pm 2 \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <span class="fbox">[-3;-2]: f > 0 &emsp; [-2;2]: f < 0 &emsp; [2;3]: f > 0</span>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Stammfunktion: \\( F(x) = \\dfrac{x^3}{3} - 4x \\)
+  <br><br>\\( I_1 = \\int_{-3}^{-2} (x^2 - 4)\\,dx = F(-2) - F(-3) = \\left(-\\dfrac{8}{3} + 8\\right) - \\left(-9 + 12\\right) = \\dfrac{16}{3} - 3 = \\dfrac{7}{3} \\)
+  <br><br>\\( I_2 = \\int_{-2}^{2} (x^2 - 4)\\,dx = F(2) - F(-2) = \\left(\\dfrac{8}{3} - 8\\right) - \\left(-\\dfrac{8}{3} + 8\\right) = -\\dfrac{16}{3} - \\dfrac{16}{3} = -\\dfrac{32}{3} \\)
+  <br><br>\\( I_3 = \\int_{2}^{3} (x^2 - 4)\\,dx = F(3) - F(2) = (9 - 12) - \\left(\\dfrac{8}{3} - 8\\right) = -3 + \\dfrac{16}{3} = \\dfrac{7}{3} \\)
+  <div class="dmath">\\( A = |I_1| + |I_2| + |I_3| = \\dfrac{7}{3} + \\dfrac{32}{3} + \\dfrac{7}{3} = \\dfrac{46}{3} \\approx 15{,}33 \\)</div>
+</div></div>
+<div class="result">A = 46/3 \u2248 15,33 FE</div>`,
+prompt:`Ich \u00fcbe die Berechnung des echten Fl\u00e4cheninhalts mit Nullstellen und Aufteilen (Mathe Klasse 12). Erstelle 2 Aufgaben mit Polynomen, die die x-Achse schneiden. Vollst\u00e4ndige L\u00f6sungen.`},
+
+f4:{title:"Mehrere Vorzeichenwechsel (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Gegeben ist \\(f(x) = x^3 - x\\) auf \\([-1;\\,2]\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Bestimmen Sie alle Nullstellen von \\(f\\) im Intervall.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie das orientierte Integral \\(\\int_{-1}^{2} f(x)\\,dx\\). Warum ist dieses Ergebnis <em>nicht</em> der Fl\\u00e4cheninhalt?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie den echten Fl\\u00e4cheninhalt, indem Sie an den Nullstellen aufteilen.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( x^3 - x = x(x^2 - 1) = x(x-1)(x+1) = 0 \\)
+  <br>Nullstellen: \\( x = -1, \\; x = 0, \\; x = 1 \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( F(x) = \\dfrac{x^4}{4} - \\dfrac{x^2}{2} \\)
+  <div class="dmath">\\( \\int_{-1}^{2} f(x)\\,dx = F(2) - F(-1) = \\left(4 - 2\\right) - \\left(\\dfrac{1}{4} - \\dfrac{1}{2}\\right) = 2 - \\left(-\\dfrac{1}{4}\\right) = \\dfrac{9}{4} \\)</div>
+  Dieses Ergebnis ist <strong>nicht</strong> der Fl\\u00e4cheninhalt, weil sich positive und negative Fl\\u00e4chenanteile teilweise aufheben.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Vorzeichen: \\([-1;\\,0]\\): \\(f \\geq 0\\), \\quad \\([0;\\,1]\\): \\(f \\leq 0\\), \\quad \\([1;\\,2]\\): \\(f \\geq 0\\)
+  <br><br>\\( I_1 = \\int_{-1}^{0} f(x)\\,dx = F(0) - F(-1) = 0 - \\left(-\\dfrac{1}{4}\\right) = \\dfrac{1}{4} \\)
+  <br>\\( I_2 = \\int_{0}^{1} f(x)\\,dx = F(1) - F(0) = \\left(\\dfrac{1}{4} - \\dfrac{1}{2}\\right) - 0 = -\\dfrac{1}{4} \\)
+  <br>\\( I_3 = \\int_{1}^{2} f(x)\\,dx = F(2) - F(1) = 2 - \\left(-\\dfrac{1}{4}\\right) = \\dfrac{9}{4} \\)
+  <div class="dmath">\\( A = |I_1| + |I_2| + |I_3| = \\dfrac{1}{4} + \\dfrac{1}{4} + \\dfrac{9}{4} = \\dfrac{11}{4} = 2{,}75 \\)</div>
+</div></div>
+<div class="result">A = 11/4 = 2,75 FE (orientiertes Integral w\u00e4re nur 9/4 = 2,25)</div>`,
+prompt:`Ich \u00fcbe den Fl\u00e4cheninhalt bei mehreren Vorzeichenwechseln (Mathe Klasse 12, AFB III). Erstelle eine Aufgabe mit kubischer Funktion. Erkl\u00e4re den typischen Fehler: orientiertes statt echtes Integral.`},
+
+y1:{title:"Symmetrie und Integrale (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Betrachten Sie gerade und ungerade Funktionen.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Begr\\u00fcnden Sie: F\\u00fcr eine ungerade Funktion \\(f(-x) = -f(x)\\) gilt \\(\\int_{-a}^{a} f(x)\\,dx = 0\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Begr\\u00fcnden Sie: F\\u00fcr eine gerade Funktion \\(f(-x) = f(x)\\) gilt \\(\\int_{-a}^{a} f(x)\\,dx = 2\\int_0^{a} f(x)\\,dx\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Verifizieren Sie mit \\(f(x) = x^3\\) auf \\([-2;\\,2]\\) und \\(g(x) = x^4\\) auf \\([-1;\\,1]\\).</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Der Graph einer ungeraden Funktion ist <strong>punktsymmetrisch</strong> zum Ursprung. Die Fl\\u00e4che unterhalb der x-Achse links vom Ursprung hat denselben Betrag wie die Fl\\u00e4che oberhalb rechts, aber entgegengesetztes Vorzeichen. Daher:
+  <div class="dmath">\\( \\int_{-a}^{0} f(x)\\,dx + \\int_{0}^{a} f(x)\\,dx = -\\int_{0}^{a} f(x)\\,dx + \\int_{0}^{a} f(x)\\,dx = 0 \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Der Graph einer geraden Funktion ist <strong>achsensymmetrisch</strong> zur y-Achse. Die linke H\\u00e4lfte ist ein Spiegelbild der rechten:
+  <div class="dmath">\\( \\int_{-a}^{0} f(x)\\,dx = \\int_{0}^{a} f(x)\\,dx \\quad \\Rightarrow \\quad \\int_{-a}^{a} f(x)\\,dx = 2\\int_{0}^{a} f(x)\\,dx \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( \\int_{-2}^{2} x^3\\,dx = \\left[\\dfrac{x^4}{4}\\right]_{-2}^{2} = 4 - 4 = 0 \\; \\checkmark \\) (ungerade)
+  <br><br>\\( \\int_{-1}^{1} x^4\\,dx = \\left[\\dfrac{x^5}{5}\\right]_{-1}^{1} = \\dfrac{1}{5} - \\left(-\\dfrac{1}{5}\\right) = \\dfrac{2}{5} \\)
+  <br>\\( 2\\int_{0}^{1} x^4\\,dx = 2 \\cdot \\dfrac{1}{5} = \\dfrac{2}{5} \\; \\checkmark \\) (gerade)
+</div></div>
+<div class="result">Ungerade: Integral = 0, Gerade: Integral = 2 \u00d7 (H\u00e4lfte)</div>`,
+prompt:`Ich \u00fcbe Symmetrieeigenschaften und Integrale (Mathe Klasse 12, AFB III). Erkl\u00e4re: Warum ist das Integral ungerader Funktionen \u00fcber symmetrische Intervalle null? Neue Aufgabe.`},
+
+y2:{title:"Obere Grenze als Unbekannte (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Gesucht ist \\(b > 0\\) mit \\(\\int_0^b (x^2 - 4)\\,dx = 0\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie das Integral in Abh\\u00e4ngigkeit von \\(b\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">L\\u00f6sen Sie die Gleichung \\(\\int_0^b (x^2 - 4)\\,dx = 0\\) nach \\(b\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Interpretieren Sie das Ergebnis geometrisch: Warum gibt es ein \\(b > 0\\), f\\u00fcr das das Integral null wird?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( \\int_0^b (x^2 - 4)\\,dx = \\left[\\dfrac{x^3}{3} - 4x\\right]_0^b = \\dfrac{b^3}{3} - 4b \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( \\dfrac{b^3}{3} - 4b = 0 \\quad \\Rightarrow \\quad b\\left(\\dfrac{b^2}{3} - 4\\right) = 0 \\)
+  <br>\\( b = 0 \\) (trivial) oder \\( \\dfrac{b^2}{3} = 4 \\Rightarrow b^2 = 12 \\Rightarrow b = 2\\sqrt{3} \\approx 3{,}46 \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  F\\u00fcr \\(x \\in [0;\\,2]\\) ist \\(f(x) < 0\\) (Graph unter der x-Achse, negativer Fl\\u00e4chenbeitrag).
+  <br>F\\u00fcr \\(x > 2\\) ist \\(f(x) > 0\\) (Graph \\u00fcber der x-Achse, positiver Beitrag).
+  <br>Bei \\(b = 2\\sqrt{3}\\) gleichen sich der negative Fl\\u00e4chenanteil \\([0;\\,2]\\) und der positive Anteil \\([2;\\,2\\sqrt{3}]\\) exakt aus.
+</div></div>
+<div class="result">b = 2\u221a3 \u2248 3,46 (negative und positive Fl\u00e4che heben sich auf)</div>`,
+prompt:`Ich \u00fcbe die obere Integrationsgrenze als Unbekannte (Mathe Klasse 12, Knobelaufgabe). Erstelle eine Aufgabe: \u222b\u2080\u1d47 f(x) dx = k l\u00f6sen. Geometrische Interpretation. Vollst\u00e4ndige L\u00f6sung.`}
+
+};
+
+// -----------------------------------------
+// STATE
+// -----------------------------------------
+const state = {};
+let curId = null;
+
+function loadState(){
+  try{ Object.assign(state, JSON.parse(sessionStorage.getItem('q4-integral')||'{}')); }catch(e){}
+}
+function saveState(){
+  try{ sessionStorage.setItem('q4-integral', JSON.stringify(state)); }catch(e){}
+}
+
+// -----------------------------------------
+// TOGGLE
+// -----------------------------------------
+function toggle(checkArea){
+  const card = checkArea.closest('.comp-card');
+  card.classList.toggle('done');
+  state[card.dataset.id] = card.classList.contains('done');
+  saveState();
+  updateProgress();
+  updateCnt(card.dataset.sec);
+}
+
+// -----------------------------------------
+// PROGRESS
+// -----------------------------------------
+function updateProgress(){
+  const all = document.querySelectorAll('.comp-card').length;
+  const done = document.querySelectorAll('.comp-card.done').length;
+  const pct = all ? done/all*100 : 0;
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-text').textContent = done+' von '+all+' Kompetenzen';
+}
+function updateCnt(sec){
+  const all  = document.querySelectorAll(`[data-sec="${sec}"]`).length;
+  const done = document.querySelectorAll(`[data-sec="${sec}"].done`).length;
+  const el   = document.getElementById('cnt-'+sec);
+  if(el) el.textContent = done+'/'+all;
+}
+function initState(){
+  loadState();
+  document.querySelectorAll('.comp-card').forEach(c=>{
+    if(state[c.dataset.id]) c.classList.add('done');
+  });
+  updateProgress();
+  ['stamm','hauptsatz','bestimmt','anfang','anwendung','flaeche','symmetrie'].forEach(s=>updateCnt(s));
+}
+
+// -----------------------------------------
+// MODAL
+// -----------------------------------------
+function openModal(id){
+  curId = id;
+  const d = T[id];
+  if(!d) return;
+
+  document.getElementById('m-title').textContent = d.title;
+
+  // Tab 0: Aufgabe + ausklappbare Loesung
+  document.getElementById('tp0').innerHTML =
+    d.aufgabe +
+    `<button class="sol-toggle" onclick="toggleSol()">💡 L\u00f6sung anzeigen</button>
+     <div class="sol-box" id="sol-box">${d.loesung}</div>`;
+
+  // Tab 1: Loesung direkt
+  document.getElementById('tp1').innerHTML =
+    `<div class="sol-box open">${d.loesung}</div>`;
+
+  // Tab 2: KI-Prompt
+  document.getElementById('tp2').innerHTML =
+    `<p style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">Prompt f\u00fcr weitere \u00dcbungsaufgaben:</p>
+     <div class="prompt-box">${d.prompt}</div>
+     <div class="ai-btns">
+       <button class="ai-btn copy" onclick="copyPrompt()">📋 Kopieren</button>
+       <a class="ai-btn" href="https://gemini.google.com" target="_blank">🚀 Google AI</a>
+       <a class="ai-btn" href="https://chatgpt.com" target="_blank">💬 ChatGPT</a>
+     </div>`;
+
+  // Reset tabs
+  document.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Re-render MathJax
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('overlay')]).catch(e=>console.log(e));
+  }
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClick(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
+
+function switchTab(i){
+  document.querySelectorAll('.mtab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.tab-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('tp'+i)]).catch(e=>console.log(e));
+  }
+}
+
+function toggleSol(){
+  const b = document.getElementById('sol-box');
+  const btn = b.previousElementSibling;
+  b.classList.toggle('open');
+  btn.textContent = b.classList.contains('open') ? '🙈 L\u00f6sung ausblenden' : '💡 L\u00f6sung anzeigen';
+  if(b.classList.contains('open') && window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([b]).catch(e=>console.log(e));
+  }
+}
+
+function copyPrompt(){
+  if(!T[curId]) return;
+  navigator.clipboard.writeText(T[curId].prompt).then(()=>{
+    const btn = document.querySelector('.copy');
+    btn.textContent = '✅ Kopiert!';
+    setTimeout(()=>btn.textContent='📋 Kopieren', 2000);
+  });
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+// -----------------------------------------
+// INIT
+// -----------------------------------------
+window.addEventListener('DOMContentLoaded', ()=>{
+  initState();
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise().catch(e=>console.log(e));
+  }
+});
+</script>
+
+</body>
+</html>

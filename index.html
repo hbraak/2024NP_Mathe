@@ -172,6 +172,28 @@
         </header>
         
         <div class="material-grid">
+            <a href="lernliste-integral-q4.html" class="material-card" data-url="lernliste-integral-q4.html">
+                <div class="card-header">
+                    <div class="card-icon green">📋</div>
+                    <div class="card-title">Lernliste: Q4 — Integralrechnung</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Interaktive Checkliste zur Klausurvorbereitung Q4: Stammfunktionen, Hauptsatz, bestimmtes Integral, Anfangsbedingungen, Anwendungen und orientierter Flächeninhalt. 22 Kompetenzen mit Übungsaufgaben, Lösungen und KI-Prompts.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Integralrechnung</span>
+                            <span class="tag">Stammfunktion</span>
+                            <span class="tag">Hauptsatz</span>
+                            <span class="tag">Flächeninhalt</span>
+                            <span class="tag">Klausur Q4</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-q4"></div>
+                </div>
+            </a>
+
             <a href="index_eFunktionen_Q3.html" class="material-card" data-url="index_eFunktionen_Q3.html">
                 <div class="card-header">
                     <div class="card-icon green">📋</div>
@@ -318,6 +340,7 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-q4', 'lernliste-integral-q4.html');
             generateQR('qr-q3', 'index_eFunktionen_Q3.html');
             generateQR('qr-lernliste', 'lernliste-analysis-q2.html');
             generateQR('qr-sincos', 'ableitungen_sin_cos.html');
