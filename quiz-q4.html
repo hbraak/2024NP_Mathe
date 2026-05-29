@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mathe-Quiz – 12NP</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  body { font-family: 'Inter', sans-serif; }
+  .option-btn { transition: all 0.2s; }
+  .option-btn:active { transform: scale(0.97); }
+  .option-btn.correct { background: #22c55e !important; color: white !important; border-color: #22c55e !important; }
+  .option-btn.wrong { background: #ef4444 !important; color: white !important; border-color: #ef4444 !important; }
+  .option-btn.reveal { border-color: #22c55e !important; background: #f0fdf4 !important; }
+  .fade-in { animation: fadeIn 0.35s ease-out; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pop { 0% { transform:scale(1); } 50% { transform:scale(1.15); } 100% { transform:scale(1); } }
+  .pop { animation: pop 0.3s ease; }
+  .progress-bar { transition: width 0.4s ease; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 to-blue-50 min-h-screen">
+
+<div id="app" class="max-w-lg mx-auto px-4 py-6">
+
+  <!-- START SCREEN -->
+  <div id="start-screen" class="text-center fade-in">
+    <div class="text-6xl mb-4">🧠</div>
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-2">Mathe-Quiz</h1>
+    <p class="text-gray-500 mb-1">12NP – Nach der Klausur ist vor dem Spaß</p>
+    <p class="text-gray-400 text-sm mb-8">10 Fragen • Keine Noten • Nur Ehre</p>
+
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-6 text-left">
+      <p class="text-sm text-gray-600">🎯 Mix aus Schätzfragen, Knobeleien und Mathe-Fun</p>
+      <p class="text-sm text-gray-600 mt-2">⏱️ Kein Zeitlimit – aber wer zuerst fertig ist, darf angeben</p>
+      <p class="text-sm text-gray-600 mt-2">📱 Taschenrechner erlaubt (aber nicht immer nötig)</p>
+    </div>
+
+    <button onclick="startQuiz()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-4 rounded-2xl text-lg transition shadow-lg shadow-indigo-200">
+      Los geht's! 🚀
+    </button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" class="hidden">
+    <!-- Progress -->
+    <div class="flex items-center gap-3 mb-6">
+      <span id="q-counter" class="text-sm font-bold text-indigo-600 whitespace-nowrap">1/10</span>
+      <div class="flex-1 bg-gray-200 rounded-full h-2.5">
+        <div id="progress-bar" class="progress-bar bg-indigo-500 h-2.5 rounded-full" style="width:10%"></div>
+      </div>
+      <span id="score-display" class="text-sm font-bold text-green-600 whitespace-nowrap">0 ✓</span>
+    </div>
+
+    <!-- Question Card -->
+    <div id="question-card" class="fade-in">
+      <div class="bg-white rounded-2xl shadow-md p-6 mb-4">
+        <div id="q-category" class="text-xs font-semibold text-indigo-400 uppercase tracking-wide mb-2"></div>
+        <h2 id="q-text" class="text-lg font-bold text-gray-800 leading-snug"></h2>
+        <div id="q-image" class="mt-3"></div>
+        <p id="q-hint" class="text-sm text-gray-400 italic mt-2 hidden"></p>
+      </div>
+
+      <div id="options-container" class="space-y-2.5 mb-4"></div>
+
+      <!-- Feedback -->
+      <div id="feedback" class="hidden bg-white rounded-2xl shadow-md p-5 mb-4 text-center">
+        <div id="feedback-emoji" class="text-4xl mb-2"></div>
+        <p id="feedback-text" class="text-sm text-gray-600"></p>
+      </div>
+
+      <button id="next-btn" onclick="nextQuestion()" class="hidden w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-xl transition">
+        Nächste Frage →
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="result-screen" class="hidden fade-in text-center">
+    <div id="result-emoji" class="text-7xl mb-4"></div>
+    <h2 id="result-title" class="text-2xl font-extrabold text-gray-800 mb-2"></h2>
+    <p id="result-subtitle" class="text-gray-500 mb-6"></p>
+
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+      <div class="text-5xl font-extrabold text-indigo-600 mb-1" id="result-score"></div>
+      <p class="text-gray-400 text-sm">von 10 richtig</p>
+    </div>
+
+    <div id="result-details" class="bg-white rounded-2xl shadow-md p-5 mb-6 text-left space-y-2"></div>
+
+    <button onclick="location.reload()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-2xl transition">
+      🔄 Nochmal spielen
+    </button>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    category: "🎲 Schätzfrage",
+    text: "Wie oft müssten Sie ein DIN-A4-Blatt falten, damit es höher als der Eiffelturm (330 m) wäre?",
+    hint: "Ein Blatt ist ca. 0,1 mm dick. Jede Faltung verdoppelt die Dicke.",
+    options: ["15-mal", "23-mal", "42-mal", "57-mal"],
+    correct: 1,
+    explanation: "Nach 23 Faltungen: 0,1 mm × 2²³ ≈ 838 m – das überragt den Eiffelturm locker! Exponentielles Wachstum ist krass. 🗼"
+  },
+  {
+    category: "📐 Kopfrechnen",
+    text: "Was ist 111.111.111 × 111.111.111?",
+    options: [
+      "12.345.678.987.654.321",
+      "12.345.678.123.456.789",
+      "11.111.111.111.111.111",
+      "12.346.679.012.345.678"
+    ],
+    correct: 0,
+    explanation: "Das wunderschöne Palindrom: 12.345.678.987.654.321 – erst hoch, dann wieder runter! ✨"
+  },
+  {
+    category: "🧮 Integral-Quickie",
+    text: "Welchen Wert hat ∫₀¹ 2x dx?",
+    options: ["0", "1", "2", "½"],
+    correct: 1,
+    explanation: "F(x) = x², also F(1) − F(0) = 1 − 0 = 1. Die Fläche unter der Geraden f(x) = 2x von 0 bis 1. 📈"
+  },
+  {
+    category: "🤯 Mathe-Rätsel",
+    text: "Drei Freunde zahlen je 10 € für eine Pizza (30 €). Der Kellner gibt 5 € Rabatt zurück. Jeder bekommt 1 € zurück, 2 € behält der Kellner als Trinkgeld. 3 × 9 € + 2 € = 29 €. Wo ist der fehlende Euro?",
+    options: [
+      "Der Kellner hat ihn",
+      "Es fehlt gar keiner – die Rechnung ist ein Trick",
+      "Rundungsfehler",
+      "Die Pizza war teurer"
+    ],
+    correct: 1,
+    explanation: "Die 27 € enthalten bereits die 2 € Trinkgeld. Man darf 27 + 2 nicht addieren – das ist ein klassischer Taschenspielertrick! 🎩"
+  },
+  {
+    category: "📊 Graph erkennen",
+    text: "Die Funktion f(x) = x² − 4 hat zwei Nullstellen. Welche Aussage über ∫₋₂² f(x) dx stimmt?",
+    hint: "Denken Sie an das Vorzeichen der Fläche …",
+    options: [
+      "Das Integral ist positiv",
+      "Das Integral ist 0",
+      "Das Integral ist negativ",
+      "Das kann man nicht sagen"
+    ],
+    correct: 2,
+    explanation: "Zwischen den Nullstellen −2 und 2 liegt die Parabel komplett UNTER der x-Achse → das Integral ist negativ (−32/3 ≈ −10,67). Kam euch die Aufgabe bekannt vor? 😏"
+  },
+  {
+    category: "🌍 Alltagsmathe",
+    text: "Sie trinken jeden Tag einen Kaffee für 3,50 €. Wie viel geben Sie in einem Jahr dafür aus?",
+    options: ["ca. 750 €", "ca. 1.000 €", "ca. 1.280 €", "ca. 1.500 €"],
+    correct: 2,
+    explanation: "365 × 3,50 € = 1.277,50 € ≈ 1.280 €. Fast genug für einen Urlaub! ☕✈️"
+  },
+  {
+    category: "🧮 Integral-Quickie",
+    text: "Was ist die Stammfunktion von f(x) = cos(x)?",
+    options: ["−sin(x) + C", "sin(x) + C", "−cos(x) + C", "tan(x) + C"],
+    correct: 1,
+    explanation: "F(x) = sin(x) + C, weil die Ableitung von sin(x) gleich cos(x) ist. Klassiker! 🎯"
+  },
+  {
+    category: "🎲 Schätzfrage",
+    text: "Wie viele Sekunden hat ein Tag?",
+    options: ["3.600", "36.000", "86.400", "604.800"],
+    correct: 2,
+    explanation: "24 × 60 × 60 = 86.400 Sekunden. Die 604.800 wäre eine ganze Woche! ⏰"
+  },
+  {
+    category: "🤯 Logik",
+    text: "Ich bin eine dreistellige Zahl. Meine Ziffern sind aufeinanderfolgend. Meine Quersumme ist 15. Welche Zahl bin ich?",
+    options: ["345", "456", "567", "234"],
+    correct: 1,
+    explanation: "4 + 5 + 6 = 15 ✓ – Die anderen: 345→12, 567→18, 234→9. Passt nur 456! 🔢"
+  },
+  {
+    category: "🧮 Integral-Spaß",
+    text: "Ein Auto beschleunigt mit a(t) = 6 m/s². Wie schnell fährt es nach 5 Sekunden, wenn es aus dem Stand startet?",
+    hint: "v(t) = ∫ a(t) dt mit v(0) = 0",
+    options: ["15 m/s", "30 m/s", "60 m/s", "108 m/s"],
+    correct: 1,
+    explanation: "v(t) = 6t → v(5) = 30 m/s = 108 km/h. In 5 Sekunden von 0 auf 108! Auch bekannt aus Aufgabe 4 eurer Klausur … 😉"
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let answered = false;
+let answers = [];
+
+function startQuiz() {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  const q = QUESTIONS[currentQ];
+  const card = document.getElementById('question-card');
+  card.classList.remove('fade-in');
+  void card.offsetWidth;
+  card.classList.add('fade-in');
+
+  document.getElementById('q-counter').textContent = `${currentQ + 1}/10`;
+  document.getElementById('progress-bar').style.width = `${(currentQ + 1) * 10}%`;
+  document.getElementById('score-display').textContent = `${score} ✓`;
+  document.getElementById('q-category').textContent = q.category;
+  document.getElementById('q-text').textContent = q.text;
+
+  const hintEl = document.getElementById('q-hint');
+  if (q.hint) { hintEl.textContent = '💡 ' + q.hint; hintEl.classList.remove('hidden'); }
+  else { hintEl.classList.add('hidden'); }
+
+  document.getElementById('q-image').innerHTML = '';
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = q.options.map((opt, i) => `
+    <button class="option-btn w-full text-left px-5 py-3.5 rounded-xl border-2 border-gray-200 bg-white font-medium text-gray-700 hover:border-indigo-300 hover:bg-indigo-50 transition"
+            onclick="selectAnswer(${i})" id="opt-${i}">
+      <span class="inline-block w-7 h-7 rounded-full bg-gray-100 text-center text-sm font-bold leading-7 mr-3 text-gray-500">${String.fromCharCode(65+i)}</span>
+      ${opt}
+    </button>
+  `).join('');
+
+  document.getElementById('feedback').classList.add('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+
+  const q = QUESTIONS[currentQ];
+  const isCorrect = idx === q.correct;
+  if (isCorrect) score++;
+
+  answers.push({ q: currentQ, selected: idx, correct: q.correct, isCorrect });
+
+  // Highlight buttons
+  document.getElementById(`opt-${idx}`).classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    document.getElementById(`opt-${q.correct}`).classList.add('reveal');
+  }
+
+  // Feedback
+  const fb = document.getElementById('feedback');
+  fb.classList.remove('hidden');
+  document.getElementById('feedback-emoji').textContent = isCorrect ? '🎉' : '😅';
+  document.getElementById('feedback-emoji').classList.add('pop');
+  document.getElementById('feedback-text').textContent = q.explanation;
+
+  // Score update
+  document.getElementById('score-display').textContent = `${score} ✓`;
+
+  // Next button
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.classList.remove('hidden');
+  nextBtn.textContent = currentQ < 9 ? 'Nächste Frage →' : 'Ergebnis anzeigen 🏆';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ < QUESTIONS.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  const rs = document.getElementById('result-screen');
+  rs.classList.remove('hidden', 'fade-in');
+  void rs.offsetWidth;
+  rs.classList.add('fade-in');
+
+  const pct = score / 10;
+  let emoji, title, subtitle;
+  if (pct >= 0.9) { emoji = '🏆'; title = 'Mathe-Genie!'; subtitle = 'Fast alles richtig – Respekt!'; }
+  else if (pct >= 0.7) { emoji = '🌟'; title = 'Stark!'; subtitle = 'Solides Mathewissen!'; }
+  else if (pct >= 0.5) { emoji = '👍'; title = 'Gut gemacht!'; subtitle = 'Die Hälfte geschafft – nicht schlecht!'; }
+  else if (pct >= 0.3) { emoji = '💪'; title = 'Geht noch was!'; subtitle = 'Übung macht den Meister!'; }
+  else { emoji = '🎲'; title = 'Pech gehabt?'; subtitle = 'Nächstes Mal wird\'s besser!'; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-subtitle').textContent = subtitle;
+  document.getElementById('result-score').textContent = score;
+
+  const details = document.getElementById('result-details');
+  details.innerHTML = '<h3 class="font-bold text-gray-700 mb-3">Übersicht</h3>' +
+    answers.map((a, i) => {
+      const q = QUESTIONS[i];
+      return `<div class="flex items-start gap-2 py-1.5 ${i < 9 ? 'border-b border-gray-100' : ''}">
+        <span class="text-lg">${a.isCorrect ? '✅' : '❌'}</span>
+        <div class="flex-1">
+          <span class="text-sm text-gray-600">${q.category.split(' ')[1] || ''} ${q.text.slice(0, 50)}…</span>
+          ${!a.isCorrect ? `<div class="text-xs text-green-600 mt-0.5">Richtig: ${q.options[q.correct]}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+}
+</script>
+</body>
+</html>
