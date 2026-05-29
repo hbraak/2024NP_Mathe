@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Klausurreflexion – 12NP Mathe</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  body { font-family: 'Inter', sans-serif; }
+  .emoji-btn { transition: all 0.15s; }
+  .emoji-btn.selected { transform: scale(1.35); filter: none; }
+  .emoji-btn:not(.selected) { filter: grayscale(0.6) opacity(0.5); }
+  .emoji-btn:not(.selected):hover { filter: grayscale(0.2) opacity(0.8); }
+  .step { display: none; }
+  .step.active { display: block; }
+  .progress-dot { transition: all 0.2s; }
+  input[type="range"] { -webkit-appearance: none; appearance: none; height: 8px; border-radius: 4px; background: #e2e8f0; outline: none; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: #3b82f6; cursor: pointer; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+  .check-item input:checked + span { background: #3b82f6; color: white; border-color: #3b82f6; }
+  .fade-in { animation: fadeIn 0.3s ease-in; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<div id="app" class="max-w-lg mx-auto px-4 py-6">
+
+  <!-- Header -->
+  <div class="text-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">📝 Klausurreflexion</h1>
+    <p class="text-gray-500 mt-1">12NP Mathematik – Integralrechnung</p>
+    <p class="text-gray-400 text-sm">28. Mai 2026</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="flex justify-center gap-2 mb-8" id="progress">
+    <div class="progress-dot w-3 h-3 rounded-full bg-blue-500" data-step="0"></div>
+    <div class="progress-dot w-3 h-3 rounded-full bg-gray-300" data-step="1"></div>
+    <div class="progress-dot w-3 h-3 rounded-full bg-gray-300" data-step="2"></div>
+    <div class="progress-dot w-3 h-3 rounded-full bg-gray-300" data-step="3"></div>
+    <div class="progress-dot w-3 h-3 rounded-full bg-gray-300" data-step="4"></div>
+  </div>
+
+  <!-- ==================== STEP 0: Vorbereitung ==================== -->
+  <div class="step active fade-in" data-step="0">
+    <h2 class="text-lg font-semibold text-gray-700 mb-4">🎯 Deine Vorbereitung</h2>
+
+    <div class="bg-white rounded-xl shadow-sm p-5 mb-4">
+      <label class="block text-sm font-medium text-gray-600 mb-3">
+        Wie viele Stunden hast du insgesamt für die Klausur gelernt?
+      </label>
+      <input type="range" id="lernzeit" min="0" max="20" value="3" step="0.5"
+             class="w-full" oninput="document.getElementById('lernzeit-val').textContent=this.value+'h'">
+      <div class="text-center text-2xl font-bold text-blue-600 mt-2" id="lernzeit-val">3h</div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-5 mb-4">
+      <label class="block text-sm font-medium text-gray-600 mb-3">
+        Welche Materialien hast du zur Vorbereitung genutzt?
+      </label>
+      <div class="grid grid-cols-2 gap-2">
+        <label class="check-item"><input type="checkbox" value="Heft/Mitschriften" class="hidden mat-check">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">📒 Heft / Mitschriften</span></label>
+        <label class="check-item"><input type="checkbox" value="Übungsblätter" class="hidden mat-check">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">📄 Übungsblätter</span></label>
+        <label class="check-item"><input type="checkbox" value="Lerntheke" class="hidden mat-check">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">🗂️ Lerntheke</span></label>
+        <label class="check-item"><input type="checkbox" value="Videos/YouTube" class="hidden mat-check">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">🎬 Videos / YouTube</span></label>
+        <label class="check-item"><input type="checkbox" value="Mathebuch" class="hidden mat-check">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">📕 Mathebuch</span></label>
+        <label class="check-item"><input type="checkbox" value="Lerngruppe" class="hidden mat-check">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">👥 Lerngruppe</span></label>
+        <label class="check-item"><input type="checkbox" value="KI-Tools" class="hidden mat-check">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">🤖 KI-Tools</span></label>
+        <label class="check-item"><input type="checkbox" value="Gar nicht gelernt" class="hidden mat-check">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">🤷 Gar nicht</span></label>
+      </div>
+    </div>
+
+    <button onclick="goStep(1)" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-xl mt-2 transition">
+      Weiter →
+    </button>
+  </div>
+
+  <!-- ==================== STEP 1: Aufgaben-Einschätzung ==================== -->
+  <div class="step fade-in" data-step="1">
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">📊 Aufgaben-Einschätzung</h2>
+    <p class="text-sm text-gray-400 mb-4">Wie sicher hast du dich bei jeder Aufgabe gefühlt?</p>
+
+    <div id="aufgaben-container" class="space-y-3">
+      <!-- Aufgaben werden per JS generiert -->
+    </div>
+
+    <div class="flex gap-3 mt-6">
+      <button onclick="goStep(0)" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-xl transition">← Zurück</button>
+      <button onclick="goStep(2)" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-xl transition">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- ==================== STEP 2: Themen-Check ==================== -->
+  <div class="step fade-in" data-step="2">
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">🔍 Themen-Check</h2>
+    <p class="text-sm text-gray-400 mb-4">Welche Themen brauchst du noch mehr Übung?</p>
+
+    <div class="bg-white rounded-xl shadow-sm p-5 mb-4">
+      <div class="space-y-2">
+        <label class="check-item"><input type="checkbox" value="Bruchrechnen" class="hidden thema-check">
+          <span class="block text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">Bruchrechnen (ohne TR)</span></label>
+        <label class="check-item"><input type="checkbox" value="Stammfunktionen" class="hidden thema-check">
+          <span class="block text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">Stammfunktionen bilden</span></label>
+        <label class="check-item"><input type="checkbox" value="Hauptsatz" class="hidden thema-check">
+          <span class="block text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">Hauptsatz / Bestimmtes Integral berechnen</span></label>
+        <label class="check-item"><input type="checkbox" value="Flächenberechnung" class="hidden thema-check">
+          <span class="block text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">Flächenberechnung (mit Nullstellen)</span></label>
+        <label class="check-item"><input type="checkbox" value="Flächenbilanz vs Flächeninhalt" class="hidden thema-check">
+          <span class="block text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">Unterschied Flächenbilanz / Flächeninhalt</span></label>
+        <label class="check-item"><input type="checkbox" value="Anfangsbedingungen" class="hidden thema-check">
+          <span class="block text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">Integrationskonstante / Anfangsbedingungen</span></label>
+        <label class="check-item"><input type="checkbox" value="Anwendungsaufgaben" class="hidden thema-check">
+          <span class="block text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">Textaufgaben / Anwendung (z.B. Solaranlage)</span></label>
+        <label class="check-item"><input type="checkbox" value="Sinusfunktion integrieren" class="hidden thema-check">
+          <span class="block text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">Sinus/Cosinus integrieren</span></label>
+        <label class="check-item"><input type="checkbox" value="e-Funktion integrieren" class="hidden thema-check">
+          <span class="block text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">e-Funktion integrieren</span></label>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mt-4">
+      <button onclick="goStep(1)" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-xl transition">← Zurück</button>
+      <button onclick="goStep(3)" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-xl transition">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- ==================== STEP 3: Reflexion ==================== -->
+  <div class="step fade-in" data-step="3">
+    <h2 class="text-lg font-semibold text-gray-700 mb-4">💭 Reflexion</h2>
+
+    <div class="bg-white rounded-xl shadow-sm p-5 mb-4">
+      <label class="block text-sm font-medium text-gray-600 mb-3">
+        Wie zufrieden bist du insgesamt mit deiner Klausurleistung?
+      </label>
+      <div class="flex justify-between text-3xl gap-1" id="zufriedenheit-btns">
+        <button class="emoji-btn flex-1 py-2 rounded-lg" onclick="setZufriedenheit(1)" data-val="1">😟</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg" onclick="setZufriedenheit(2)" data-val="2">😕</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg" onclick="setZufriedenheit(3)" data-val="3">😐</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg" onclick="setZufriedenheit(4)" data-val="4">🙂</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg" onclick="setZufriedenheit(5)" data-val="5">😊</button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-5 mb-4">
+      <label class="block text-sm font-medium text-gray-600 mb-2">
+        Was würdest du bei der nächsten Klausur anders machen?
+      </label>
+      <textarea id="freitext" rows="4" placeholder="z.B. früher anfangen, mehr Übungsaufgaben rechnen, ..."
+                class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none"></textarea>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-5 mb-4">
+      <label class="block text-sm font-medium text-gray-600 mb-2">
+        Welche Note erwartest du?
+      </label>
+      <div class="flex justify-between gap-1" id="note-btns">
+        <button class="emoji-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold" onclick="setNote('1')" data-val="1">1</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold" onclick="setNote('2')" data-val="2">2</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold" onclick="setNote('3')" data-val="3">3</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold" onclick="setNote('4')" data-val="4">4</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold" onclick="setNote('5')" data-val="5">5</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-sm font-bold" onclick="setNote('6')" data-val="6">6</button>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mt-4">
+      <button onclick="goStep(2)" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-xl transition">← Zurück</button>
+      <button onclick="submitForm()" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition">✅ Abschicken</button>
+    </div>
+  </div>
+
+  <!-- ==================== STEP 4: Ergebnis ==================== -->
+  <div class="step fade-in" data-step="4">
+    <div class="text-center mb-6">
+      <div class="text-5xl mb-3">🎉</div>
+      <h2 class="text-xl font-bold text-gray-800">Danke für deine Reflexion!</h2>
+      <p class="text-gray-500 text-sm mt-1">Deine Antworten wurden gespeichert.</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-5 mb-4" id="zusammenfassung">
+      <!-- JS füllt Zusammenfassung -->
+    </div>
+
+    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4 text-sm text-blue-800">
+      <strong>Für den Lehrer:</strong> Klicke auf „CSV kopieren", um die Daten in die Zwischenablage zu kopieren.
+    </div>
+
+    <button onclick="copyCSV()" id="csv-btn"
+            class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-xl transition mb-3">
+      📋 CSV-Zeile kopieren
+    </button>
+    <button onclick="downloadCSV()" id="dl-btn"
+            class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-xl transition">
+      💾 Eigene Daten als CSV downloaden
+    </button>
+  </div>
+
+</div>
+
+<!-- ==================== TEACHER VIEW ==================== -->
+<div id="teacher-view" class="hidden max-w-2xl mx-auto px-4 py-6">
+  <h1 class="text-2xl font-bold text-gray-800 mb-2">📊 Lehrer-Auswertung</h1>
+  <p class="text-gray-500 text-sm mb-4">Paste die CSV-Zeilen der Schüler hier ein (eine pro Zeile):</p>
+
+  <textarea id="teacher-csv-input" rows="8" placeholder="CSV-Zeilen hier einfügen..."
+            class="w-full border border-gray-300 rounded-lg p-3 text-xs font-mono focus:ring-2 focus:ring-blue-400 mb-4"></textarea>
+
+  <button onclick="analyzeCSV()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-xl transition mb-6">
+    📊 Auswerten
+  </button>
+
+  <div id="teacher-results" class="space-y-4"></div>
+
+  <button onclick="downloadTeacherCSV()" id="teacher-dl-btn" class="hidden w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition mt-4">
+    💾 Gesamte CSV herunterladen
+  </button>
+</div>
+
+<script>
+// === CONFIG ===
+const AUFGABEN = [
+  { nr: '0', titel: 'Bruchrechnen (ohne TR)', punkte: 6 },
+  { nr: '1', titel: 'Stammfunktionen bestimmen', punkte: 8 },
+  { nr: '2', titel: 'Hauptsatz anwenden', punkte: 7 },
+  { nr: '3', titel: 'Flächenberechnung & Flächenbilanz', punkte: 17 },
+  { nr: '4', titel: 'Anfangsbedingung v(t), s(t)', punkte: 11 },
+  { nr: '5', titel: 'Solaranlage (Anwendung)', punkte: 20 },
+];
+const EMOJIS = ['😟','😕','😐','🙂','😊'];
+const CSV_HEADER = 'Timestamp;Lernzeit_h;Materialien;A0_Bruch;A1_Stamm;A2_Hauptsatz;A3_Flaeche;A4_Anfang;A5_Solar;Themen_Uebung;Zufriedenheit;Erwartete_Note;Freitext';
+
+// === STATE ===
+let aufgabenWerte = {};
+let zufriedenheit = null;
+let erwarteteNote = null;
+
+// === Check for teacher mode ===
+if (window.location.search.includes('lehrer')) {
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('teacher-view').classList.remove('hidden');
+}
+
+// === INIT: Aufgaben generieren ===
+(function initAufgaben() {
+  const container = document.getElementById('aufgaben-container');
+  AUFGABEN.forEach(a => {
+    const div = document.createElement('div');
+    div.className = 'bg-white rounded-xl shadow-sm p-4';
+    div.innerHTML = `
+      <div class="flex justify-between items-start mb-2">
+        <span class="text-sm font-medium text-gray-700">A${a.nr}: ${a.titel}</span>
+        <span class="text-xs text-gray-400 whitespace-nowrap ml-2">${a.punkte}P</span>
+      </div>
+      <div class="flex justify-between text-2xl gap-1" id="aufgabe-${a.nr}">
+        ${EMOJIS.map((e, i) => `<button class="emoji-btn flex-1 py-1 rounded-lg" onclick="setAufgabe('${a.nr}',${i+1})" data-val="${i+1}">${e}</button>`).join('')}
+      </div>
+    `;
+    container.appendChild(div);
+  });
+})();
+
+// === NAVIGATION ===
+function goStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.step[data-step="${n}"]`).classList.add('active');
+  document.querySelectorAll('.progress-dot').forEach(d => {
+    const s = parseInt(d.dataset.step);
+    d.className = `progress-dot w-3 h-3 rounded-full ${s <= n ? 'bg-blue-500' : 'bg-gray-300'}`;
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// === EMOJI SELECTION ===
+function setAufgabe(nr, val) {
+  aufgabenWerte[nr] = val;
+  document.querySelectorAll(`#aufgabe-${nr} .emoji-btn`).forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.val) === val);
+  });
+}
+
+function setZufriedenheit(val) {
+  zufriedenheit = val;
+  document.querySelectorAll('#zufriedenheit-btns .emoji-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.val) === val);
+  });
+}
+
+function setNote(val) {
+  erwarteteNote = val;
+  document.querySelectorAll('#note-btns .emoji-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.val === val);
+    if (b.dataset.val === val) {
+      b.style.background = '#3b82f6';
+      b.style.color = 'white';
+      b.style.borderColor = '#3b82f6';
+    } else {
+      b.style.background = '';
+      b.style.color = '';
+      b.style.borderColor = '';
+    }
+  });
+}
+
+// === DATA COLLECTION ===
+function collectData() {
+  const lernzeit = document.getElementById('lernzeit').value;
+  const materialien = [...document.querySelectorAll('.mat-check:checked')].map(c => c.value).join(', ');
+  const themen = [...document.querySelectorAll('.thema-check:checked')].map(c => c.value).join(', ');
+  const freitext = document.getElementById('freitext').value.replace(/[\n\r;]/g, ' ').trim();
+  const timestamp = new Date().toISOString().slice(0, 19);
+
+  return {
+    timestamp, lernzeit, materialien,
+    aufgaben: AUFGABEN.map(a => aufgabenWerte[a.nr] || ''),
+    themen,
+    zufriedenheit: zufriedenheit || '',
+    erwarteteNote: erwarteteNote || '',
+    freitext
+  };
+}
+
+function dataToCSVLine(d) {
+  return [d.timestamp, d.lernzeit, `"${d.materialien}"`,
+          ...d.aufgaben,
+          `"${d.themen}"`, d.zufriedenheit, d.erwarteteNote,
+          `"${d.freitext}"`].join(';');
+}
+
+// === SUBMIT ===
+function submitForm() {
+  const data = collectData();
+
+  // Zusammenfassung anzeigen
+  const container = document.getElementById('zusammenfassung');
+  const aufgabenHTML = AUFGABEN.map(a => {
+    const val = aufgabenWerte[a.nr];
+    return `<div class="flex justify-between items-center py-1">
+      <span class="text-sm text-gray-600">A${a.nr}: ${a.titel}</span>
+      <span class="text-lg">${val ? EMOJIS[val-1] : '–'}</span>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <h3 class="font-semibold text-gray-700 mb-3">Deine Zusammenfassung</h3>
+    <div class="text-sm text-gray-600 space-y-1 mb-3">
+      <div>⏱️ Lernzeit: <strong>${data.lernzeit}h</strong></div>
+      <div>📚 Materialien: ${data.materialien || '–'}</div>
+      <div>📈 Zufriedenheit: ${zufriedenheit ? EMOJIS[zufriedenheit-1] : '–'}</div>
+      <div>🎯 Erwartete Note: <strong>${erwarteteNote || '–'}</strong></div>
+    </div>
+    <div class="border-t pt-3">${aufgabenHTML}</div>
+    ${data.themen ? `<div class="border-t pt-3 mt-3"><span class="text-sm text-gray-500">Noch üben:</span> <span class="text-sm">${data.themen}</span></div>` : ''}
+    ${data.freitext ? `<div class="border-t pt-3 mt-3"><span class="text-sm text-gray-500">Freitext:</span> <span class="text-sm italic">${data.freitext}</span></div>` : ''}
+  `;
+
+  // Store in localStorage
+  const stored = JSON.parse(localStorage.getItem('reflexion_responses') || '[]');
+  stored.push(data);
+  localStorage.setItem('reflexion_responses', JSON.stringify(stored));
+
+  goStep(4);
+}
+
+// === CSV EXPORT ===
+function copyCSV() {
+  const data = collectData();
+  const line = dataToCSVLine(data);
+  navigator.clipboard.writeText(line).then(() => {
+    const btn = document.getElementById('csv-btn');
+    btn.textContent = '✅ Kopiert!';
+    btn.classList.replace('bg-blue-500', 'bg-green-500');
+    setTimeout(() => {
+      btn.textContent = '📋 CSV-Zeile kopieren';
+      btn.classList.replace('bg-green-500', 'bg-blue-500');
+    }, 2000);
+  });
+}
+
+function downloadCSV() {
+  const data = collectData();
+  const csv = CSV_HEADER + '\n' + dataToCSVLine(data);
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Reflexion_12NP_${data.timestamp.slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// === TEACHER ANALYSIS ===
+function analyzeCSV() {
+  const raw = document.getElementById('teacher-csv-input').value.trim();
+  if (!raw) return;
+
+  const lines = raw.split('\n').filter(l => l.trim());
+  const parsed = lines.map(line => {
+    const parts = [];
+    let current = '', inQuotes = false;
+    for (const ch of line) {
+      if (ch === '"') { inQuotes = !inQuotes; }
+      else if (ch === ';' && !inQuotes) { parts.push(current.trim()); current = ''; }
+      else { current += ch; }
+    }
+    parts.push(current.trim());
+    return parts;
+  });
+
+  const n = parsed.length;
+  if (n === 0) return;
+
+  // Lernzeit (Index 1)
+  const lernzeiten = parsed.map(p => parseFloat(p[1]) || 0);
+  const avgLernzeit = (lernzeiten.reduce((a,b) => a+b, 0) / n).toFixed(1);
+
+  // Aufgaben-Einschätzung (Index 3-8)
+  const aufgabenStats = AUFGABEN.map((a, i) => {
+    const vals = parsed.map(p => parseInt(p[3 + i]) || 0).filter(v => v > 0);
+    const avg = vals.length ? (vals.reduce((a,b) => a+b, 0) / vals.length).toFixed(1) : '–';
+    const dist = [0,0,0,0,0];
+    vals.forEach(v => dist[v-1]++);
+    return { ...a, avg, dist, count: vals.length };
+  });
+
+  // Zufriedenheit (Index 9... actually let me recount)
+  // CSV: Timestamp;Lernzeit;Materialien;A0;A1;A2;A3;A4;A5;Themen;Zufriedenheit;Note;Freitext
+  //       0         1        2          3  4  5  6  7  8  9      10             11   12
+  const zufrVals = parsed.map(p => parseInt(p[10]) || 0).filter(v => v > 0);
+  const avgZufr = zufrVals.length ? (zufrVals.reduce((a,b) => a+b, 0) / zufrVals.length).toFixed(1) : '–';
+
+  // Erwartete Note
+  const noten = parsed.map(p => parseInt(p[11]) || 0).filter(v => v > 0);
+  const avgNote = noten.length ? (noten.reduce((a,b) => a+b, 0) / noten.length).toFixed(1) : '–';
+
+  // Themen die Übung brauchen
+  const themenCount = {};
+  parsed.forEach(p => {
+    (p[9] || '').split(',').map(t => t.trim()).filter(Boolean).forEach(t => {
+      themenCount[t] = (themenCount[t] || 0) + 1;
+    });
+  });
+  const themenSorted = Object.entries(themenCount).sort((a,b) => b[1] - a[1]);
+
+  // Render
+  const results = document.getElementById('teacher-results');
+  results.innerHTML = `
+    <div class="bg-white rounded-xl shadow-sm p-5">
+      <h3 class="font-bold text-gray-800 mb-3">Übersicht (${n} Antworten)</h3>
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div><div class="text-2xl font-bold text-blue-600">${avgLernzeit}h</div><div class="text-xs text-gray-500">⌀ Lernzeit</div></div>
+        <div><div class="text-2xl font-bold text-yellow-600">${avgZufr !== '–' ? EMOJIS[Math.round(avgZufr)-1] : '–'} ${avgZufr}</div><div class="text-xs text-gray-500">⌀ Zufriedenheit</div></div>
+        <div><div class="text-2xl font-bold text-green-600">${avgNote}</div><div class="text-xs text-gray-500">⌀ Erw. Note</div></div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-5">
+      <h3 class="font-bold text-gray-800 mb-3">Aufgaben-Einschätzung (⌀)</h3>
+      ${aufgabenStats.map(a => {
+        const pct = a.avg !== '–' ? (parseFloat(a.avg) / 5 * 100) : 0;
+        const color = parseFloat(a.avg) >= 3.5 ? 'bg-green-400' : parseFloat(a.avg) >= 2.5 ? 'bg-yellow-400' : 'bg-red-400';
+        return `<div class="mb-3">
+          <div class="flex justify-between text-sm mb-1">
+            <span class="text-gray-600">A${a.nr}: ${a.titel}</span>
+            <span class="font-semibold">${a.avg !== '–' ? EMOJIS[Math.round(a.avg)-1] : '–'} ${a.avg}/5</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div class="${color} h-3 rounded-full transition-all" style="width:${pct}%"></div>
+          </div>
+          <div class="flex justify-between text-xs text-gray-400 mt-1">
+            ${EMOJIS.map((e, i) => `<span>${e} ${a.dist[i]}</span>`).join('')}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    ${themenSorted.length ? `
+    <div class="bg-white rounded-xl shadow-sm p-5">
+      <h3 class="font-bold text-gray-800 mb-3">🔴 Themen mit Übungsbedarf</h3>
+      ${themenSorted.map(([t, c]) => `
+        <div class="flex justify-between items-center py-1">
+          <span class="text-sm text-gray-600">${t}</span>
+          <span class="text-sm font-semibold text-red-600">${c}× genannt (${Math.round(c/n*100)}%)</span>
+        </div>
+      `).join('')}
+    </div>` : ''}
+  `;
+
+  document.getElementById('teacher-dl-btn').classList.remove('hidden');
+}
+
+function downloadTeacherCSV() {
+  const raw = document.getElementById('teacher-csv-input').value.trim();
+  const csv = CSV_HEADER + '\n' + raw;
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Reflexion_12NP_Gesamt_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
