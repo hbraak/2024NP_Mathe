@@ -74,8 +74,36 @@
           <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">👥 Lerngruppe</span></label>
         <label class="check-item"><input type="checkbox" value="KI-Tools" class="hidden mat-check">
           <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">🤖 KI-Tools</span></label>
+        <label class="check-item"><input type="checkbox" value="Online-Lernliste" class="hidden mat-check">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">📱 Online-Lernliste</span></label>
         <label class="check-item"><input type="checkbox" value="Gar nicht gelernt" class="hidden mat-check">
           <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">🤷 Gar nicht</span></label>
+      </div>
+    </div>
+
+    <!-- Lernliste Zusatzfragen (werden eingeblendet wenn "Online-Lernliste" angehakt) -->
+    <div id="lernliste-details" class="bg-white rounded-xl shadow-sm p-5 mb-4 hidden">
+      <label class="block text-sm font-medium text-gray-600 mb-3">
+        📱 Wie oft hast du die <strong>Online-Lernliste</strong> genutzt?
+      </label>
+      <div class="grid grid-cols-3 gap-2 mb-4">
+        <label class="check-item"><input type="radio" name="lernliste-freq" value="einmal" class="hidden ll-freq">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">1×</span></label>
+        <label class="check-item"><input type="radio" name="lernliste-freq" value="mehrmals" class="hidden ll-freq">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">2–3×</span></label>
+        <label class="check-item"><input type="radio" name="lernliste-freq" value="regelmäßig" class="hidden ll-freq">
+          <span class="block text-center text-sm py-2 px-3 rounded-lg border-2 border-gray-200 cursor-pointer">4× oder mehr</span></label>
+      </div>
+
+      <label class="block text-sm font-medium text-gray-600 mb-3">
+        Wie hilfreich fandest du die Lernliste?
+      </label>
+      <div class="flex justify-between text-2xl gap-1" id="lernliste-hilf-btns">
+        <button class="emoji-btn flex-1 py-2 rounded-lg" onclick="setLernlisteHilf(1)" data-val="1">😟</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg" onclick="setLernlisteHilf(2)" data-val="2">😕</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg" onclick="setLernlisteHilf(3)" data-val="3">😐</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg" onclick="setLernlisteHilf(4)" data-val="4">🙂</button>
+        <button class="emoji-btn flex-1 py-2 rounded-lg" onclick="setLernlisteHilf(5)" data-val="5">😊</button>
       </div>
     </div>
 
@@ -232,12 +260,27 @@ const AUFGABEN = [
   { nr: '5', titel: 'Solaranlage (Anwendung)', punkte: 20 },
 ];
 const EMOJIS = ['😟','😕','😐','🙂','😊'];
-const CSV_HEADER = 'Timestamp;Lernzeit_h;Materialien;A0_Bruch;A1_Stamm;A2_Hauptsatz;A3_Flaeche;A4_Anfang;A5_Solar;Themen_Uebung;Zufriedenheit;Erwartete_Note;Freitext';
+const CSV_HEADER = 'Timestamp;Lernzeit_h;Materialien;Lernliste_Haeufigkeit;Lernliste_Hilfreich;A0_Bruch;A1_Stamm;A2_Hauptsatz;A3_Flaeche;A4_Anfang;A5_Solar;Themen_Uebung;Zufriedenheit;Erwartete_Note;Freitext';
 
 // === STATE ===
 let aufgabenWerte = {};
 let zufriedenheit = null;
 let erwarteteNote = null;
+let lernlisteHilf = null;
+
+// === Lernliste Checkbox Toggle ===
+document.addEventListener('change', function(e) {
+  if (e.target.value === 'Online-Lernliste' && e.target.classList.contains('mat-check')) {
+    document.getElementById('lernliste-details').classList.toggle('hidden', !e.target.checked);
+  }
+});
+
+function setLernlisteHilf(val) {
+  lernlisteHilf = val;
+  document.querySelectorAll('#lernliste-hilf-btns .emoji-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.val) === val);
+  });
+}
 
 // === Check for teacher mode ===
 if (window.location.search.includes('lehrer')) {
@@ -310,12 +353,16 @@ function setNote(val) {
 function collectData() {
   const lernzeit = document.getElementById('lernzeit').value;
   const materialien = [...document.querySelectorAll('.mat-check:checked')].map(c => c.value).join(', ');
+  const llFreq = document.querySelector('.ll-freq:checked');
+  const lernlisteFreq = llFreq ? llFreq.value : '';
   const themen = [...document.querySelectorAll('.thema-check:checked')].map(c => c.value).join(', ');
   const freitext = document.getElementById('freitext').value.replace(/[\n\r;]/g, ' ').trim();
   const timestamp = new Date().toISOString().slice(0, 19);
 
   return {
     timestamp, lernzeit, materialien,
+    lernlisteFreq,
+    lernlisteHilf: lernlisteHilf || '',
     aufgaben: AUFGABEN.map(a => aufgabenWerte[a.nr] || ''),
     themen,
     zufriedenheit: zufriedenheit || '',
@@ -326,6 +373,7 @@ function collectData() {
 
 function dataToCSVLine(d) {
   return [d.timestamp, d.lernzeit, `"${d.materialien}"`,
+          d.lernlisteFreq, d.lernlisteHilf,
           ...d.aufgaben,
           `"${d.themen}"`, d.zufriedenheit, d.erwarteteNote,
           `"${d.freitext}"`].join(';');
@@ -350,6 +398,7 @@ function submitForm() {
     <div class="text-sm text-gray-600 space-y-1 mb-3">
       <div>⏱️ Lernzeit: <strong>${data.lernzeit}h</strong></div>
       <div>📚 Materialien: ${data.materialien || '–'}</div>
+      ${data.lernlisteFreq ? `<div>📱 Lernliste: ${data.lernlisteFreq} genutzt, Bewertung: ${data.lernlisteHilf ? EMOJIS[data.lernlisteHilf-1] : '–'}</div>` : ''}
       <div>📈 Zufriedenheit: ${zufriedenheit ? EMOJIS[zufriedenheit-1] : '–'}</div>
       <div>🎯 Erwartete Note: <strong>${erwarteteNote || '–'}</strong></div>
     </div>
@@ -418,29 +467,35 @@ function analyzeCSV() {
   const lernzeiten = parsed.map(p => parseFloat(p[1]) || 0);
   const avgLernzeit = (lernzeiten.reduce((a,b) => a+b, 0) / n).toFixed(1);
 
-  // Aufgaben-Einschätzung (Index 3-8)
+  // Lernliste (Index 3=Häufigkeit, 4=Hilfreich)
+  // CSV: Timestamp;Lernzeit;Materialien;LL_Freq;LL_Hilf;A0;A1;A2;A3;A4;A5;Themen;Zufr;Note;Freitext
+  //       0         1        2          3       4       5  6  7  8  9  10 11     12    13  14
+  const llFreqs = {};
+  parsed.forEach(p => { const v = (p[3]||'').trim(); if(v) llFreqs[v] = (llFreqs[v]||0)+1; });
+  const llHilfVals = parsed.map(p => parseInt(p[4]) || 0).filter(v => v > 0);
+  const avgLLHilf = llHilfVals.length ? (llHilfVals.reduce((a,b) => a+b, 0) / llHilfVals.length).toFixed(1) : '–';
+  const llNutzer = parsed.filter(p => (p[3]||'').trim()).length;
+
+  // Aufgaben-Einschätzung (Index 5-10)
   const aufgabenStats = AUFGABEN.map((a, i) => {
-    const vals = parsed.map(p => parseInt(p[3 + i]) || 0).filter(v => v > 0);
+    const vals = parsed.map(p => parseInt(p[5 + i]) || 0).filter(v => v > 0);
     const avg = vals.length ? (vals.reduce((a,b) => a+b, 0) / vals.length).toFixed(1) : '–';
     const dist = [0,0,0,0,0];
     vals.forEach(v => dist[v-1]++);
     return { ...a, avg, dist, count: vals.length };
   });
 
-  // Zufriedenheit (Index 9... actually let me recount)
-  // CSV: Timestamp;Lernzeit;Materialien;A0;A1;A2;A3;A4;A5;Themen;Zufriedenheit;Note;Freitext
-  //       0         1        2          3  4  5  6  7  8  9      10             11   12
-  const zufrVals = parsed.map(p => parseInt(p[10]) || 0).filter(v => v > 0);
+  const zufrVals = parsed.map(p => parseInt(p[12]) || 0).filter(v => v > 0);
   const avgZufr = zufrVals.length ? (zufrVals.reduce((a,b) => a+b, 0) / zufrVals.length).toFixed(1) : '–';
 
   // Erwartete Note
-  const noten = parsed.map(p => parseInt(p[11]) || 0).filter(v => v > 0);
+  const noten = parsed.map(p => parseInt(p[13]) || 0).filter(v => v > 0);
   const avgNote = noten.length ? (noten.reduce((a,b) => a+b, 0) / noten.length).toFixed(1) : '–';
 
   // Themen die Übung brauchen
   const themenCount = {};
   parsed.forEach(p => {
-    (p[9] || '').split(',').map(t => t.trim()).filter(Boolean).forEach(t => {
+    (p[11] || '').split(',').map(t => t.trim()).filter(Boolean).forEach(t => {
       themenCount[t] = (themenCount[t] || 0) + 1;
     });
   });
@@ -476,6 +531,15 @@ function analyzeCSV() {
           </div>
         </div>`;
       }).join('')}
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-5">
+      <h3 class="font-bold text-gray-800 mb-3">📱 Online-Lernliste</h3>
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div><div class="text-2xl font-bold text-blue-600">${llNutzer}/${n}</div><div class="text-xs text-gray-500">haben sie genutzt</div></div>
+        <div><div class="text-2xl font-bold text-purple-600">${Object.entries(llFreqs).map(([k,v])=>`${k}: ${v}`).join(', ') || '–'}</div><div class="text-xs text-gray-500">Häufigkeit</div></div>
+        <div><div class="text-2xl font-bold text-yellow-600">${avgLLHilf !== '–' ? EMOJIS[Math.round(avgLLHilf)-1]+' '+avgLLHilf : '–'}</div><div class="text-xs text-gray-500">⌀ Hilfreich</div></div>
+      </div>
     </div>
 
     ${themenSorted.length ? `
