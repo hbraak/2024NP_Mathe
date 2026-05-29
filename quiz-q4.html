@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Mathe-Quiz – 12NP</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+  startup: { typeset: false }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -104,11 +112,11 @@ const QUESTIONS = [
     hint: "Ein Blatt ist ca. 0,1 mm dick. Jede Faltung verdoppelt die Dicke.",
     options: ["15-mal", "23-mal", "42-mal", "57-mal"],
     correct: 1,
-    explanation: "Nach 23 Faltungen: 0,1 mm × 2²³ ≈ 838 m – das überragt den Eiffelturm locker! Exponentielles Wachstum ist krass. 🗼"
+    explanation: "Nach 23 Faltungen: \\(0{,}1\\,\\text{mm} \\times 2^{23} \\approx 838\\,\\text{m}\\) – das überragt den Eiffelturm locker! Exponentielles Wachstum ist krass. 🗼"
   },
   {
     category: "📐 Kopfrechnen",
-    text: "Was ist 111.111.111 × 111.111.111?",
+    text: "Was ist \\(111.111.111 \\times 111.111.111\\)?",
     options: [
       "12.345.678.987.654.321",
       "12.345.678.123.456.789",
@@ -120,14 +128,14 @@ const QUESTIONS = [
   },
   {
     category: "🧮 Integral-Quickie",
-    text: "Welchen Wert hat ∫₀¹ 2x dx?",
-    options: ["0", "1", "2", "½"],
+    text: "Welchen Wert hat \\(\\displaystyle\\int_0^1 2x\\,dx\\)?",
+    options: ["\\(0\\)", "\\(1\\)", "\\(2\\)", "\\(\\tfrac{1}{2}\\)"],
     correct: 1,
-    explanation: "F(x) = x², also F(1) − F(0) = 1 − 0 = 1. Die Fläche unter der Geraden f(x) = 2x von 0 bis 1. 📈"
+    explanation: "\\(F(x) = x^2\\), also \\(F(1) - F(0) = 1 - 0 = 1\\). Die Fläche unter der Geraden \\(f(x) = 2x\\) von 0 bis 1. 📈"
   },
   {
     category: "🤯 Mathe-Rätsel",
-    text: "Drei Freunde zahlen je 10 € für eine Pizza (30 €). Der Kellner gibt 5 € Rabatt zurück. Jeder bekommt 1 € zurück, 2 € behält der Kellner als Trinkgeld. 3 × 9 € + 2 € = 29 €. Wo ist der fehlende Euro?",
+    text: "Drei Freunde zahlen je 10 € für eine Pizza (30 €). Der Kellner gibt 5 € Rabatt zurück. Jeder bekommt 1 € zurück, 2 € behält der Kellner als Trinkgeld. \\(3 \\times 9\\,€ + 2\\,€ = 29\\,€\\). Wo ist der fehlende Euro?",
     options: [
       "Der Kellner hat ihn",
       "Es fehlt gar keiner – die Rechnung ist ein Trick",
@@ -139,7 +147,7 @@ const QUESTIONS = [
   },
   {
     category: "📊 Graph erkennen",
-    text: "Die Funktion f(x) = x² − 4 hat zwei Nullstellen. Welche Aussage über ∫₋₂² f(x) dx stimmt?",
+    text: "Die Funktion \\(f(x) = x^2 - 4\\) hat zwei Nullstellen. Welche Aussage über \\(\\displaystyle\\int_{-2}^{2} f(x)\\,dx\\) stimmt?",
     hint: "Denken Sie an das Vorzeichen der Fläche …",
     options: [
       "Das Integral ist positiv",
@@ -148,28 +156,28 @@ const QUESTIONS = [
       "Das kann man nicht sagen"
     ],
     correct: 2,
-    explanation: "Zwischen den Nullstellen −2 und 2 liegt die Parabel komplett UNTER der x-Achse → das Integral ist negativ (−32/3 ≈ −10,67). Kam euch die Aufgabe bekannt vor? 😏"
+    explanation: "Zwischen den Nullstellen \\(-2\\) und \\(2\\) liegt die Parabel komplett UNTER der x-Achse → das Integral ist negativ: \\(-\\tfrac{32}{3} \\approx -10{,}67\\). Kam euch die Aufgabe bekannt vor? 😏"
   },
   {
     category: "🌍 Alltagsmathe",
     text: "Sie trinken jeden Tag einen Kaffee für 3,50 €. Wie viel geben Sie in einem Jahr dafür aus?",
     options: ["ca. 750 €", "ca. 1.000 €", "ca. 1.280 €", "ca. 1.500 €"],
     correct: 2,
-    explanation: "365 × 3,50 € = 1.277,50 € ≈ 1.280 €. Fast genug für einen Urlaub! ☕✈️"
+    explanation: "\\(365 \\times 3{,}50\\,€ = 1.277{,}50\\,€ \\approx 1.280\\,€\\). Fast genug für einen Urlaub! ☕✈️"
   },
   {
     category: "🧮 Integral-Quickie",
-    text: "Was ist die Stammfunktion von f(x) = cos(x)?",
-    options: ["−sin(x) + C", "sin(x) + C", "−cos(x) + C", "tan(x) + C"],
+    text: "Was ist die Stammfunktion von \\(f(x) = \\cos(x)\\)?",
+    options: ["\\(-\\sin(x) + C\\)", "\\(\\sin(x) + C\\)", "\\(-\\cos(x) + C\\)", "\\(\\tan(x) + C\\)"],
     correct: 1,
-    explanation: "F(x) = sin(x) + C, weil die Ableitung von sin(x) gleich cos(x) ist. Klassiker! 🎯"
+    explanation: "\\(F(x) = \\sin(x) + C\\), weil die Ableitung von \\(\\sin(x)\\) gleich \\(\\cos(x)\\) ist. Klassiker! 🎯"
   },
   {
     category: "🎲 Schätzfrage",
     text: "Wie viele Sekunden hat ein Tag?",
     options: ["3.600", "36.000", "86.400", "604.800"],
     correct: 2,
-    explanation: "24 × 60 × 60 = 86.400 Sekunden. Die 604.800 wäre eine ganze Woche! ⏰"
+    explanation: "\\(24 \\times 60 \\times 60 = 86.400\\) Sekunden. Die 604.800 wäre eine ganze Woche! ⏰"
   },
   {
     category: "🤯 Logik",
@@ -180,11 +188,11 @@ const QUESTIONS = [
   },
   {
     category: "🧮 Integral-Spaß",
-    text: "Ein Auto beschleunigt mit a(t) = 6 m/s². Wie schnell fährt es nach 5 Sekunden, wenn es aus dem Stand startet?",
-    hint: "v(t) = ∫ a(t) dt mit v(0) = 0",
-    options: ["15 m/s", "30 m/s", "60 m/s", "108 m/s"],
+    text: "Ein Auto beschleunigt mit \\(a(t) = 6\\,\\tfrac{\\text{m}}{\\text{s}^2}\\). Wie schnell fährt es nach 5 Sekunden, wenn es aus dem Stand startet?",
+    hint: "\\(v(t) = \\int a(t)\\,dt\\) mit \\(v(0) = 0\\)",
+    options: ["\\(15\\,\\tfrac{\\text{m}}{\\text{s}}\\)", "\\(30\\,\\tfrac{\\text{m}}{\\text{s}}\\)", "\\(60\\,\\tfrac{\\text{m}}{\\text{s}}\\)", "\\(108\\,\\tfrac{\\text{m}}{\\text{s}}\\)"],
     correct: 1,
-    explanation: "v(t) = 6t → v(5) = 30 m/s = 108 km/h. In 5 Sekunden von 0 auf 108! Auch bekannt aus Aufgabe 4 eurer Klausur … 😉"
+    explanation: "\\(v(t) = 6t \\Rightarrow v(5) = 30\\,\\tfrac{\\text{m}}{\\text{s}} = 108\\,\\tfrac{\\text{km}}{\\text{h}}\\). In 5 Sekunden von 0 auf 108! Auch bekannt aus Aufgabe 4 eurer Klausur … 😉"
   }
 ];
 
@@ -230,6 +238,11 @@ function showQuestion() {
 
   document.getElementById('feedback').classList.add('hidden');
   document.getElementById('next-btn').classList.add('hidden');
+
+  // MathJax rendern
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([document.getElementById('question-card')]);
+  }
 }
 
 function selectAnswer(idx) {
@@ -262,6 +275,11 @@ function selectAnswer(idx) {
   const nextBtn = document.getElementById('next-btn');
   nextBtn.classList.remove('hidden');
   nextBtn.textContent = currentQ < 9 ? 'Nächste Frage →' : 'Ergebnis anzeigen 🏆';
+
+  // MathJax im Feedback rendern
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([document.getElementById('feedback')]);
+  }
 }
 
 function nextQuestion() {
@@ -305,6 +323,13 @@ function showResult() {
         </div>
       </div>`;
     }).join('');
+
+  // MathJax für Ergebnisseite
+  setTimeout(() => {
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetPromise([details]);
+    }
+  }, 100);
 }
 </script>
 </body>
