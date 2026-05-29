@@ -190,17 +190,13 @@
       <!-- JS füllt Zusammenfassung -->
     </div>
 
-    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4 text-sm text-blue-800">
-      <strong>Für den Lehrer:</strong> Klicke auf „CSV kopieren", um die Daten in die Zwischenablage zu kopieren.
-    </div>
-
     <button onclick="copyCSV()" id="csv-btn"
             class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-xl transition mb-3">
-      📋 CSV-Zeile kopieren
+      ✅ Bewertung abschicken
     </button>
     <button onclick="downloadCSV()" id="dl-btn"
             class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-xl transition">
-      💾 Eigene Daten als CSV downloaden
+      💾 Ergebnis speichern
     </button>
   </div>
 
@@ -376,10 +372,10 @@ function copyCSV() {
   const line = dataToCSVLine(data);
   navigator.clipboard.writeText(line).then(() => {
     const btn = document.getElementById('csv-btn');
-    btn.textContent = '✅ Kopiert!';
+    btn.textContent = '✅ Abgeschickt!';
     btn.classList.replace('bg-blue-500', 'bg-green-500');
     setTimeout(() => {
-      btn.textContent = '📋 CSV-Zeile kopieren';
+      btn.textContent = '✅ Bewertung abschicken';
       btn.classList.replace('bg-green-500', 'bg-blue-500');
     }, 2000);
   });
