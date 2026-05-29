@@ -26,37 +26,52 @@ window.MathJax = {
   @keyframes pop { 0% { transform:scale(1); } 50% { transform:scale(1.15); } 100% { transform:scale(1); } }
   .pop { animation: pop 0.3s ease; }
   .progress-bar { transition: width 0.4s ease; }
+  .team-a { --team: #dc2626; --team-light: #fef2f2; --team-border: #fca5a5; }
+  .team-b { --team: #2563eb; --team-light: #eff6ff; --team-border: #93c5fd; }
+  .team-badge { background: var(--team); }
+  .team-progress .progress-bar { background: var(--team); }
+  .team-card { border-left: 4px solid var(--team); }
 </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-50 to-blue-50 min-h-screen">
 
 <div id="app" class="max-w-lg mx-auto px-4 py-6">
 
-  <!-- START SCREEN -->
-  <div id="start-screen" class="text-center fade-in">
+  <!-- ==================== TEAM SELECTION ==================== -->
+  <div id="team-screen" class="text-center fade-in">
     <div class="text-6xl mb-4">🧠</div>
     <h1 class="text-3xl font-extrabold text-gray-800 mb-2">Mathe-Quiz</h1>
     <p class="text-gray-500 mb-1">12NP – Nach der Klausur ist vor dem Spaß</p>
-    <p class="text-gray-400 text-sm mb-8">10 Fragen • Keine Noten • Nur Ehre</p>
+    <p class="text-gray-400 text-sm mb-8">10 Fragen • Keine Noten • Team gegen Team</p>
 
-    <div class="bg-white rounded-2xl shadow-md p-6 mb-6 text-left">
-      <p class="text-sm text-gray-600">🎯 Mix aus Schätzfragen, Knobeleien und Mathe-Fun</p>
-      <p class="text-sm text-gray-600 mt-2">⏱️ Kein Zeitlimit – aber wer zuerst fertig ist, darf angeben</p>
-      <p class="text-sm text-gray-600 mt-2">📱 Taschenrechner erlaubt (aber nicht immer nötig)</p>
+    <p class="text-lg font-semibold text-gray-700 mb-4">Wähle dein Team!</p>
+
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <button onclick="selectTeam('a')"
+              class="bg-red-500 hover:bg-red-600 text-white font-extrabold py-8 rounded-2xl text-2xl transition shadow-lg shadow-red-200 active:scale-95">
+        🔴<br>Team A
+      </button>
+      <button onclick="selectTeam('b')"
+              class="bg-blue-500 hover:bg-blue-600 text-white font-extrabold py-8 rounded-2xl text-2xl transition shadow-lg shadow-blue-200 active:scale-95">
+        🔵<br>Team B
+      </button>
     </div>
 
-    <button onclick="startQuiz()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-4 rounded-2xl text-lg transition shadow-lg shadow-indigo-200">
-      Los geht's! 🚀
-    </button>
+    <div class="bg-white rounded-2xl shadow-md p-5 text-left text-sm text-gray-600 space-y-2">
+      <p>🎯 Jedes Team bekommt eigene Fragen – gleich schwer, aber anders!</p>
+      <p>⏱️ Kein Zeitlimit – aber wer zuerst fertig ist, darf angeben</p>
+      <p>📱 Taschenrechner erlaubt (aber nicht immer nötig)</p>
+    </div>
   </div>
 
-  <!-- QUIZ SCREEN -->
+  <!-- ==================== QUIZ SCREEN ==================== -->
   <div id="quiz-screen" class="hidden">
-    <!-- Progress -->
-    <div class="flex items-center gap-3 mb-6">
-      <span id="q-counter" class="text-sm font-bold text-indigo-600 whitespace-nowrap">1/10</span>
-      <div class="flex-1 bg-gray-200 rounded-full h-2.5">
-        <div id="progress-bar" class="progress-bar bg-indigo-500 h-2.5 rounded-full" style="width:10%"></div>
+    <!-- Team Badge + Progress -->
+    <div class="flex items-center gap-3 mb-5">
+      <span id="team-badge" class="team-badge text-white text-xs font-bold px-3 py-1 rounded-full"></span>
+      <span id="q-counter" class="text-sm font-bold text-gray-500 whitespace-nowrap">1/10</span>
+      <div class="flex-1 bg-gray-200 rounded-full h-2.5 team-progress">
+        <div id="progress-bar" class="progress-bar h-2.5 rounded-full" style="width:10%"></div>
       </div>
       <span id="score-display" class="text-sm font-bold text-green-600 whitespace-nowrap">0 ✓</span>
     </div>
@@ -64,9 +79,8 @@ window.MathJax = {
     <!-- Question Card -->
     <div id="question-card" class="fade-in">
       <div class="bg-white rounded-2xl shadow-md p-6 mb-4">
-        <div id="q-category" class="text-xs font-semibold text-indigo-400 uppercase tracking-wide mb-2"></div>
+        <div id="q-category" class="text-xs font-semibold uppercase tracking-wide mb-2" style="color: var(--team);"></div>
         <h2 id="q-text" class="text-lg font-bold text-gray-800 leading-snug"></h2>
-        <div id="q-image" class="mt-3"></div>
         <p id="q-hint" class="text-sm text-gray-400 italic mt-2 hidden"></p>
       </div>
 
@@ -78,26 +92,31 @@ window.MathJax = {
         <p id="feedback-text" class="text-sm text-gray-600"></p>
       </div>
 
-      <button id="next-btn" onclick="nextQuestion()" class="hidden w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-xl transition">
+      <button id="next-btn" onclick="nextQuestion()" class="hidden w-full text-white font-semibold py-3 rounded-xl transition" style="background: var(--team);">
         Nächste Frage →
       </button>
     </div>
   </div>
 
-  <!-- RESULT SCREEN -->
+  <!-- ==================== RESULT SCREEN ==================== -->
   <div id="result-screen" class="hidden fade-in text-center">
     <div id="result-emoji" class="text-7xl mb-4"></div>
     <h2 id="result-title" class="text-2xl font-extrabold text-gray-800 mb-2"></h2>
     <p id="result-subtitle" class="text-gray-500 mb-6"></p>
 
-    <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
-      <div class="text-5xl font-extrabold text-indigo-600 mb-1" id="result-score"></div>
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-4">
+      <div id="result-team-badge" class="inline-block text-white text-sm font-bold px-4 py-1.5 rounded-full mb-3"></div>
+      <div class="text-5xl font-extrabold mb-1" id="result-score" style="color: var(--team);"></div>
       <p class="text-gray-400 text-sm">von 10 richtig</p>
+    </div>
+
+    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4 text-sm text-yellow-800">
+      💡 <strong>Vergleicht eure Ergebnisse!</strong> Welches Team hat insgesamt mehr Punkte?
     </div>
 
     <div id="result-details" class="bg-white rounded-2xl shadow-md p-5 mb-6 text-left space-y-2"></div>
 
-    <button onclick="location.reload()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-2xl transition">
+    <button onclick="location.reload()" class="w-full bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 rounded-2xl transition">
       🔄 Nochmal spielen
     </button>
   </div>
@@ -105,111 +124,193 @@ window.MathJax = {
 </div>
 
 <script>
-const QUESTIONS = [
+// ==================== FRAGEN TEAM A (🔴) ====================
+const QUESTIONS_A = [
   {
     category: "🎲 Schätzfrage",
     text: "Wie oft müssten Sie ein DIN-A4-Blatt falten, damit es höher als der Eiffelturm (330 m) wäre?",
     hint: "Ein Blatt ist ca. 0,1 mm dick. Jede Faltung verdoppelt die Dicke.",
     options: ["15-mal", "23-mal", "42-mal", "57-mal"],
     correct: 1,
-    explanation: "Nach 23 Faltungen: \\(0{,}1\\,\\text{mm} \\times 2^{23} \\approx 838\\,\\text{m}\\) – das überragt den Eiffelturm locker! Exponentielles Wachstum ist krass. 🗼"
+    explanation: "Nach 23 Faltungen: \\(0{,}1\\,\\text{mm} \\times 2^{23} \\approx 838\\,\\text{m}\\) – das überragt den Eiffelturm locker! 🗼"
   },
   {
     category: "📐 Kopfrechnen",
     text: "Was ist \\(111.111.111 \\times 111.111.111\\)?",
-    options: [
-      "12.345.678.987.654.321",
-      "12.345.678.123.456.789",
-      "11.111.111.111.111.111",
-      "12.346.679.012.345.678"
-    ],
+    options: ["12.345.678.987.654.321", "12.345.678.123.456.789", "11.111.111.111.111.111", "12.346.679.012.345.678"],
     correct: 0,
     explanation: "Das wunderschöne Palindrom: 12.345.678.987.654.321 – erst hoch, dann wieder runter! ✨"
   },
   {
-    category: "🧮 Integral-Quickie",
+    category: "🧮 Integral",
     text: "Welchen Wert hat \\(\\displaystyle\\int_0^1 2x\\,dx\\)?",
     options: ["\\(0\\)", "\\(1\\)", "\\(2\\)", "\\(\\tfrac{1}{2}\\)"],
     correct: 1,
-    explanation: "\\(F(x) = x^2\\), also \\(F(1) - F(0) = 1 - 0 = 1\\). Die Fläche unter der Geraden \\(f(x) = 2x\\) von 0 bis 1. 📈"
+    explanation: "\\(F(x) = x^2\\), also \\(F(1) - F(0) = 1 - 0 = 1\\). 📈"
   },
   {
-    category: "🤯 Mathe-Rätsel",
-    text: "Drei Freunde zahlen je 10 € für eine Pizza (30 €). Der Kellner gibt 5 € Rabatt zurück. Jeder bekommt 1 € zurück, 2 € behält der Kellner als Trinkgeld. \\(3 \\times 9\\,€ + 2\\,€ = 29\\,€\\). Wo ist der fehlende Euro?",
-    options: [
-      "Der Kellner hat ihn",
-      "Es fehlt gar keiner – die Rechnung ist ein Trick",
-      "Rundungsfehler",
-      "Die Pizza war teurer"
-    ],
+    category: "🤯 Rätsel",
+    text: "Drei Freunde zahlen je 10 € für eine Pizza (30 €). Der Kellner gibt 5 € Rabatt. Jeder bekommt 1 € zurück, 2 € Trinkgeld. \\(3 \\times 9\\,€ + 2\\,€ = 29\\,€\\). Wo ist der fehlende Euro?",
+    options: ["Der Kellner hat ihn", "Es fehlt gar keiner – die Rechnung ist ein Trick", "Rundungsfehler", "Die Pizza war teurer"],
     correct: 1,
-    explanation: "Die 27 € enthalten bereits die 2 € Trinkgeld. Man darf 27 + 2 nicht addieren – das ist ein klassischer Taschenspielertrick! 🎩"
+    explanation: "Die 27 € enthalten bereits das Trinkgeld. Man darf 27 + 2 nicht addieren – klassischer Trick! 🎩"
   },
   {
-    category: "📊 Graph erkennen",
+    category: "📊 Integral",
     text: "Die Funktion \\(f(x) = x^2 - 4\\) hat zwei Nullstellen. Welche Aussage über \\(\\displaystyle\\int_{-2}^{2} f(x)\\,dx\\) stimmt?",
     hint: "Denken Sie an das Vorzeichen der Fläche …",
-    options: [
-      "Das Integral ist positiv",
-      "Das Integral ist 0",
-      "Das Integral ist negativ",
-      "Das kann man nicht sagen"
-    ],
+    options: ["Das Integral ist positiv", "Das Integral ist 0", "Das Integral ist negativ", "Das kann man nicht sagen"],
     correct: 2,
-    explanation: "Zwischen den Nullstellen \\(-2\\) und \\(2\\) liegt die Parabel komplett UNTER der x-Achse → das Integral ist negativ: \\(-\\tfrac{32}{3} \\approx -10{,}67\\). Kam euch die Aufgabe bekannt vor? 😏"
+    explanation: "Zwischen \\(-2\\) und \\(2\\) liegt die Parabel komplett unter der x-Achse → negativ: \\(-\\tfrac{32}{3}\\). Bekannt aus der Klausur? 😏"
   },
   {
-    category: "🌍 Alltagsmathe",
-    text: "Sie trinken jeden Tag einen Kaffee für 3,50 €. Wie viel geben Sie in einem Jahr dafür aus?",
+    category: "🌍 Alltag",
+    text: "Sie trinken jeden Tag einen Kaffee für 3,50 €. Wie viel geben Sie pro Jahr dafür aus?",
     options: ["ca. 750 €", "ca. 1.000 €", "ca. 1.280 €", "ca. 1.500 €"],
     correct: 2,
-    explanation: "\\(365 \\times 3{,}50\\,€ = 1.277{,}50\\,€ \\approx 1.280\\,€\\). Fast genug für einen Urlaub! ☕✈️"
+    explanation: "\\(365 \\times 3{,}50\\,€ = 1.277{,}50\\,€ \\approx 1.280\\,€\\). Fast ein Urlaub! ☕✈️"
   },
   {
-    category: "🧮 Integral-Quickie",
+    category: "🧮 Stammfunktion",
     text: "Was ist die Stammfunktion von \\(f(x) = \\cos(x)\\)?",
     options: ["\\(-\\sin(x) + C\\)", "\\(\\sin(x) + C\\)", "\\(-\\cos(x) + C\\)", "\\(\\tan(x) + C\\)"],
     correct: 1,
-    explanation: "\\(F(x) = \\sin(x) + C\\), weil die Ableitung von \\(\\sin(x)\\) gleich \\(\\cos(x)\\) ist. Klassiker! 🎯"
+    explanation: "\\(F(x) = \\sin(x) + C\\), weil \\((\\sin x)' = \\cos x\\). 🎯"
   },
   {
     category: "🎲 Schätzfrage",
     text: "Wie viele Sekunden hat ein Tag?",
     options: ["3.600", "36.000", "86.400", "604.800"],
     correct: 2,
-    explanation: "\\(24 \\times 60 \\times 60 = 86.400\\) Sekunden. Die 604.800 wäre eine ganze Woche! ⏰"
+    explanation: "\\(24 \\times 60 \\times 60 = 86.400\\). Die 604.800 wäre eine Woche! ⏰"
   },
   {
     category: "🤯 Logik",
     text: "Ich bin eine dreistellige Zahl. Meine Ziffern sind aufeinanderfolgend. Meine Quersumme ist 15. Welche Zahl bin ich?",
     options: ["345", "456", "567", "234"],
     correct: 1,
-    explanation: "4 + 5 + 6 = 15 ✓ – Die anderen: 345→12, 567→18, 234→9. Passt nur 456! 🔢"
+    explanation: "\\(4 + 5 + 6 = 15\\) ✓ – Die anderen passen nicht! 🔢"
   },
   {
-    category: "🧮 Integral-Spaß",
-    text: "Ein Auto beschleunigt mit \\(a(t) = 6\\,\\tfrac{\\text{m}}{\\text{s}^2}\\). Wie schnell fährt es nach 5 Sekunden, wenn es aus dem Stand startet?",
+    category: "🧮 Integral",
+    text: "Ein Auto beschleunigt mit \\(a(t) = 6\\,\\tfrac{\\text{m}}{\\text{s}^2}\\). Wie schnell fährt es nach 5 Sekunden aus dem Stand?",
     hint: "\\(v(t) = \\int a(t)\\,dt\\) mit \\(v(0) = 0\\)",
     options: ["\\(15\\,\\tfrac{\\text{m}}{\\text{s}}\\)", "\\(30\\,\\tfrac{\\text{m}}{\\text{s}}\\)", "\\(60\\,\\tfrac{\\text{m}}{\\text{s}}\\)", "\\(108\\,\\tfrac{\\text{m}}{\\text{s}}\\)"],
     correct: 1,
-    explanation: "\\(v(t) = 6t \\Rightarrow v(5) = 30\\,\\tfrac{\\text{m}}{\\text{s}} = 108\\,\\tfrac{\\text{km}}{\\text{h}}\\). In 5 Sekunden von 0 auf 108! Auch bekannt aus Aufgabe 4 eurer Klausur … 😉"
+    explanation: "\\(v(t) = 6t \\Rightarrow v(5) = 30\\,\\tfrac{\\text{m}}{\\text{s}} = 108\\,\\tfrac{\\text{km}}{\\text{h}}\\). Auch bekannt aus Aufgabe 4! 😉"
   }
 ];
 
+// ==================== FRAGEN TEAM B (🔵) ====================
+const QUESTIONS_B = [
+  {
+    category: "🎲 Schätzfrage",
+    text: "Wie oft kann man eine Tafel Schokolade (100 g) halbieren, bis ein Stück weniger als 1 g wiegt?",
+    hint: "Jede Halbierung teilt die Masse durch 2.",
+    options: ["5-mal", "7-mal", "10-mal", "20-mal"],
+    correct: 1,
+    explanation: "\\(100 \\div 2^7 = 0{,}78\\,\\text{g} < 1\\,\\text{g}\\). Nach 6-mal hat man noch \\(1{,}56\\,\\text{g}\\). 🍫"
+  },
+  {
+    category: "📐 Kopfrechnen",
+    text: "Was ist \\(12345679 \\times 9\\)?",
+    options: ["111.111.111", "123.456.789", "111.111.101", "109.876.543"],
+    correct: 0,
+    explanation: "\\(12345679 \\times 9 = 111.111.111\\). Beachte: Die 8 fehlt in der Ausgangszahl! ✨"
+  },
+  {
+    category: "🧮 Integral",
+    text: "Welchen Wert hat \\(\\displaystyle\\int_0^{\\pi} \\sin(x)\\,dx\\)?",
+    options: ["\\(0\\)", "\\(1\\)", "\\(2\\)", "\\(\\pi\\)"],
+    correct: 2,
+    explanation: "\\(F(x) = -\\cos(x)\\), also \\(-\\cos(\\pi) - (-\\cos(0)) = 1 + 1 = 2\\). Auch aus der Klausur! 📈"
+  },
+  {
+    category: "🤯 Rätsel",
+    text: "Ein Seil ist um die Erde gespannt (Umfang 40.000 km). Sie verlängern es um genau 1 m. Wie hoch schwebt es gleichmäßig über dem Boden?",
+    options: ["Weniger als 1 mm", "Ca. 16 cm", "Ca. 1 m", "Ca. 10 m"],
+    correct: 1,
+    explanation: "\\(\\Delta r = \\frac{\\Delta U}{2\\pi} = \\frac{1}{2\\pi} \\approx 0{,}16\\,\\text{m}\\). Unabhängig von der Erdgröße! 🌍"
+  },
+  {
+    category: "📊 Integral",
+    text: "Welche Aussage stimmt für \\(\\displaystyle\\int_{-1}^{1} x^3\\,dx\\)?",
+    hint: "Ist \\(x^3\\) eine gerade oder ungerade Funktion?",
+    options: ["Das Integral ist positiv", "Das Integral ist 0", "Das Integral ist negativ", "Das Integral ist \\(\\tfrac{1}{4}\\)"],
+    correct: 1,
+    explanation: "\\(x^3\\) ist punktsymmetrisch zum Ursprung (ungerade Funktion) → über ein symmetrisches Intervall ist das Integral immer 0! 🎯"
+  },
+  {
+    category: "🌍 Alltag",
+    text: "Netflix streamt ca. 3 GB pro Stunde. Wie viel Datenvolumen verbrauchen Sie bei 2 Stunden täglich im Monat?",
+    options: ["ca. 60 GB", "ca. 120 GB", "ca. 180 GB", "ca. 250 GB"],
+    correct: 2,
+    explanation: "\\(2 \\times 3 \\times 30 = 180\\,\\text{GB}\\). Deshalb ist WLAN wichtig! 📺"
+  },
+  {
+    category: "🧮 Stammfunktion",
+    text: "Was ist die Stammfunktion von \\(f(x) = e^{3x}\\)?",
+    options: ["\\(3\\,e^{3x} + C\\)", "\\(\\tfrac{1}{3}\\,e^{3x} + C\\)", "\\(e^{3x} + C\\)", "\\(3x \\cdot e^{3x} + C\\)"],
+    correct: 1,
+    explanation: "Kettenregel rückwärts: \\(F(x) = \\tfrac{1}{3}\\,e^{3x} + C\\), weil \\(\\left(\\tfrac{1}{3} e^{3x}\\right)' = e^{3x}\\). 🧮"
+  },
+  {
+    category: "🎲 Schätzfrage",
+    text: "Wie viele Minuten hat ein Jahr (kein Schaltjahr)?",
+    options: ["52.560", "525.600", "5.256.000", "365.000"],
+    correct: 1,
+    explanation: "\\(365 \\times 24 \\times 60 = 525.600\\). Kennt man auch aus dem Musical ‚Rent': ♪ Five hundred twenty-five thousand six hundred minutes ♪ 🎵"
+  },
+  {
+    category: "🤯 Logik",
+    text: "Welche Zahl kommt als nächstes? 1, 1, 2, 3, 5, 8, 13, …",
+    options: ["18", "20", "21", "26"],
+    correct: 2,
+    explanation: "Fibonacci! Jede Zahl ist die Summe der beiden vorherigen: \\(8 + 13 = 21\\). 🐚"
+  },
+  {
+    category: "🧮 Integral",
+    text: "Die Leistung einer Solaranlage ist \\(P(t) = 800\\sin\\!\\left(\\tfrac{\\pi}{12}\\,t\\right)\\) Watt. Was berechnet \\(\\displaystyle\\int_0^{12} P(t)\\,dt\\)?",
+    options: ["Die maximale Leistung", "Die Gesamtenergie des Tages", "Den Durchschnittsverbrauch", "Die Stromkosten"],
+    correct: 1,
+    explanation: "Das Integral der Leistung über die Zeit gibt die Energie (in Wh). Direkt aus Aufgabe 5 eurer Klausur! 😏☀️"
+  }
+];
+
+// ==================== STATE ====================
+let team = null;
+let questions = [];
 let currentQ = 0;
 let score = 0;
 let answered = false;
 let answers = [];
 
-function startQuiz() {
-  document.getElementById('start-screen').classList.add('hidden');
+// ==================== TEAM SELECTION ====================
+function selectTeam(t) {
+  team = t;
+  questions = t === 'a' ? QUESTIONS_A : QUESTIONS_B;
+
+  // Team-Styling setzen
+  document.getElementById('app').classList.add(t === 'a' ? 'team-a' : 'team-b');
+
+  // Badge
+  const badge = document.getElementById('team-badge');
+  badge.textContent = t === 'a' ? '🔴 Team A' : '🔵 Team B';
+
+  const resultBadge = document.getElementById('result-team-badge');
+  resultBadge.textContent = t === 'a' ? '🔴 Team A' : '🔵 Team B';
+  resultBadge.style.background = t === 'a' ? '#dc2626' : '#2563eb';
+
+  // Screens wechseln
+  document.getElementById('team-screen').classList.add('hidden');
   document.getElementById('quiz-screen').classList.remove('hidden');
   showQuestion();
 }
 
+// ==================== QUIZ LOGIC ====================
 function showQuestion() {
   answered = false;
-  const q = QUESTIONS[currentQ];
+  const q = questions[currentQ];
   const card = document.getElementById('question-card');
   card.classList.remove('fade-in');
   void card.offsetWidth;
@@ -219,17 +320,15 @@ function showQuestion() {
   document.getElementById('progress-bar').style.width = `${(currentQ + 1) * 10}%`;
   document.getElementById('score-display').textContent = `${score} ✓`;
   document.getElementById('q-category').textContent = q.category;
-  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-text').innerHTML = q.text;
 
   const hintEl = document.getElementById('q-hint');
-  if (q.hint) { hintEl.textContent = '💡 ' + q.hint; hintEl.classList.remove('hidden'); }
+  if (q.hint) { hintEl.innerHTML = '💡 ' + q.hint; hintEl.classList.remove('hidden'); }
   else { hintEl.classList.add('hidden'); }
-
-  document.getElementById('q-image').innerHTML = '';
 
   const container = document.getElementById('options-container');
   container.innerHTML = q.options.map((opt, i) => `
-    <button class="option-btn w-full text-left px-5 py-3.5 rounded-xl border-2 border-gray-200 bg-white font-medium text-gray-700 hover:border-indigo-300 hover:bg-indigo-50 transition"
+    <button class="option-btn w-full text-left px-5 py-3.5 rounded-xl border-2 border-gray-200 bg-white font-medium text-gray-700 hover:border-gray-300 hover:bg-gray-50 transition"
             onclick="selectAnswer(${i})" id="opt-${i}">
       <span class="inline-block w-7 h-7 rounded-full bg-gray-100 text-center text-sm font-bold leading-7 mr-3 text-gray-500">${String.fromCharCode(65+i)}</span>
       ${opt}
@@ -239,7 +338,6 @@ function showQuestion() {
   document.getElementById('feedback').classList.add('hidden');
   document.getElementById('next-btn').classList.add('hidden');
 
-  // MathJax rendern
   if (window.MathJax && MathJax.typesetPromise) {
     MathJax.typesetPromise([document.getElementById('question-card')]);
   }
@@ -249,42 +347,37 @@ function selectAnswer(idx) {
   if (answered) return;
   answered = true;
 
-  const q = QUESTIONS[currentQ];
+  const q = questions[currentQ];
   const isCorrect = idx === q.correct;
   if (isCorrect) score++;
 
   answers.push({ q: currentQ, selected: idx, correct: q.correct, isCorrect });
 
-  // Highlight buttons
   document.getElementById(`opt-${idx}`).classList.add(isCorrect ? 'correct' : 'wrong');
   if (!isCorrect) {
     document.getElementById(`opt-${q.correct}`).classList.add('reveal');
   }
 
-  // Feedback
   const fb = document.getElementById('feedback');
   fb.classList.remove('hidden');
   document.getElementById('feedback-emoji').textContent = isCorrect ? '🎉' : '😅';
   document.getElementById('feedback-emoji').classList.add('pop');
-  document.getElementById('feedback-text').textContent = q.explanation;
+  document.getElementById('feedback-text').innerHTML = q.explanation;
 
-  // Score update
   document.getElementById('score-display').textContent = `${score} ✓`;
 
-  // Next button
   const nextBtn = document.getElementById('next-btn');
   nextBtn.classList.remove('hidden');
   nextBtn.textContent = currentQ < 9 ? 'Nächste Frage →' : 'Ergebnis anzeigen 🏆';
 
-  // MathJax im Feedback rendern
   if (window.MathJax && MathJax.typesetPromise) {
-    MathJax.typesetPromise([document.getElementById('feedback')]);
+    MathJax.typesetPromise([fb]);
   }
 }
 
 function nextQuestion() {
   currentQ++;
-  if (currentQ < QUESTIONS.length) {
+  if (currentQ < questions.length) {
     showQuestion();
   } else {
     showResult();
@@ -302,7 +395,7 @@ function showResult() {
   let emoji, title, subtitle;
   if (pct >= 0.9) { emoji = '🏆'; title = 'Mathe-Genie!'; subtitle = 'Fast alles richtig – Respekt!'; }
   else if (pct >= 0.7) { emoji = '🌟'; title = 'Stark!'; subtitle = 'Solides Mathewissen!'; }
-  else if (pct >= 0.5) { emoji = '👍'; title = 'Gut gemacht!'; subtitle = 'Die Hälfte geschafft – nicht schlecht!'; }
+  else if (pct >= 0.5) { emoji = '👍'; title = 'Gut gemacht!'; subtitle = 'Über die Hälfte – nicht schlecht!'; }
   else if (pct >= 0.3) { emoji = '💪'; title = 'Geht noch was!'; subtitle = 'Übung macht den Meister!'; }
   else { emoji = '🎲'; title = 'Pech gehabt?'; subtitle = 'Nächstes Mal wird\'s besser!'; }
 
@@ -312,19 +405,18 @@ function showResult() {
   document.getElementById('result-score').textContent = score;
 
   const details = document.getElementById('result-details');
-  details.innerHTML = '<h3 class="font-bold text-gray-700 mb-3">Übersicht</h3>' +
+  details.innerHTML = '<h3 class="font-bold text-gray-700 mb-3">Deine Übersicht</h3>' +
     answers.map((a, i) => {
-      const q = QUESTIONS[i];
+      const q = questions[i];
       return `<div class="flex items-start gap-2 py-1.5 ${i < 9 ? 'border-b border-gray-100' : ''}">
         <span class="text-lg">${a.isCorrect ? '✅' : '❌'}</span>
         <div class="flex-1">
-          <span class="text-sm text-gray-600">${q.category.split(' ')[1] || ''} ${q.text.slice(0, 50)}…</span>
+          <span class="text-sm text-gray-600">${q.category}</span>
           ${!a.isCorrect ? `<div class="text-xs text-green-600 mt-0.5">Richtig: ${q.options[q.correct]}</div>` : ''}
         </div>
       </div>`;
     }).join('');
 
-  // MathJax für Ergebnisseite
   setTimeout(() => {
     if (window.MathJax && MathJax.typesetPromise) {
       MathJax.typesetPromise([details]);
