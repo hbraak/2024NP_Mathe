@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathe-Jahresrückblick | 12NP</title>
+<style>
+  :root{ --bg:#f3f7f6; --card:#fff; --ink:#12201d; --muted:#5a6b66; --acc:#0d9488; --ok:#1a7a36; --no:#b23; --line:#dce5e2; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  header{background:#12201d;color:#fff;padding:18px 16px}
+  header h1{margin:0;font-size:1.25rem}
+  header p{margin:4px 0 0;color:#b3c6c1;font-size:.9rem}
+  main{max-width:680px;margin:0 auto;padding:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .bar{height:8px;background:#e4ece9;border-radius:99px;overflow:hidden;margin-bottom:6px}
+  .bar > i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+  .meta{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);margin-bottom:10px}
+  .q{font-size:1.15rem;font-weight:600;margin:6px 0 16px}
+  .q sup,.q sub{font-size:.72em}
+  .topic{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+         color:var(--acc);background:#d5efec;border-radius:6px;padding:3px 8px;margin-bottom:10px}
+  .opt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:#fff;border-radius:10px;
+       padding:13px 15px;margin:9px 0;font-size:1rem;cursor:pointer;transition:.15s;color:var(--ink)}
+  .opt:hover{border-color:var(--acc)}
+  .opt:disabled{cursor:default}
+  .opt.ok{border-color:var(--ok);background:#eaf6ee}
+  .opt.no{border-color:var(--no);background:#fcecec}
+  .fb{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:.95rem;display:none}
+  .fb.show{display:block}
+  .fb.ok{background:#eaf6ee;border:1px solid #bfe2c8}
+  .fb.no{background:#fcecec;border:1px solid #efc3c3}
+  .btn{display:inline-block;border:none;background:var(--acc);color:#fff;font-weight:600;font-size:1rem;
+       padding:12px 22px;border-radius:10px;cursor:pointer;margin-top:14px}
+  .btn:hover{filter:brightness(1.08)}
+  .center{text-align:center}
+  .score{font-size:2.4rem;font-weight:800;color:var(--acc)}
+  .hidden{display:none}
+  footer{max-width:680px;margin:0 auto;padding:8px 16px 40px;color:var(--muted);font-size:.82rem;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <h1>📈 Mathe-Jahresrückblick 12NP</h1>
+  <p>Analysis mal anders: Ableitung · e-Funktion · Logarithmus · Integrale – mit echtem Alltagsbezug</p>
+</header>
+<main>
+
+  <div id="start" class="card center">
+    <p>Kein Formel-Pauken – 15 Fragen zeigen, wo eure Mathe im echten Leben steckt: von viralen Videos über Koffein bis zur Pandemie-Kurve. Nach jeder Frage gibt's die Auflösung. Schaffst du alle? 😏</p>
+    <button class="btn" onclick="startGame()">Quiz starten</button>
+  </div>
+
+  <div id="game" class="card hidden">
+    <div class="bar"><i id="prog"></i></div>
+    <div class="meta"><span id="count"></span><span id="scoreLive"></span></div>
+    <div class="topic" id="topic"></div>
+    <div class="q" id="qtext"></div>
+    <div id="opts"></div>
+    <div class="fb" id="fb"></div>
+    <button class="btn hidden" id="next" onclick="nextQ()">Weiter →</button>
+  </div>
+
+  <div id="end" class="card center hidden">
+    <p>Geschafft!</p>
+    <div class="score" id="finalScore"></div>
+    <p id="endMsg"></p>
+    <button class="btn" onclick="startGame()">Nochmal spielen</button>
+  </div>
+
+</main>
+<footer>Mathe 12NP · Lore-Lorentz-Schule Düsseldorf · Jahresrückblick 2025/26</footer>
+
+<script>
+const QUESTIONS = [
+  { t:"Ableitung = Steigung",
+    q:"Ein Auto fährt, <i>s(t)</i> ist der zurückgelegte Weg. Was beschreibt die Ableitung <i>s&prime;(t)</i>?",
+    a:["die Geschwindigkeit","die zurückgelegte Strecke","den Benzinverbrauch"],
+    correct:0, e:"Die Ableitung des Weges nach der Zeit ist die <b>Geschwindigkeit</b> – sie sagt, wie schnell sich der Weg gerade ändert (Steigung im t-s-Diagramm)." },
+
+  { t:"Potenzregel",
+    q:"Wie lautet die Ableitung von <i>f(x) = x</i><sup>3</sup>?",
+    a:["3x<sup>2</sup>","x<sup>2</sup>","3x"],
+    correct:0, e:"Potenzregel: Exponent nach vorne, Exponent um 1 kleiner → aus x<sup>3</sup> wird <b>3x<sup>2</sup></b>." },
+
+  { t:"Die e-Funktion",
+    q:"Welche Funktion ist ihre <b>eigene</b> Ableitung – ändert sich beim Ableiten also nicht?",
+    a:["f(x) = e<sup>x</sup>","f(x) = x<sup>2</sup>","f(x) = 1/x"],
+    correct:0, e:"Das Besondere an e<sup>x</sup>: (e<sup>x</sup>)&prime; = e<sup>x</sup>. Genau deshalb taucht die e-Funktion überall auf, wo etwas proportional zu sich selbst wächst." },
+
+  { t:"Ableitung sin/cos",
+    q:"Was ergibt die Ableitung von <i>sin(x)</i>?",
+    a:["cos(x)","−sin(x)","−cos(x)"],
+    correct:0, e:"(sin x)&prime; = cos x. Nach viermaligem Ableiten ist man wieder bei sin x: sin → cos → −sin → −cos → sin." },
+
+  { t:"Exponentielles Wachstum",
+    q:"Ein Video wird jeden Tag <b>doppelt</b> so oft geklickt wie am Vortag. Welche Art Wachstum ist das?",
+    a:["exponentielles Wachstum","lineares Wachstum","quadratisches Wachstum"],
+    correct:0, e:"Verdopplung pro Zeitschritt = <b>exponentiell</b> (Form a·2<sup>t</sup> bzw. a·e<sup>kt</sup>). Startet langsam, explodiert dann – das steckt hinter „viral gehen“." },
+
+  { t:"Aha: der Cent-Trick",
+    q:"Du bekommst 30 Tage Geld: Tag 1 einen Cent, dann täglich verdoppelt (2, 4, 8 …). Wie viel am <b>30. Tag</b>?",
+    a:["etwa 5 Millionen €","etwa 300 €","etwa 10 000 €"],
+    correct:0, e:"2<sup>29</sup> Cent ≈ <b>5,4 Mio €</b>! Exponentielles Wachstum wird maßlos unterschätzt – der Klassiker, um ein Gefühl dafür zu bekommen." },
+
+  { t:"Logarithmus",
+    q:"Welche Frage beantwortet der <b>Logarithmus</b>?",
+    a:["„Hoch wie viel muss ich rechnen, um die Zahl zu bekommen?“","„Was ist die Steigung?“","„Wie groß ist die Fläche?“"],
+    correct:0, e:"log ist die Umkehrung des Potenzierens – er liefert den <b>Exponenten</b>: log<sub>2</sub>(8)=3, weil 2<sup>3</sup>=8. So löst man auf, wenn die gesuchte Größe im Exponenten steckt." },
+
+  { t:"Halbwertszeit",
+    q:"Koffein hat im Körper eine Halbwertszeit von ca. 5 Stunden. Von 200 mg um 15 Uhr sind um <b>20 Uhr</b> noch …",
+    a:["100 mg","0 mg","180 mg"],
+    correct:0, e:"Nach einer Halbwertszeit ist die <b>Hälfte</b> übrig: 200 → 100 mg. Deshalb hält Kaffee am Abend wach – nach 10 h sind immer noch 50 mg da." },
+
+  { t:"Extremstelle",
+    q:"Ein Ball fliegt hoch. Am <b>höchsten Punkt</b> der Flugbahn gilt für die Steigung (Ableitung) …",
+    a:["f&prime;(x) = 0","f&prime;(x) > 0","f&prime;(x) ist maximal"],
+    correct:0, e:"Im Hoch- oder Tiefpunkt ist die Tangente waagerecht → <b>f&prime;(x)=0</b>. Genau so findet man Maxima und Minima (max. Gewinn, kürzester Weg …)." },
+
+  { t:"Wendepunkt",
+    q:"In einer Pandemie-Kurve ist der <b>Wendepunkt</b> der Moment, in dem …",
+    a:["die Neuinfektionen ihr Maximum haben (danach wächst es langsamer)","die Pandemie vorbei ist","niemand mehr infiziert ist"],
+    correct:0, e:"Am Wendepunkt (f&Prime;(x)=0) ist die Steigung am größten – das Wachstum ist am schnellsten und kippt danach. Deshalb war „den Wendepunkt erreichen“ 2020 in jeder Nachrichtensendung." },
+
+  { t:"Integral = Fläche",
+    q:"Anschaulich berechnet ein bestimmtes <b>Integral</b> …",
+    a:["die Fläche zwischen Graph und x-Achse","die Steigung des Graphen","den höchsten Punkt"],
+    correct:0, e:"Das Integral summiert unendlich viele schmale Streifen → <b>Fläche</b> unter der Kurve. Es ist die Umkehrung des Ableitens (Hauptsatz)." },
+
+  { t:"Integral-Anwendung",
+    q:"Du kennst die Geschwindigkeit <i>v(t)</i> eines Autos. Wie bekommst du die <b>zurückgelegte Strecke</b>?",
+    a:["durch Integrieren von v(t)","durch Ableiten von v(t)","durch Multiplizieren mit t<sup>2</sup>"],
+    correct:0, e:"Ableiten und Integrieren sind Gegenspieler: Weg →(ableiten)→ Geschwindigkeit →(integrieren)→ Weg. Die Fläche unter der v-t-Kurve ist die Strecke." },
+
+  { t:"Grenzwert & Asymptote",
+    q:"Heißer Tee kühlt ab. Die Temperatur nähert sich mit der Zeit …",
+    a:["der Raumtemperatur (waagerechte Asymptote)","dem absoluten Nullpunkt","unendlich hoher Temperatur"],
+    correct:0, e:"Abklingprozesse (e<sup>−kt</sup>) nähern sich einem <b>Grenzwert</b>, ohne ihn ganz zu erreichen – hier die Raumtemperatur. Gleiche Mathe wie beim Akku-Laden oder Medikamentenabbau." },
+
+  { t:"Zinseszins",
+    q:"100 € liegen auf einem Konto mit 5 % Zinsen pro Jahr (Zinseszins). Nach <b>1 Jahr</b> sind es …",
+    a:["105 €","150 €","100,05 €"],
+    correct:0, e:"100 € · 1,05 = <b>105 €</b>. Über viele Jahre wächst das exponentiell – Zinseszins, angeblich Einsteins „achtes Weltwunder“." },
+
+  { t:"Warum ausgerechnet e?",
+    q:"Die Zahl <i>e</i> ≈ 2,718 taucht bei natürlichem Wachstum auf. Was gilt für <i>f(x)=e<sup>x</sup></i> am Punkt <i>x=0</i>?",
+    a:["Funktionswert 1 und Steigung genau 1","Funktionswert 0","Steigung 0"],
+    correct:0, e:"Bei x=0 ist e<sup>x</sup>=1 <b>und</b> die Steigung =1. e ist genau die Basis, für die das passt – das macht sie zur „natürlichen“ Wachstumszahl." }
+];
+
+let order=[], idx=0, score=0, answered=false;
+
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+
+function startGame(){
+  order = shuffle([...Array(QUESTIONS.length).keys()]);
+  idx=0; score=0;
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('end').classList.add('hidden');
+  document.getElementById('game').classList.remove('hidden');
+  render();
+}
+
+function render(){
+  answered=false;
+  const q = QUESTIONS[order[idx]];
+  document.getElementById('count').textContent = `Frage ${idx+1} / ${order.length}`;
+  document.getElementById('scoreLive').textContent = `Punkte: ${score}`;
+  document.getElementById('prog').style.width = `${(idx/order.length)*100}%`;
+  document.getElementById('topic').textContent = q.t;
+  document.getElementById('qtext').innerHTML = q.q;
+  const fb = document.getElementById('fb'); fb.className='fb'; fb.innerHTML='';
+  document.getElementById('next').classList.add('hidden');
+  const opts = document.getElementById('opts'); opts.innerHTML='';
+  const oi = shuffle([...Array(q.a.length).keys()]);
+  oi.forEach(originalIndex => {
+    const b=document.createElement('button');
+    b.className='opt'; b.innerHTML=q.a[originalIndex];
+    b.dataset.correct = (originalIndex===q.correct) ? '1' : '0';
+    b.onclick=()=>choose(b, originalIndex===q.correct, q);
+    opts.appendChild(b);
+  });
+}
+
+function choose(btn, isCorrect, q){
+  if(answered) return;
+  answered=true;
+  const buttons = document.querySelectorAll('.opt');
+  buttons.forEach(b=>b.disabled=true);
+  const fb = document.getElementById('fb');
+  if(isCorrect){
+    btn.classList.add('ok'); score++;
+    fb.className='fb show ok'; fb.innerHTML='✅ Richtig! '+q.e;
+  } else {
+    btn.classList.add('no');
+    buttons.forEach(b=>{ if(b.dataset.correct==='1') b.classList.add('ok'); });
+    fb.className='fb show no'; fb.innerHTML='❌ Knapp daneben. '+q.e;
+  }
+  document.getElementById('scoreLive').textContent = `Punkte: ${score}`;
+  document.getElementById('next').classList.remove('hidden');
+  document.getElementById('next').textContent = (idx+1<order.length) ? 'Weiter →' : 'Ergebnis ansehen';
+}
+
+function nextQ(){
+  idx++;
+  if(idx<order.length){ render(); }
+  else { showEnd(); }
+}
+
+function showEnd(){
+  document.getElementById('game').classList.add('hidden');
+  const end = document.getElementById('end'); end.classList.remove('hidden');
+  document.getElementById('finalScore').textContent = `${score} / ${order.length}`;
+  let msg;
+  const r = score/order.length;
+  if(r===1) msg='Perfekt! Analysis ist dein Heimspiel. 🏆';
+  else if(r>=0.7) msg='Stark! Das sitzt richtig gut – Ferien mehr als verdient.';
+  else if(r>=0.4) msg='Solide! Ein paar Klassiker nochmal anschauen, dann läuft es.';
+  else msg='Kein Drama – Mathe ist Kopfsache. Lies die Erklärungen, vieles ist erstaunlich logisch. 💪';
+  document.getElementById('endMsg').textContent = msg;
+}
+</script>
+</body>
+</html>
