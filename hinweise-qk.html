@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hilfen: Wie sicher ist ein Prüfverfahren? | Mathematik 13NP</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$']] }, svg: { fontCache: 'global' } };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f5f7fa;color:#1e293b;
+       line-height:1.6;padding:16px 14px 60px}
+  .wrap{max-width:680px;margin:0 auto}
+  header{background:#fff;border-radius:14px;padding:22px 20px;margin-bottom:18px;
+         box-shadow:0 2px 10px rgba(0,0,0,.08);text-align:center}
+  header h1{font-size:1.35em;color:#7c3aed;margin-bottom:6px;line-height:1.3}
+  header .sub{color:#64748b;font-size:.95em}
+  .intro{background:#fffbeb;border-left:4px solid #f59e0b;border-radius:8px;
+         padding:14px 16px;margin-bottom:22px;font-size:.94em;color:#78350f}
+  .nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+  .nav a{flex:1 1 auto;text-align:center;background:#fff;border:2px solid #e2e8f0;border-radius:10px;
+         padding:10px 8px;text-decoration:none;color:#475569;font-weight:600;font-size:.9em}
+  .nav a:hover{border-color:#7c3aed;color:#7c3aed}
+  section{background:#fff;border-radius:14px;padding:20px;margin-bottom:20px;
+          box-shadow:0 2px 10px rgba(0,0,0,.08);scroll-margin-top:12px}
+  section h2{font-size:1.1em;color:#7c3aed;margin-bottom:4px}
+  section .frage{color:#64748b;font-size:.92em;margin-bottom:14px;font-style:italic}
+  details{border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden}
+  details[open]{border-color:#c4b5fd}
+  summary{cursor:pointer;padding:12px 14px;font-weight:600;font-size:.95em;background:#faf9ff;
+          list-style:none;display:flex;align-items:center;gap:10px}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";color:#7c3aed;font-size:1.1em;transition:transform .2s}
+  details[open] summary::before{transform:rotate(90deg)}
+  .stufe{display:inline-block;background:#ede9fe;color:#6d28d9;border-radius:20px;
+         padding:2px 10px;font-size:.78em;font-weight:700;margin-right:2px}
+  .stufe.erg{background:#dcfce7;color:#15803d}
+  .inhalt{padding:4px 16px 16px;font-size:.95em;border-top:1px solid #f1f5f9}
+  .inhalt p{margin-top:10px}
+  .formel{background:#f8fafc;border-radius:8px;padding:10px 12px;margin:10px 0;overflow-x:auto}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88em}
+  th,td{border:1px solid #e2e8f0;padding:7px 8px;text-align:center}
+  th{background:#f8fafc;font-weight:600}
+  td.lbl,th.lbl{text-align:left;background:#f8fafc;font-weight:600}
+  .foot{text-align:center;margin-top:26px}
+  .foot a{display:inline-block;background:#7c3aed;color:#fff;text-decoration:none;
+          border-radius:10px;padding:12px 22px;font-weight:600;font-size:.95em}
+  .foot .zurueck{display:block;margin-top:14px;color:#64748b;font-size:.9em;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Wie sicher ist ein Prüfverfahren?</h1>
+  <div class="sub">Gestufte Hilfen &middot; Mathematik 13NP &middot; 03.09.2026</div>
+</header>
+
+<div class="intro">
+  <strong>So nutzen Sie diese Seite:</strong> Öffnen Sie immer nur die <em>nächste</em> Stufe —
+  erst wenn Sie selbst nicht weiterkommen. Stufe&nbsp;1 gibt einen Denkanstoß,
+  Stufe&nbsp;2 den Ansatz, Stufe&nbsp;3 den Rechenweg. Das Ergebnis steht ganz unten
+  zum Abgleich.
+</div>
+
+<div class="nav">
+  <a href="#a1">Aufgabe 1</a>
+  <a href="#a2">Aufgabe 2</a>
+  <a href="#a3">Aufgabe 3</a>
+  <a href="#a4">Aufgabe 4</a>
+</div>
+
+<!-- ================= AUFGABE 1 ================= -->
+<section id="a1">
+  <h2>Aufgabe 1 — Von Prozenten zu Stückzahlen</h2>
+  <div class="frage">Vierfeldertafel für 10&nbsp;000 Nähte ausfüllen.</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span> Womit anfangen?</summary>
+    <div class="inhalt">
+      <p>Fangen Sie <strong>außen</strong> an, nicht in der Mitte. Die Randsummen sind das
+      Einzige, was Sie sofort ausrechnen können.</p>
+      <p>Wie viele der 10&nbsp;000 Nähte sind überhaupt rissig? Die Angabe „4&nbsp;%&nbsp;aller
+      Nähte“ bezieht sich auf die gesamte Tagesproduktion.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe">Stufe 2</span> Der Ansatz</summary>
+    <div class="inhalt">
+      <p>Rechte Spalte (Randsummen der Zeilen) bekommen Sie erst zum Schluss. Beginnen Sie mit
+      der <strong>untersten Zeile</strong>:</p>
+      <div class="formel">$0{,}04 \cdot 10\,000 = 400$ rissige Nähte &nbsp;&rarr;&nbsp;
+      also $10\,000 - 400 = 9600$ einwandfreie</div>
+      <p>Jetzt greifen Sensitivität und Spezifität — aber Achtung: Die
+      <strong>92&nbsp;%</strong> beziehen sich nur auf die 400 rissigen, die
+      <strong>95&nbsp;%</strong> nur auf die 9600 einwandfreien. Jede Angabe hat ihre eigene
+      Bezugsgruppe.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe">Stufe 3</span> Der Rechenweg</summary>
+    <div class="inhalt">
+      <div class="formel">
+        Von den 400 rissigen schlägt der Prüfkopf an bei: $0{,}92 \cdot 400 = 368$<br>
+        &rarr; die restlichen $400 - 368 = 32$ werden übersehen.<br><br>
+        Von den 9600 einwandfreien bleibt er stumm bei: $0{,}95 \cdot 9600 = 9120$<br>
+        &rarr; die restlichen $9600 - 9120 = 480$ sind Fehlalarme.
+      </div>
+      <p>Die vier Innenfelder stehen damit fest. Die Zeilensummen ergeben sich durch Addition.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe erg">Ergebnis</span> Zum Abgleich</summary>
+    <div class="inhalt">
+      <table>
+        <tr><th class="lbl"></th><th>rissig $D$</th><th>in Ordnung $\overline{D}$</th><th>Summe</th></tr>
+        <tr><td class="lbl">schlägt an $T$</td><td>368</td><td>480</td><td><strong>848</strong></td></tr>
+        <tr><td class="lbl">bleibt stumm $\overline{T}$</td><td>32</td><td>9120</td><td><strong>9152</strong></td></tr>
+        <tr><td class="lbl">Summe</td><td><strong>400</strong></td><td><strong>9600</strong></td><td><strong>10 000</strong></td></tr>
+      </table>
+      <p><strong>b)</strong> Aussortiert werden $368 + 480 = 848$ Nähte pro Tag — obwohl nur
+      400 wirklich rissig sind.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 2 ================= -->
+<section id="a2">
+  <h2>Aufgabe 2 — Die Frage des Qualitätsleiters</h2>
+  <div class="frage">Der Prüfkopf hat angeschlagen. Welcher Anteil ist wirklich rissig?</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span> Worauf schauen Sie?</summary>
+    <div class="inhalt">
+      <p>Die Frage schränkt ein: Es geht <em>nur noch</em> um die Nähte, bei denen der Prüfkopf
+      angeschlagen hat. Alle anderen sind für diese Frage nicht mehr interessant.</p>
+      <p>Welche Zeile Ihrer Tafel ist das? Und wie viele Nähte stehen dort insgesamt?</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe">Stufe 2</span> Der Ansatz</summary>
+    <div class="inhalt">
+      <p>Sie brauchen genau zwei Zahlen aus der Zeile „Prüfkopf schlägt an“:</p>
+      <div class="formel">
+        $\text{Anteil} = \dfrac{\text{davon wirklich rissig}}{\text{alle mit Alarm}}$
+      </div>
+      <p>Der Nenner ist <strong>nicht</strong> 10&nbsp;000 und <strong>nicht</strong> 400 —
+      sondern die Zeilensumme.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe">Stufe 3</span> Rechenweg und die Erklärung zu d)</summary>
+    <div class="inhalt">
+      <div class="formel">
+        a) $\dfrac{368}{848} = 0{,}434$ &nbsp;&rarr;&nbsp; 43,4&nbsp;%<br><br>
+        c) $\dfrac{9120}{9152} = 0{,}9965$ &nbsp;&rarr;&nbsp; 99,65&nbsp;%
+      </div>
+      <p><strong>Zu d):</strong> Vergleichen Sie die beiden Fehlerquellen nicht in Prozent,
+      sondern in Stückzahlen. 5&nbsp;% Fehlalarme klingen wenig — aber 5&nbsp;% von
+      <em>9600</em> sind 480 Stück. 92&nbsp;% Treffer klingen viel — aber 92&nbsp;% von
+      <em>400</em> sind nur 368 Stück.</p>
+      <p>Der Grund: Rissige Nähte sind <strong>selten</strong>. Die kleine Fehlerquote wirkt auf
+      eine riesige Gruppe, die große Trefferquote nur auf eine kleine.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe erg">Ergebnis</span> Zum Abgleich</summary>
+    <div class="inhalt">
+      <p><strong>a)</strong> 43,4&nbsp;% — die Naht ist bei Alarm in <em>weniger als der Hälfte</em>
+      der Fälle wirklich rissig. Von 848 Alarmen sind 480 Fehlalarme.</p>
+      <p><strong>c)</strong> 99,65&nbsp;% — bleibt der Prüfkopf stumm, ist die Naht fast sicher
+      in Ordnung.</p>
+      <p><strong>d)</strong> Entscheidend ist die Grundrate von nur 4&nbsp;%: Die seltene
+      Eigenschaft „rissig“ lässt sich auch mit einem guten Test schwer sicher nachweisen,
+      weil die vielen Fehlalarme aus der großen Vergleichsgruppe alles überdecken.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 3 ================= -->
+<section id="a3">
+  <h2>Aufgabe 3 — Derselbe Weg über das Baumdiagramm</h2>
+  <div class="frage">Baumdiagramm beschriften, Pfadregeln anwenden, $P(D \mid T)$ berechnen.</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span> Welche Zahl gehört an welchen Ast?</summary>
+    <div class="inhalt">
+      <p>Die erste Verzweigung trennt nach dem <em>Zustand</em> der Naht (rissig oder nicht) —
+      dort gehören die 4&nbsp;% hin.</p>
+      <p>Die zweite Verzweigung trennt nach dem <em>Prüfergebnis</em>. Wichtig: An jedem
+      Astpaar müssen die beiden Wahrscheinlichkeiten zusammen 1 ergeben.</p>
+      <p>Fragen Sie sich bei den unteren Ästen jeweils: <em>Unter welcher Bedingung</em> stehe
+      ich hier gerade — links bei den rissigen oder rechts bei den einwandfreien?</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe">Stufe 2</span> Die Pfadregeln</summary>
+    <div class="inhalt">
+      <p><strong>Erste Pfadregel:</strong> Entlang eines Pfades werden die Wahrscheinlichkeiten
+      <em>multipliziert</em>.</p>
+      <p><strong>Zweite Pfadregel:</strong> Führen mehrere Pfade zum selben Ereignis, werden
+      diese Pfadergebnisse <em>addiert</em>.</p>
+      <p>Für $P(T)$ gilt: Es gibt <strong>zwei</strong> Wege, bei denen der Prüfkopf anschlägt —
+      über eine rissige und über eine einwandfreie Naht.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe">Stufe 3</span> Der Rechenweg</summary>
+    <div class="inhalt">
+      <div class="formel">
+        $P(D \cap T) = 0{,}04 \cdot 0{,}92 = 0{,}0368$<br>
+        $P(\overline{D} \cap T) = 0{,}96 \cdot 0{,}05 = 0{,}048$<br><br>
+        $P(T) = 0{,}0368 + 0{,}048 = 0{,}0848$
+      </div>
+      <p>Jetzt die Formel aus der Merkbox anwenden — Zähler ist der Pfad, bei dem
+      <em>beides</em> zutrifft, Nenner die Summe aller Alarm-Pfade.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe erg">Ergebnis</span> Zum Abgleich</summary>
+    <div class="inhalt">
+      <div class="formel">
+        $P(D \mid T) = \dfrac{P(D \cap T)}{P(T)} = \dfrac{0{,}0368}{0{,}0848} = 0{,}434$
+        &nbsp;&rarr;&nbsp; 43,4&nbsp;%
+      </div>
+      <p>Genau derselbe Wert wie in Aufgabe&nbsp;2a. Die Tafel mit 10&nbsp;000 Nähten war nichts
+      anderes als dieser Rechenweg in absoluten Zahlen:
+      $0{,}0848 \cdot 10\,000 = 848$.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 4 ================= -->
+<section id="a4">
+  <h2>Aufgabe 4 — Eine ganze Stichprobe</h2>
+  <div class="frage">20 Nähte, jede mit 4&nbsp;% Wahrscheinlichkeit rissig.</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span> Zu a) und b)</summary>
+    <div class="inhalt">
+      <p>Stellen Sie sich das als Baumdiagramm mit 20 Stufen vor. Der Pfad „alle in Ordnung“
+      ist ein einziger Pfad — 20-mal hintereinander dieselbe Verzweigung nach derselben Seite.</p>
+      <p>Für b): „Mindestens eine“ ist mühsam direkt zu zählen. Was ist das
+      <strong>Gegenteil</strong> von „mindestens eine rissig“?</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe">Stufe 2</span> Zu c) und d) — der entscheidende Unterschied</summary>
+    <div class="inhalt">
+      <p>In c) ist die Position <strong>festgelegt</strong>: genau die 7.&nbsp;Naht. Das ist
+      <em>ein</em> bestimmter Pfad, also ein reines Produkt.</p>
+      <p>In d) ist die Position <strong>egal</strong>. Der Pfad „1. und 2. rissig“ hat dieselbe
+      Wahrscheinlichkeit wie „7. und 13. rissig“ — es gibt nur viele davon.</p>
+      <p>Zählen Sie also: Auf wie viele Arten kann man aus 20 Nähten 2 auswählen, wenn die
+      Reihenfolge egal ist? Denken Sie an den Binomialkoeffizienten.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe">Stufe 3</span> Der Rechenweg</summary>
+    <div class="inhalt">
+      <div class="formel">
+        a) $0{,}96^{20}$<br>
+        b) $1 - 0{,}96^{20}$ &nbsp;(Gegenereignis)<br>
+        c) $0{,}04 \cdot 0{,}96^{19}$ &nbsp;(ein fester Pfad)<br><br>
+        d) ein Pfad: $0{,}04^2 \cdot 0{,}96^{18}$ &nbsp;&middot;&nbsp;
+           Anzahl: $\binom{20}{2} = \dfrac{20 \cdot 19}{2} = 190$<br><br>
+        e) $190 \cdot 0{,}04^2 \cdot 0{,}96^{18}$
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe erg">Ergebnis</span> Zum Abgleich</summary>
+    <div class="inhalt">
+      <p>a) $0{,}96^{20} = 0{,}4420$ &rarr; 44,2&nbsp;%</p>
+      <p>b) $1 - 0{,}4420 = 0{,}5580$ &rarr; 55,8&nbsp;%</p>
+      <p>c) $0{,}04 \cdot 0{,}96^{19} = 0{,}01842$</p>
+      <p>d) ein Pfad: $0{,}000767\ldots$ &nbsp;&middot;&nbsp; Anzahl der Pfade: $190$</p>
+      <p>e) $190 \cdot 0{,}04^2 \cdot 0{,}96^{18} = 0{,}1458$ &rarr; 14,6&nbsp;%</p>
+      <p style="margin-top:14px"><strong>Der Bauplan dahinter:</strong> Sie haben gerade
+      (Anzahl der Pfade) $\cdot$ (Wahrscheinlichkeit eines Pfades) gerechnet — genau dieses
+      Muster ist die Binomialverteilung, mit der wir weiterarbeiten.</p>
+    </div>
+  </details>
+</section>
+
+<div class="foot">
+  <a href="loesung-qualitaetskontrolle.pdf">Vollständige Lösung als PDF</a>
+  <a class="zurueck" href="index.html">&larr; Zur Materialübersicht</a>
+</div>
+
+</div>
+</body>
+</html>

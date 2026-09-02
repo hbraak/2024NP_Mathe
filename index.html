@@ -167,11 +167,32 @@
 <body>
     <div class="container">
         <header>
-            <h1>📐 Mathematik 12NP</h1>
+            <h1>📐 Mathematik 13NP</h1>
             <div class="subtitle">Lore-Lorentz-Schule | Lernmaterialien</div>
         </header>
         
         <div class="material-grid">
+            <a href="hinweise-qk.html" class="material-card" data-url="hinweise-qk.html">
+                <div class="card-header">
+                    <div class="card-icon purple">🔍</div>
+                    <div class="card-title">Hilfen: Wie sicher ist ein Prüfverfahren?</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Gestufte Hilfen zum Arbeitsblatt „Bedingte Wahrscheinlichkeiten in der Qualitätskontrolle“: pro Aufgabe erst ein Denkanstoß, dann der Ansatz, dann der Rechenweg — Ergebnis zum Abgleich ganz unten. Auch direkt über die QR-Codes auf dem Blatt erreichbar.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Gestufte Hilfen</span>
+                            <span class="tag">Q1</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-hinweise-qk"></div>
+                </div>
+            </a>
+
             <a href="mathe_jahresrueckblick_quiz.html" class="material-card" data-url="mathe_jahresrueckblick_quiz.html">
                 <div class="card-header">
                     <div class="card-icon amber">📈</div>
@@ -186,7 +207,6 @@
                             <span class="tag">Quiz</span>
                             <span class="tag">Jahresrückblick</span>
                             <span class="tag">Alltagsbezug</span>
-                            <span class="tag">NEU</span>
                         </div>
                     </div>
                     <div class="qr-code" id="qr-jahresquiz"></div>
@@ -382,6 +402,7 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-hinweise-qk', 'hinweise-qk.html');
             generateQR('qr-jahresquiz', 'mathe_jahresrueckblick_quiz.html');
             generateQR('qr-quiz', 'quiz-q4.html');
             generateQR('qr-q4', 'lernliste-integral-q4.html');
