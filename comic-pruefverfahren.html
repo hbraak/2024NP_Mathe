@@ -49,6 +49,16 @@
   .titel .unter{font-size:clamp(1em,2.6vw,1.3em);color:#94a3b8}
   .titel .hint{margin-top:26px;color:#64748b;font-size:.92em}
 
+  /* Faktenliste auf der Tipp-Seite */
+  .fakten{list-style:none;width:100%;max-width:620px;display:flex;flex-direction:column;gap:8px;
+          background:#172033;border:1px solid #334155;border-radius:14px;padding:14px 18px}
+  .fakten li{font-size:clamp(.9em,2.05vw,1.08em);color:#cbd5e1;line-height:1.4;
+             padding-left:20px;position:relative}
+  .fakten li::before{content:"■";position:absolute;left:0;top:0;color:#7c3aed;font-size:.8em}
+  .fakten .rot{color:#f87171;font-weight:700}
+  .fakten .zahl{color:#fbbf24;font-weight:700}
+  .fakten .gruen{color:#4ade80;font-weight:700}
+
   /* Tipp-Panel */
   .tipp{width:100%;max-width:620px;background:#1e293b;border-radius:16px;padding:22px 24px;
         border:2px solid #334155}
@@ -276,6 +286,13 @@
       <p>Der Prüfkopf hat angeschlagen. Wie viel Prozent dieser Nähte haben
          Ihrer Schätzung nach wirklich einen Riss?</p>
     </div>
+
+    <ul class="fakten">
+      <li><span class="rot">4 %</span> aller Nähte haben einen Riss</li>
+      <li><span class="zahl">92 %</span> Sensitivität — von den rissigen schlägt er an</li>
+      <li><span class="gruen">95 %</span> Spezifität — von den guten bleibt er stumm</li>
+    </ul>
+
     <div class="tipp">
       <div class="wert" id="wert">50 %</div>
       <input type="range" id="slider" min="0" max="100" value="50" step="1"
