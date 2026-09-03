@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Die Naht, die keiner sieht | Mathematik 13NP</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#0f172a;color:#e2e8f0;
+       overflow:hidden;display:flex;flex-direction:column;user-select:none;-webkit-user-select:none}
+
+  header{flex:0 0 auto;padding:10px 16px;display:flex;align-items:center;gap:14px;
+         border-bottom:1px solid #1e293b}
+  header .t{font-size:.9em;color:#64748b;letter-spacing:.04em}
+  header .sp{flex:1}
+  header button{background:#1e293b;color:#94a3b8;border:none;border-radius:8px;
+                padding:7px 12px;font-size:.85em;cursor:pointer;font-family:inherit}
+  header button:hover{background:#334155;color:#e2e8f0}
+
+  .stage{flex:1 1 auto;position:relative;overflow:hidden}
+  .panel{position:absolute;inset:0;display:none;flex-direction:column;
+         align-items:center;justify-content:center;padding:18px 20px 12px;gap:14px}
+  .panel.on{display:flex;animation:in .35s ease-out}
+  @keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .art{flex:0 1 auto;max-height:52vh;width:100%;max-width:820px;
+       background:#f8fafc;border-radius:16px;border:3px solid #334155;overflow:hidden}
+  .art svg{display:block;width:100%;height:100%}
+
+  .txt{max-width:820px;width:100%;text-align:center}
+  .txt h2{font-size:clamp(1.15em,3.4vw,1.9em);color:#f1f5f9;margin-bottom:8px;line-height:1.25}
+  .txt p{font-size:clamp(.95em,2.2vw,1.18em);color:#cbd5e1;line-height:1.55}
+  .txt .zahl{color:#fbbf24;font-weight:700}
+  .txt .rot{color:#f87171;font-weight:700}
+  .txt .gruen{color:#4ade80;font-weight:700}
+
+  /* Sprechblase */
+  .bubble{background:#fff;color:#1e293b;border-radius:14px;padding:12px 18px;
+          font-size:clamp(.95em,2.3vw,1.2em);line-height:1.45;position:relative;
+          max-width:700px;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+  .bubble::after{content:"";position:absolute;top:-13px;left:52px;border:7px solid transparent;
+                 border-bottom-color:#fff}
+  .bubble em{color:#7c3aed;font-style:italic;font-weight:600}
+
+  /* Titelpanel */
+  .titel h1{font-size:clamp(1.7em,6vw,3.2em);line-height:1.1;color:#fff;margin-bottom:14px;
+            letter-spacing:-.01em}
+  .titel .unter{font-size:clamp(1em,2.6vw,1.3em);color:#94a3b8}
+  .titel .hint{margin-top:26px;color:#64748b;font-size:.92em}
+
+  /* Tipp-Panel */
+  .tipp{width:100%;max-width:620px;background:#1e293b;border-radius:16px;padding:22px 24px;
+        border:2px solid #334155}
+  .tipp .wert{font-size:clamp(2.6em,9vw,4.2em);font-weight:800;color:#fbbf24;
+              text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+  .tipp input[type=range]{width:100%;margin:18px 0 6px;height:30px;accent-color:#7c3aed;cursor:pointer}
+  .tipp .skala{display:flex;justify-content:space-between;color:#64748b;font-size:.85em}
+  .tipp .ok{margin-top:16px;width:100%;background:#7c3aed;color:#fff;border:none;border-radius:10px;
+            padding:13px;font-size:1em;font-weight:600;cursor:pointer;font-family:inherit}
+  .tipp .ok:hover{background:#6d28d9}
+  .tipp .fest{margin-top:14px;text-align:center;color:#4ade80;font-size:.98em;
+              line-height:1.5;display:none}
+  .tipp .fest.on{display:block}
+
+  /* Navigation */
+  nav{flex:0 0 auto;display:flex;align-items:center;gap:16px;padding:10px 18px 14px;
+      justify-content:center}
+  nav button{background:#334155;color:#e2e8f0;border:none;border-radius:10px;
+             padding:11px 22px;font-size:1em;cursor:pointer;font-family:inherit;font-weight:600}
+  nav button:hover:not(:disabled){background:#475569}
+  nav button:disabled{opacity:.3;cursor:default}
+  .dots{display:flex;gap:7px}
+  .dot{width:9px;height:9px;border-radius:50%;background:#334155;transition:all .2s;cursor:pointer}
+  .dot.on{background:#7c3aed;transform:scale(1.35)}
+
+  .tap{position:absolute;top:0;bottom:0;width:22%;z-index:5;cursor:pointer}
+  .tap.l{left:0} .tap.r{right:0}
+
+  @media (max-height:520px){ .art{max-height:42vh} }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="t">Mathematik 13NP &middot; Stochastik</span>
+  <span class="sp"></span>
+  <button onclick="voll()">⛶ Vollbild</button>
+</header>
+
+<div class="stage" id="stage">
+  <div class="tap l" onclick="go(-1)"></div>
+  <div class="tap r" onclick="go(1)"></div>
+
+  <!-- 1 TITEL -->
+  <section class="panel on titel">
+    <div class="txt">
+      <h1>Die Naht,<br>die keiner sieht</h1>
+      <div class="unter">Eine Geschichte aus der Qualitätskontrolle</div>
+      <div class="hint">Weiter mit Klick, Pfeiltaste oder Leertaste →</div>
+    </div>
+  </section>
+
+  <!-- 2 DER BETRIEB -->
+  <section class="panel">
+    <div class="art">
+      <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet">
+        <rect width="800" height="340" fill="#e0f2fe"/>
+        <!-- Halle -->
+        <rect x="60" y="90" width="680" height="200" fill="#94a3b8"/>
+        <path d="M60 90 L400 30 L740 90 Z" fill="#64748b"/>
+        <rect x="120" y="140" width="90" height="70" fill="#bae6fd" stroke="#475569" stroke-width="3"/>
+        <rect x="240" y="140" width="90" height="70" fill="#bae6fd" stroke="#475569" stroke-width="3"/>
+        <rect x="470" y="140" width="90" height="70" fill="#bae6fd" stroke="#475569" stroke-width="3"/>
+        <rect x="590" y="140" width="90" height="70" fill="#bae6fd" stroke="#475569" stroke-width="3"/>
+        <rect x="360" y="180" width="80" height="110" fill="#475569"/>
+        <!-- Funken -->
+        <g stroke="#fbbf24" stroke-width="4" stroke-linecap="round">
+          <path d="M395 120 l-16 -22"/><path d="M405 118 l14 -24"/><path d="M400 112 l0 -26"/>
+        </g>
+        <circle cx="400" cy="128" r="13" fill="#fde047"/>
+        <circle cx="400" cy="128" r="6" fill="#fff"/>
+      </svg>
+    </div>
+    <div class="txt">
+      <h2>Ein Zulieferbetrieb, irgendwo im Ruhrgebiet</h2>
+      <p>Hier werden <strong>Schweißnähte</strong> gefertigt — an Bauteilen, bei denen
+         niemand ein Versagen riskieren darf.</p>
+    </div>
+  </section>
+
+  <!-- 3 DAS PROBLEM -->
+  <section class="panel">
+    <div class="art">
+      <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet">
+        <rect width="800" height="340" fill="#f8fafc"/>
+        <g id="raster"></g>
+      </svg>
+    </div>
+    <div class="txt">
+      <h2>Aber nicht jede Naht hält</h2>
+      <p>Erfahrungsgemäß hat <span class="rot">4 von 100</span> Nähten einen Riss.
+         Von außen sieht man ihn nicht.</p>
+    </div>
+  </section>
+
+  <!-- 4 DIE PRÜFUNG -->
+  <section class="panel">
+    <div class="art">
+      <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet">
+        <rect width="800" height="340" fill="#f1f5f9"/>
+        <!-- Bauteil -->
+        <rect x="80" y="210" width="640" height="70" fill="#cbd5e1" stroke="#64748b" stroke-width="3"/>
+        <!-- Naht -->
+        <path d="M80 212 l24 -14 24 14 24 -14 24 14 24 -14 24 14 24 -14 24 14 24 -14 24 14 24 -14
+                 24 14 24 -14 24 14 24 -14 24 14 24 -14 24 14 24 -14 24 14 24 -14 24 14 24 -14 24 14"
+              fill="none" stroke="#94a3b8" stroke-width="5"/>
+        <!-- versteckter Riss -->
+        <path d="M436 214 l-7 26 l12 -8 l-6 30" fill="none" stroke="#dc2626" stroke-width="4"
+              stroke-linecap="round" opacity=".85"/>
+        <!-- Prüfkopf -->
+        <rect x="390" y="120" width="86" height="52" rx="7" fill="#334155"/>
+        <rect x="404" y="172" width="58" height="12" fill="#475569"/>
+        <path d="M433 120 C433 80 520 80 540 55" fill="none" stroke="#334155" stroke-width="6"/>
+        <!-- Schallwellen -->
+        <g fill="none" stroke="#2563eb" stroke-width="3.5" opacity=".8">
+          <path d="M410 190 q23 16 46 0"/><path d="M400 200 q33 24 66 0"/><path d="M390 210 q43 32 86 0"/>
+        </g>
+      </svg>
+    </div>
+    <div class="txt">
+      <h2>Deshalb wird jede Naht geprüft</h2>
+      <p>Eine <strong>zerstörungsfreie Ultraschallprüfung</strong> schickt Schall ins Material
+         und horcht auf das Echo.</p>
+    </div>
+  </section>
+
+  <!-- 5 SENSITIVITÄT -->
+  <section class="panel">
+    <div class="art">
+      <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet">
+        <rect width="800" height="340" fill="#fef2f2"/>
+        <text x="400" y="46" text-anchor="middle" font-family="Segoe UI,sans-serif"
+              font-size="26" font-weight="700" fill="#991b1b">100 Nähte MIT Riss</text>
+        <g id="sens"></g>
+        <text x="400" y="316" text-anchor="middle" font-family="Segoe UI,sans-serif"
+              font-size="21" fill="#7f1d1d">92 Alarme &nbsp;·&nbsp; 8 übersehen</text>
+      </svg>
+    </div>
+    <div class="txt">
+      <h2>Der Prüfkopf ist gut — aber nicht perfekt</h2>
+      <p><strong>Sensitivität <span class="zahl">92 %</span>:</strong> Von den wirklich rissigen
+         Nähten schlägt er bei 92 % an. <span class="rot">8 rutschen durch.</span></p>
+    </div>
+  </section>
+
+  <!-- 6 SPEZIFITÄT -->
+  <section class="panel">
+    <div class="art">
+      <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet">
+        <rect width="800" height="340" fill="#f0fdf4"/>
+        <text x="400" y="46" text-anchor="middle" font-family="Segoe UI,sans-serif"
+              font-size="26" font-weight="700" fill="#166534">100 einwandfreie Nähte</text>
+        <g id="spez"></g>
+        <text x="400" y="316" text-anchor="middle" font-family="Segoe UI,sans-serif"
+              font-size="21" fill="#14532d">95 bleiben stumm &nbsp;·&nbsp; 5 Fehlalarme</text>
+      </svg>
+    </div>
+    <div class="txt">
+      <h2>Und er schlägt manchmal grundlos an</h2>
+      <p><strong>Spezifität <span class="zahl">95 %</span>:</strong> Bei den einwandfreien Nähten
+         bleibt er in 95 % der Fälle stumm. <span class="zahl">5 % Fehlalarm.</span></p>
+    </div>
+  </section>
+
+  <!-- 7 ALARM -->
+  <section class="panel">
+    <div class="art">
+      <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet">
+        <rect width="800" height="340" fill="#1e293b"/>
+        <g opacity=".9">
+          <circle cx="400" cy="170" r="130" fill="none" stroke="#dc2626" stroke-width="4" opacity=".25"/>
+          <circle cx="400" cy="170" r="100" fill="none" stroke="#dc2626" stroke-width="5" opacity=".45"/>
+          <circle cx="400" cy="170" r="70" fill="none" stroke="#dc2626" stroke-width="6" opacity=".7"/>
+        </g>
+        <circle cx="400" cy="170" r="46" fill="#dc2626"/>
+        <text x="400" y="192" text-anchor="middle" font-family="Segoe UI,sans-serif"
+              font-size="60" font-weight="800" fill="#fff">!</text>
+        <text x="400" y="300" text-anchor="middle" font-family="Segoe UI,sans-serif"
+              font-size="30" font-weight="700" fill="#fca5a5" letter-spacing="3">PRÜFKOPF SCHLÄGT AN</text>
+      </svg>
+    </div>
+    <div class="txt">
+      <h2>08:42 Uhr, Naht Nr. 3117</h2>
+      <p>Das Gerät meldet Alarm. Die Naht wandert in die Kiste für Ausschuss.</p>
+    </div>
+  </section>
+
+  <!-- 8 DIE FRAGE -->
+  <section class="panel">
+    <div class="art">
+      <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet">
+        <rect width="800" height="340" fill="#faf5ff"/>
+        <!-- Person -->
+        <circle cx="215" cy="120" r="46" fill="#fcd9b6" stroke="#78350f" stroke-width="3"/>
+        <path d="M169 112 a46 46 0 0 1 92 0 q-46 -22 -92 0" fill="#78350f"/>
+        <circle cx="199" cy="122" r="5.5" fill="#1e293b"/>
+        <circle cx="231" cy="122" r="5.5" fill="#1e293b"/>
+        <path d="M200 145 q15 11 30 0" fill="none" stroke="#78350f" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M148 300 q0 -108 67 -118 q67 10 67 118 Z" fill="#1e40af"/>
+        <path d="M215 182 l-17 44 l17 16 l17 -16 Z" fill="#f8fafc"/>
+        <!-- Sprechblase -->
+        <g>
+          <rect x="330" y="70" width="430" height="150" rx="20" fill="#fff" stroke="#7c3aed" stroke-width="3"/>
+          <path d="M330 150 l-32 18 l32 14 Z" fill="#fff" stroke="#7c3aed" stroke-width="3"/>
+          <path d="M332 152 l0 28" stroke="#fff" stroke-width="4"/>
+          <text font-family="Segoe UI,sans-serif" font-size="23" fill="#1e293b">
+            <tspan x="360" y="112">Der Prüfkopf hat gerade</tspan>
+            <tspan x="360" y="146">angeschlagen — wie sicher</tspan>
+            <tspan x="360" y="180" font-weight="700" fill="#6d28d9">ist es denn nun, dass diese</tspan>
+            <tspan x="360" y="206" font-weight="700" fill="#6d28d9">Naht wirklich einen Riss hat?</tspan>
+          </text>
+        </g>
+      </svg>
+    </div>
+    <div class="txt">
+      <h2>Der Qualitätsleiter kommt vorbei</h2>
+      <p>Er will keine Formel. Er will eine Zahl.</p>
+    </div>
+  </section>
+
+  <!-- 9 TIPP -->
+  <section class="panel">
+    <div class="txt" style="margin-bottom:4px">
+      <h2>Ihr Tipp — ohne zu rechnen</h2>
+      <p>Der Prüfkopf hat angeschlagen. Wie viel Prozent dieser Nähte haben
+         Ihrer Schätzung nach wirklich einen Riss?</p>
+    </div>
+    <div class="tipp">
+      <div class="wert" id="wert">50 %</div>
+      <input type="range" id="slider" min="0" max="100" value="50" step="1"
+             oninput="setWert(this.value)">
+      <div class="skala"><span>0 % — nie</span><span>100 % — immer</span></div>
+      <button class="ok" onclick="fest()">Diesen Tipp merke ich mir</button>
+      <div class="fest" id="fest"></div>
+    </div>
+  </section>
+</div>
+
+<nav>
+  <button id="zur" onclick="go(-1)">← Zurück</button>
+  <div class="dots" id="dots"></div>
+  <button id="vor" onclick="go(1)">Weiter →</button>
+</nav>
+
+<script>
+  // ---- Punkteraster: 4 von 100 rissig ----
+  (function(){
+    let s='';
+    for(let i=0;i<100;i++){
+      const r=Math.floor(i/10), c=i%10;
+      const x=155+c*54, y=60+r*26;
+      const rissig = (i===13||i===37||i===58||i===81);
+      s+=`<circle cx="${x}" cy="${y}" r="10" fill="${rissig?'#dc2626':'#cbd5e1'}"
+           stroke="${rissig?'#7f1d1d':'#94a3b8'}" stroke-width="2"/>`;
+    }
+    document.getElementById('raster').innerHTML=s;
+  })();
+
+  // ---- Sensitivität: 92 Alarm / 8 uebersehen ----
+  (function(){
+    let s='';
+    for(let i=0;i<100;i++){
+      const r=Math.floor(i/20), c=i%20;
+      const x=88+c*33, y=90+r*38;
+      const treffer = i<92;
+      s+= treffer
+        ? `<circle cx="${x}" cy="${y}" r="12" fill="#dc2626"/>
+           <path d="M${x-6} ${y} l4 5 l8 -9" stroke="#fff" stroke-width="3" fill="none"
+                 stroke-linecap="round" stroke-linejoin="round"/>`
+        : `<circle cx="${x}" cy="${y}" r="12" fill="#fecaca" stroke="#dc2626" stroke-width="2.5"/>
+           <path d="M${x-5} ${y-5} l10 10 M${x+5} ${y-5} l-10 10" stroke="#dc2626"
+                 stroke-width="3" stroke-linecap="round"/>`;
+    }
+    document.getElementById('sens').innerHTML=s;
+  })();
+
+  // ---- Spezifität: 95 stumm / 5 Fehlalarm ----
+  (function(){
+    let s='';
+    for(let i=0;i<100;i++){
+      const r=Math.floor(i/20), c=i%20;
+      const x=88+c*33, y=90+r*38;
+      const stumm = i<95;
+      s+= stumm
+        ? `<circle cx="${x}" cy="${y}" r="12" fill="#bbf7d0" stroke="#16a34a" stroke-width="2.5"/>`
+        : `<circle cx="${x}" cy="${y}" r="12" fill="#f59e0b"/>
+           <text x="${x}" y="${y+6}" text-anchor="middle" font-family="Segoe UI,sans-serif"
+                 font-size="16" font-weight="800" fill="#fff">!</text>`;
+    }
+    document.getElementById('spez').innerHTML=s;
+  })();
+
+  // ---- Navigation ----
+  const panels=[...document.querySelectorAll('.panel')];
+  const dots=document.getElementById('dots');
+  let i=0;
+  panels.forEach((_,n)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(n===0?' on':'');
+    d.onclick=e=>{e.stopPropagation();zeige(n)};
+    dots.appendChild(d);
+  });
+  function zeige(n){
+    i=Math.max(0,Math.min(panels.length-1,n));
+    panels.forEach((p,k)=>p.classList.toggle('on',k===i));
+    [...dots.children].forEach((d,k)=>d.classList.toggle('on',k===i));
+    document.getElementById('zur').disabled = i===0;
+    document.getElementById('vor').disabled = i===panels.length-1;
+  }
+  function go(d){zeige(i+d)}
+  zeige(0);
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(-1)}
+  });
+  let tx=null;
+  document.getElementById('stage').addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+  document.getElementById('stage').addEventListener('touchend',e=>{
+    if(tx===null)return;
+    const dx=e.changedTouches[0].clientX-tx;
+    if(Math.abs(dx)>55) go(dx<0?1:-1);
+    tx=null;
+  },{passive:true});
+
+  function voll(){
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  }
+
+  // ---- Tipp ----
+  function setWert(v){document.getElementById('wert').textContent=v+' %'}
+  function fest(){
+    const v=document.getElementById('slider').value;
+    const f=document.getElementById('fest');
+    f.innerHTML='Notiert: <strong>'+v+' %</strong><br>Tragen Sie den Wert oben auf Ihrem Arbeitsblatt ein.';
+    f.classList.add('on');
+  }
+</script>
+</body>
+</html>

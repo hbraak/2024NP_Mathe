@@ -172,6 +172,27 @@
         </header>
         
         <div class="material-grid">
+            <a href="comic-pruefverfahren.html" class="material-card" data-url="comic-pruefverfahren.html">
+                <div class="card-header">
+                    <div class="card-icon blue">🏭</div>
+                    <div class="card-title">Die Naht, die keiner sieht</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Comic-Einstieg zur Qualitätskontrolle: Schweißnähte, Ultraschallprüfung, Fehlalarm — in neun Bildern zum Durchklicken. Endet mit der Frage des Qualitätsleiters und Ihrem eigenen Tipp.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Einstieg</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Q1</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-comic-qk"></div>
+                </div>
+            </a>
+
             <a href="hinweise-qk.html" class="material-card" data-url="hinweise-qk.html">
                 <div class="card-header">
                     <div class="card-icon purple">🔍</div>
@@ -402,6 +423,7 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-comic-qk', 'comic-pruefverfahren.html');
             generateQR('qr-hinweise-qk', 'hinweise-qk.html');
             generateQR('qr-jahresquiz', 'mathe_jahresrueckblick_quiz.html');
             generateQR('qr-quiz', 'quiz-q4.html');
