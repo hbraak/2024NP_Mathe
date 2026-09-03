@@ -193,6 +193,27 @@
                 </div>
             </a>
 
+            <a href="arbeitsblatt-qualitaetskontrolle.pdf" class="material-card" data-url="arbeitsblatt-qualitaetskontrolle.pdf">
+                <div class="card-header">
+                    <div class="card-icon green">📄</div>
+                    <div class="card-title">Arbeitsblatt: Wie sicher ist ein Prüfverfahren?</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Das Arbeitsblatt zur Stunde als PDF (4 Seiten): Vierfeldertafel, bedingte Wahrscheinlichkeit, Baumdiagramm und eine Stichprobe von 20 Nähten. Die QR-Codes auf dem Blatt führen zu den gestuften Hilfen.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Arbeitsblatt</span>
+                            <span class="tag">PDF</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-ab-qk"></div>
+                </div>
+            </a>
+
             <a href="hinweise-qk.html" class="material-card" data-url="hinweise-qk.html">
                 <div class="card-header">
                     <div class="card-icon purple">🔍</div>
@@ -424,6 +445,7 @@
         
         document.addEventListener('DOMContentLoaded', function() {
             generateQR('qr-comic-qk', 'comic-pruefverfahren.html');
+            generateQR('qr-ab-qk', 'arbeitsblatt-qualitaetskontrolle.pdf');
             generateQR('qr-hinweise-qk', 'hinweise-qk.html');
             generateQR('qr-jahresquiz', 'mathe_jahresrueckblick_quiz.html');
             generateQR('qr-quiz', 'quiz-q4.html');
