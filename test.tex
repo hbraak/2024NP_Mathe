@@ -1,0 +1,40 @@
+% test.tex -- Funktionstest fuer den LaTeX-Kurs der 13NP
+% Oeffnen Sie diese Datei in TeXstudio und druecken Sie F5.
+% Wenn ein PDF erscheint, ist Ihre Installation vollstaendig.
+
+\documentclass[11pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+
+\title{Funktionstest bestanden}
+\author{Vorname Nachname}   % <-- Tragen Sie hier Ihren Namen ein
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Umlaute}
+Größe, Prüfung, Wärme, Maß -- diese Zeichen müssen im PDF korrekt
+erscheinen. Auch die Silbentrennung arbeitet auf Deutsch.
+
+\section{Eine Formel}
+Der Erwartungswert einer binomialverteilten Zufallsgröße:
+\begin{equation}
+  E(X) = n \cdot p
+\end{equation}
+
+\section{Eine Tabelle}
+\begin{center}
+\begin{tabular}{lrr}
+  \hline
+  Messreihe & $n$ & $p$ \\
+  \hline
+  A & 20 & 0,04 \\
+  B & 50 & 0,10 \\
+  \hline
+\end{tabular}
+\end{center}
+
+\end{document}

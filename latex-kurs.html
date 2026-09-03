@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LaTeX-Kurs 13NP | Vorbereitung</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:#f5f7fa; color:#1e293b; padding:20px; line-height:1.6;
+  }
+  .container { max-width:760px; margin:0 auto; }
+  header {
+    text-align:center; margin-bottom:30px; padding:30px;
+    background:#fff; border-radius:15px; box-shadow:0 2px 10px rgba(0,0,0,.08);
+  }
+  header h1 { font-size:1.9em; color:#7c3aed; margin-bottom:8px; }
+  header .subtitle { color:#64748b; font-size:1.05em; }
+  .card {
+    background:#fff; border-radius:12px; padding:22px 24px; margin-bottom:18px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
+  }
+  .card h2 { font-size:1.15em; color:#7c3aed; margin-bottom:12px; }
+  .step-no {
+    display:inline-block; width:26px; height:26px; line-height:26px;
+    text-align:center; background:#7c3aed; color:#fff; border-radius:50%;
+    font-size:.85em; margin-right:8px; vertical-align:middle;
+  }
+  .warn {
+    background:#fff7ed; border-left:5px solid #ea580c;
+    border-radius:8px; padding:16px 20px; margin-bottom:18px;
+  }
+  .warn strong { color:#c2410c; }
+  ul { margin:8px 0 0 22px; }
+  li { margin-bottom:6px; }
+  a.btn {
+    display:inline-block; background:#7c3aed; color:#fff; text-decoration:none;
+    padding:9px 16px; border-radius:8px; font-weight:600; margin:6px 8px 6px 0;
+    font-size:.95em;
+  }
+  a.btn:hover { background:#6d28d9; }
+  a.btn.grey { background:#475569; }
+  a.btn.grey:hover { background:#334155; }
+  .os { font-weight:600; color:#334155; display:block; margin-top:14px; }
+  .meta { color:#64748b; font-size:.9em; }
+  code {
+    background:#f1f5f9; padding:2px 6px; border-radius:4px;
+    font-family:Consolas, Menlo, monospace; font-size:.92em;
+  }
+  footer { text-align:center; color:#94a3b8; font-size:.85em; margin:30px 0 10px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>LaTeX-Kurs 13NP</h1>
+    <div class="subtitle">Alles, was Sie vor dem Termin brauchen &mdash; an einer Stelle</div>
+  </header>
+
+  <div class="warn">
+    <strong>Bitte zu Hause installieren.</strong> Der Internetanschluss im PC-Raum
+    liefert für die ganze Gruppe zusammen etwa 200&nbsp;KB/s. Ein
+    250-MB-Download würde dort rund 20&nbsp;Minuten belegen &mdash; pro Person.
+  </div>
+
+  <div class="card">
+    <h2><span class="step-no">1</span>TeX-Distribution installieren</h2>
+    <p class="meta">Das Satzsystem selbst &mdash; der Motor, der aus Ihrem Text ein PDF macht.</p>
+
+    <span class="os">Windows &nbsp;<span class="meta">&middot; ca. 250 MB</span></span>
+    <a class="btn" href="https://miktex.org/download">MiKTeX (Basic Installer)</a>
+
+    <span class="os">macOS &nbsp;<span class="meta">&middot; ca. 100 MB</span></span>
+    <a class="btn" href="https://tug.org/mactex/morepackages.html">BasicTeX</a>
+    <p class="meta">Nehmen Sie <strong>BasicTeX</strong>, nicht das große MacTeX (über 4&nbsp;GB).</p>
+
+    <span class="os">Linux</span>
+    <p class="meta">Über die Paketverwaltung, z.&nbsp;B.:<br>
+      <code>sudo apt install texlive-latex-recommended texlive-lang-german texlive-science</code>
+    </p>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-no">2</span>Editor installieren</h2>
+    <p>Wir nutzen alle denselben Editor, damit im Kurs niemand eine fremde
+       Oberfläche vor sich hat. Kostenlos, für Windows, macOS und Linux.</p>
+    <a class="btn" href="https://www.texstudio.org/">TeXstudio herunterladen</a>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-no">3</span>Funktionstest</h2>
+    <p>Installiert heißt noch nicht funktionsfähig. Laden Sie
+       <code>test.tex</code> herunter, öffnen Sie die Datei in TeXstudio und
+       drücken Sie <strong>F5</strong>.</p>
+    <a class="btn" href="test.tex" download>test.tex herunterladen</a>
+    <a class="btn grey" href="test.pdf">So muss das PDF aussehen</a>
+    <p class="meta" style="margin-top:10px;">
+      <strong>Bestanden</strong>, wenn ein PDF erscheint, in dem &bdquo;Größe, Prüfung,
+      Wärme, Maß&ldquo; korrekt zu lesen ist, eine nummerierte Formel steht und die
+      Tabelle sauber gesetzt ist. Damit ist auch geprüft, dass die deutschen
+      Sprachpakete da sind &mdash; der häufigste Stolperstein.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Rückmeldung &mdash; bitte in jedem Fall</h2>
+    <ul>
+      <li>Hat es geklappt? Eine Zeile &bdquo;läuft&ldquo; genügt.</li>
+      <li>Hat es <em>nicht</em> geklappt? Schreiben Sie mir Betriebssystem,
+          den Schritt, an dem es hängt, und die Fehlermeldung im Wortlaut
+          (oder ein Foto davon).</li>
+      <li><strong>Kommen Sie auf jeden Fall.</strong> Für gescheiterte
+          Installationen bringe ich USB-Sticks mit einer startklaren
+          LaTeX-Umgebung mit (Windows, ohne Installation, ohne Adminrechte).</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Das Vorbereitungsblatt als PDF</h2>
+    <p class="meta">Dieselben Informationen zum Ausdrucken und Abhaken.</p>
+    <a class="btn grey" href="LaTeX_Kurs_Vorbereitung.pdf">Vorbereitungsblatt (PDF)</a>
+  </div>
+
+  <footer>Lore-Lorentz-Schule Düsseldorf &middot; 13NP &middot; H. Braak</footer>
+
+</div>
+</body>
+</html>
