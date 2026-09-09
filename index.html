@@ -214,6 +214,27 @@
                 </div>
             </a>
 
+            <a href="loesung-partnerpuzzle.pdf" class="material-card" data-url="loesung-partnerpuzzle.pdf">
+                <div class="card-header">
+                    <div class="card-icon purple">✅</div>
+                    <div class="card-title">Lösung: Partnerpuzzle A und B</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Ausführliche Lösungen zu beiden Fassungen (3 Seiten): Vierfeldertafeln aus Teil 1, die arbeitsteiligen Rechnungen aus Teil 2 und der Vergleich beider Darstellungen aus Teil 3.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Lösung</span>
+                            <span class="tag">PDF</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-pp-lsg"></div>
+                </div>
+            </a>
+
             <a href="comic-pruefverfahren.html" class="material-card" data-url="comic-pruefverfahren.html">
                 <div class="card-header">
                     <div class="card-icon blue">🏭</div>
@@ -488,6 +509,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             generateQR('qr-pp-a', 'partnerpuzzle-vierfeldertafel-a.pdf');
             generateQR('qr-pp-b', 'partnerpuzzle-baumdiagramm-b.pdf');
+            generateQR('qr-pp-lsg', 'loesung-partnerpuzzle.pdf');
             generateQR('qr-comic-qk', 'comic-pruefverfahren.html');
             generateQR('qr-ab-qk', 'arbeitsblatt-qualitaetskontrolle.pdf');
             generateQR('qr-hinweise-qk', 'hinweise-qk.html');
