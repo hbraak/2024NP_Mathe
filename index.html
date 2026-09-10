@@ -172,6 +172,27 @@
         </header>
         
         <div class="material-grid">
+            <a href="grundlagen-bedingte-wahrscheinlichkeit.pdf" class="material-card" data-url="grundlagen-bedingte-wahrscheinlichkeit.pdf">
+                <div class="card-header">
+                    <div class="card-icon green">📄</div>
+                    <div class="card-title">Bedingte Wahrscheinlichkeit &ndash; die Grundlagen</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Arbeitsblatt vom 10.09. (6 Seiten). Die Schreibweisen P(A), P(A&cap;B) und P(A|B), die beiden Pfadregeln am Baumdiagramm und die Herleitung der Formel f&uuml;r die bedingte Wahrscheinlichkeit. Mit Merkk&auml;sten zum Abheften.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Arbeitsblatt</span>
+                            <span class="tag">PDF</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-gbw"></div>
+                </div>
+            </a>
+
             <a href="partnerpuzzle-vierfeldertafel-a.pdf" class="material-card" data-url="partnerpuzzle-vierfeldertafel-a.pdf">
                 <div class="card-header">
                     <div class="card-icon green">📄</div>
@@ -507,6 +528,7 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-gbw', 'grundlagen-bedingte-wahrscheinlichkeit.pdf');
             generateQR('qr-pp-a', 'partnerpuzzle-vierfeldertafel-a.pdf');
             generateQR('qr-pp-b', 'partnerpuzzle-baumdiagramm-b.pdf');
             generateQR('qr-pp-lsg', 'loesung-partnerpuzzle.pdf');
