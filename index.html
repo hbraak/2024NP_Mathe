@@ -214,6 +214,27 @@
                 </div>
             </a>
 
+            <a href="hinweise-bino.html" class="material-card" data-url="hinweise-bino.html">
+                <div class="card-header">
+                    <div class="card-icon purple">🔍</div>
+                    <div class="card-title">Hilfen: Binomialverteilung</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Gestufte Hilfen zum Arbeitsblatt vom 17.09.: pro Aufgabe erst ein Denkansto&szlig;, dann der Ansatz, dann der vollst&auml;ndige Rechenweg &mdash; Sie entscheiden selbst, wie viel Sie aufklappen. Auch direkt &uuml;ber die QR-Codes auf dem Blatt erreichbar.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Gestufte Hilfen</span>
+                            <span class="tag">Q1</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-hinweise-bino"></div>
+                </div>
+            </a>
+
             <a href="grundlagen-bedingte-wahrscheinlichkeit.pdf" class="material-card" data-url="grundlagen-bedingte-wahrscheinlichkeit.pdf">
                 <div class="card-header">
                     <div class="card-icon green">📄</div>
@@ -375,7 +396,6 @@
                             <span class="tag">Stochastik</span>
                             <span class="tag">Gestufte Hilfen</span>
                             <span class="tag">Q1</span>
-                            <span class="tag">NEU</span>
                         </div>
                     </div>
                     <div class="qr-code" id="qr-hinweise-qk"></div>
@@ -593,6 +613,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             generateQR('qr-bino-ab', 'arbeitsblatt-binomialverteilung.pdf');
             generateQR('qr-bino-sim', 'binomialverteilung.html');
+            generateQR('qr-hinweise-bino', 'hinweise-bino.html');
             generateQR('qr-gbw', 'grundlagen-bedingte-wahrscheinlichkeit.pdf');
             generateQR('qr-gbw-lsg', 'loesung-grundlagen-bedingte-wahrscheinlichkeit.pdf');
             generateQR('qr-pp-a', 'partnerpuzzle-vierfeldertafel-a.pdf');

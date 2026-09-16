@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hilfen: Von der Bernoulli-Kette zur Binomialverteilung | Mathematik 13NP</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f5f7fa;color:#1e293b;
+       line-height:1.6;padding:16px 14px 60px;-webkit-text-size-adjust:100%}
+  .wrap{max-width:680px;margin:0 auto}
+  header{background:#fff;border-radius:15px;padding:22px 20px;margin-bottom:18px;
+         box-shadow:0 2px 10px rgba(0,0,0,.08);text-align:center}
+  header h1{font-size:1.3em;color:#7c3aed;margin-bottom:6px;line-height:1.3}
+  header .sub{color:#64748b;font-size:.95em}
+  .intro{background:#fffbeb;border-left:4px solid #f59e0b;border-radius:8px;
+         padding:14px 16px;margin-bottom:22px;font-size:.94em;color:#78350f}
+  .nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+  .nav a{flex:1 1 30%;text-align:center;background:#fff;border:2px solid #e2e8f0;border-radius:10px;
+         padding:12px 6px;text-decoration:none;color:#475569;font-weight:600;font-size:.88em;
+         min-height:48px;display:flex;align-items:center;justify-content:center}
+  .nav a:hover{border-color:#7c3aed;color:#7c3aed}
+  section{background:#fff;border-radius:15px;padding:20px;margin-bottom:20px;
+          box-shadow:0 2px 10px rgba(0,0,0,.08);scroll-margin-top:16px;
+          border:2px solid transparent;transition:border-color .3s,box-shadow .3s}
+  section:target{border-color:#7c3aed;box-shadow:0 4px 18px rgba(124,58,237,.22)}
+  section h2{font-size:1.1em;color:#7c3aed;margin-bottom:4px;line-height:1.35}
+  section .frage{color:#64748b;font-size:.92em;margin-bottom:14px;font-style:italic}
+  details{border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden}
+  details[open]{border-color:#c4b5fd}
+  summary{cursor:pointer;padding:13px 14px;font-weight:600;font-size:.95em;background:#faf9ff;
+          list-style:none;display:flex;align-items:center;gap:10px;min-height:48px}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"\25B8";color:#7c3aed;font-size:1.1em;transition:transform .2s;flex:0 0 auto}
+  details[open] summary::before{transform:rotate(90deg)}
+  .stufe{display:inline-block;background:#ede9fe;color:#6d28d9;border-radius:20px;
+         padding:2px 10px;font-size:.78em;font-weight:700;flex:0 0 auto}
+  .stufe.s2{background:#e0f2fe;color:#0369a1}
+  .stufe.s3{background:#dcfce7;color:#15803d}
+  .txt{flex:1 1 auto;min-width:0}
+  .inhalt{padding:4px 16px 16px;font-size:.95em;border-top:1px solid #f1f5f9}
+  .inhalt p{margin-top:10px}
+  .inhalt ul{margin:10px 0 0 20px}
+  .inhalt li{margin-bottom:6px}
+  .formel{background:#f8fafc;border-radius:8px;padding:11px 12px;margin:10px 0;
+          overflow-x:auto;line-height:1.9;font-size:.98em}
+  .merk{background:#faf5ff;border-left:4px solid #7c3aed;border-radius:8px;
+        padding:10px 12px;margin:12px 0;font-size:.93em}
+  .warn{background:#fef2f2;border-left:4px solid #dc2626;border-radius:8px;
+        padding:10px 12px;margin:12px 0;font-size:.93em;color:#7f1d1d}
+  .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0}
+  table{border-collapse:collapse;width:100%;font-size:.86em}
+  th,td{border:1px solid #e2e8f0;padding:6px 6px;text-align:center}
+  th{background:#f8fafc;font-weight:600}
+  td.lbl,th.lbl{text-align:left;background:#f8fafc;font-weight:600}
+  table.eng{font-size:.8em}
+  table.eng th,table.eng td{padding:5px 3px}
+  .karte{border:1px solid #e2e8f0;border-radius:8px;margin:10px 0;overflow:hidden}
+  .karte .kopf{background:#f8fafc;padding:7px 10px;font-weight:600;font-size:.92em}
+  .karte .zeile{display:flex;gap:8px;padding:6px 10px;font-size:.92em;
+                border-top:1px solid #f1f5f9;align-items:baseline}
+  .karte .zeile b{flex:0 0 88px;font-weight:600;color:#64748b;font-size:.88em}
+  .karte .zeile span{flex:1 1 auto;min-width:0;word-break:break-word}
+  code{background:#f1f5f9;border-radius:4px;padding:1px 5px;font-size:.92em;
+       font-family:'Consolas',Menlo,monospace;word-break:break-word}
+  .pascal{font-family:'Consolas',Menlo,monospace;text-align:center;line-height:1.75;
+          font-size:.9em;white-space:nowrap}
+  .foot{text-align:center;margin-top:26px}
+  .foot a.zurueck{display:inline-block;background:#7c3aed;color:#fff;text-decoration:none;
+          border-radius:10px;padding:14px 24px;font-weight:600;font-size:.95em;min-height:48px}
+  .foot .hint{display:block;margin-top:14px;color:#64748b;font-size:.88em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Von der Bernoulli-Kette zur Binomialverteilung</h1>
+  <div class="sub">Gestufte Hilfen &middot; Mathematik 13NP &middot; 17.09.2026</div>
+</header>
+
+<div class="intro">
+  <strong>So nutzen Sie diese Seite:</strong> Zu jeder Aufgabe gibt es drei Stufen.
+  Öffnen Sie immer nur die <em>nächste</em> — und erst dann, wenn Sie selbst nicht
+  weiterkommen. <strong>Stufe&nbsp;1</strong> gibt einen Anstoß, <strong>Stufe&nbsp;2</strong>
+  den entscheidenden Gedanken, <strong>Stufe&nbsp;3</strong> den vollständigen Weg.
+  Auch wenn Sie Stufe&nbsp;3 lesen: Schreiben Sie den Weg anschließend selbst auf —
+  daran erkennen Sie, ob Sie ihn wirklich verstanden haben.
+</div>
+
+<div class="nav">
+  <a href="#a1">Aufgabe 1</a>
+  <a href="#a2">Aufgabe 2</a>
+  <a href="#a3">Aufgabe 3</a>
+  <a href="#a4">Aufgabe 4</a>
+  <a href="#a5">Aufgabe 5</a>
+  <a href="#a6">Aufgabe 6</a>
+  <a href="#a7">Zusatz</a>
+</div>
+
+<!-- ================= AUFGABE 1 ================= -->
+<section id="a1">
+  <h2>Aufgabe 1 — Passt das Modell?</h2>
+  <div class="frage">Liegt eine Bernoulli-Kette vor? Und wenn ja: <em>n</em>, <em>p</em>, Bedeutung eines Treffers.</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p>Gehen Sie jede Teilaufgabe mit derselben Checkliste durch — in dieser Reihenfolge:</p>
+      <ul>
+        <li>Hat <em>ein einzelner</em> Versuch wirklich nur <strong>zwei</strong> Ausgänge?</li>
+        <li>Bleibt <em>p</em> von Versuch zu Versuch <strong>gleich</strong>?</li>
+        <li>Sind die Versuche <strong>unabhängig</strong> — beeinflusst also das Ergebnis des einen
+            das nächste nicht?</li>
+      </ul>
+      <p>Zwei Formulierungen im Text sind erfahrungsgemäß Warnsignale:
+      „ohne Zurücklegen“ und alles, was den Versuchsaufbau <em>während</em> der Durchführung
+      verändert.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Weiterhelfen</span></summary>
+    <div class="inhalt">
+      <p>Die beiden Bedingungen hängen enger zusammen, als es aussieht: Sobald sich <em>p</em>
+      verändert, weil vorher etwas passiert ist, ist damit auch die Unabhängigkeit dahin.</p>
+      <p>Prüfen Sie bei c) konkret nach, wie groß <em>p</em> im ersten und im zweiten Zug ist —
+      rechnen Sie die Brüche wirklich hin, dann ist die Entscheidung eindeutig. Bei d) fragen
+      Sie sich, was das Nachjustieren mit der Fehlerquote des <em>nächsten</em> Starts macht.</p>
+      <div class="merk">
+        <strong>Warum bei a) trotzdem „ja“ herauskommt, obwohl auch dort nicht zurückgelegt wird:</strong>
+        Entscheidend ist das Größenverhältnis. Aus einer laufenden Produktion (viele tausend Teile)
+        10 Stück zu entnehmen, verändert <em>p</em> erst in einer Nachkommastelle weit hinten.
+        Diese Näherung ist in der Qualitätssicherung üblich. Bei 8 Teilen in einer Schachtel
+        springt <em>p</em> dagegen bei jedem Zug deutlich.
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Lösungsweg</span></summary>
+    <div class="inhalt">
+      <p><strong>a) Ja.</strong> <em>n</em>&nbsp;=&nbsp;10, <em>p</em>&nbsp;=&nbsp;0,05,
+      Treffer = „Bauteil ist defekt“. Die Produktion ist praktisch unerschöpflich, dadurch bleibt
+      <em>p</em> konstant und die Entnahmen sind (näherungsweise) unabhängig.</p>
+
+      <p><strong>b) Ja.</strong> <em>n</em>&nbsp;=&nbsp;20,
+      <em>p</em>&nbsp;=&nbsp;<sup>1</sup>&frasl;<sub>6</sub>, Treffer = „Sechs“.
+      Zwei Ausgänge (Sechs / keine Sechs), der Würfel hat kein Gedächtnis, also sind die Würfe
+      unabhängig und <em>p</em> ist konstant.</p>
+
+      <p><strong>c) Nein.</strong> Im ersten Zug ist
+      <em>p</em>&nbsp;=&nbsp;<sup>3</sup>&frasl;<sub>8</sub>. Danach liegen nur noch 7 Teile in der
+      Schachtel, also <em>p</em>&nbsp;=&nbsp;<sup>2</sup>&frasl;<sub>7</sub> (falls das gezogene
+      defekt war) oder <sup>3</sup>&frasl;<sub>7</sub> (falls nicht). Bedingung&nbsp;(1) ist
+      verletzt, damit auch die Unabhängigkeit. Die Grundgesamtheit ist für die Näherung aus a)
+      viel zu klein.</p>
+
+      <p><strong>d) Nein.</strong> Das Nachjustieren senkt die Fehlerquote — <em>p</em> ist also
+      nicht konstant. Und weil justiert wird <em>weil</em> vorher ein Fehlstart auftrat, hängen
+      die Versuche zusätzlich voneinander ab.</p>
+
+      <div class="merk">Der Kern: Die Binomialverteilung darf man immer dann ansetzen, wenn man
+      guten Gewissens sagen kann „jeder Versuch läuft unter denselben Bedingungen ab“.</div>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 2 ================= -->
+<section id="a2">
+  <h2>Aufgabe 2 — Der Baum für n = 3</h2>
+  <div class="frage">Pfadwahrscheinlichkeiten allgemein mit <em>p</em>; warum sind drei Pfade gleich groß?</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p>Lassen Sie Zahlen zunächst ganz weg und arbeiten Sie nur mit <em>p</em> und
+      (1&nbsp;−&nbsp;<em>p</em>). Das ist hier nicht schwerer, sondern leichter — Sie sehen die
+      Struktur besser.</p>
+      <p>Fahren Sie den Pfad <code>TTN</code> im Baum mit dem Finger ab: An jeder der drei
+      Verzweigungen steht eine Wahrscheinlichkeit am Ast. Was sagt die
+      <strong>1.&nbsp;Pfadregel</strong>, was Sie mit diesen drei Zahlen tun sollen?</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Weiterhelfen</span></summary>
+    <div class="inhalt">
+      <p><strong>1.&nbsp;Pfadregel:</strong> Entlang eines Pfades werden die Wahrscheinlichkeiten
+      <em>multipliziert</em>. Für <code>TTN</code> also:</p>
+      <div class="formel">P(<code>TTN</code>) = <em>p</em> ⋅ <em>p</em> ⋅ (1 − <em>p</em>)</div>
+      <p>Schreiben Sie jetzt <code>TNT</code> und <code>NTT</code> genauso hin, <em>ohne</em>
+      gleich zusammenzufassen. Legen Sie die drei Produkte untereinander und vergleichen Sie,
+      welche Faktoren jeweils vorkommen — und in welcher Reihenfolge.</p>
+      <p>Für d) brauchen Sie dann die <strong>2.&nbsp;Pfadregel:</strong> Führen mehrere Pfade zum
+      selben Ereignis, werden ihre Wahrscheinlichkeiten <em>addiert</em>. Und wenn man mehrere
+      gleich große Zahlen addiert, kann man das auch kürzer schreiben.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Lösungsweg</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong></p>
+      <div class="formel">
+        P(<code>TTN</code>) = <em>p</em> ⋅ <em>p</em> ⋅ (1 − <em>p</em>)
+        = <em>p</em><sup>2</sup>(1 − <em>p</em>)
+      </div>
+
+      <p><strong>b)</strong></p>
+      <div class="formel">
+        P(<code>TNT</code>) = <em>p</em> ⋅ (1 − <em>p</em>) ⋅ <em>p</em>
+        = <em>p</em><sup>2</sup>(1 − <em>p</em>)<br>
+        P(<code>NTT</code>) = (1 − <em>p</em>) ⋅ <em>p</em> ⋅ <em>p</em>
+        = <em>p</em><sup>2</sup>(1 − <em>p</em>)
+      </div>
+      <p>Alle drei Pfade sind <strong>gleich groß</strong>. Der Grund ist schlicht, dass es bei
+      der Multiplikation auf die Reihenfolge der Faktoren nicht ankommt
+      (Kommutativgesetz): 0,05 ⋅ 0,95 ⋅ 0,05 ist derselbe Wert wie 0,05 ⋅ 0,05 ⋅ 0,95.
+      Entscheidend ist nur, <em>wie viele</em> Faktoren <em>p</em> und wie viele
+      (1&nbsp;−&nbsp;<em>p</em>) auftreten — nicht, an welcher Stelle im Pfad sie stehen.</p>
+
+      <p><strong>c)</strong> Genau <strong>drei</strong> Pfade führen zu <em>k</em>&nbsp;=&nbsp;2
+      Treffern: <code>TTN</code>, <code>TNT</code>, <code>NTT</code>.</p>
+
+      <p><strong>d)</strong> Die drei gleich großen Pfadwahrscheinlichkeiten werden addiert:</p>
+      <div class="formel">
+        P(X = 2) = <em>p</em><sup>2</sup>(1 − <em>p</em>) + <em>p</em><sup>2</sup>(1 − <em>p</em>)
+        + <em>p</em><sup>2</sup>(1 − <em>p</em>)<br>
+        P(X = 2) = 3 ⋅ <em>p</em><sup>2</sup> ⋅ (1 − <em>p</em>)<sup>1</sup>
+      </div>
+      <div class="merk">Genau dieses Muster — <strong>Anzahl der Pfade ⋅ Wahrscheinlichkeit eines
+      Pfades</strong> — ist bereits die Binomialformel. Es fehlt nur noch ein bequemer Weg, die
+      Pfadanzahl zu bestimmen, ohne den Baum zu zeichnen. Darum geht es in Aufgabe&nbsp;3.</div>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 3 ================= -->
+<section id="a3">
+  <h2>Aufgabe 3 — Pfade zählen, Pascalsches Dreieck</h2>
+  <div class="frage">Pfadanzahlen eintragen, Zeile <em>n</em>&nbsp;=&nbsp;5 ergänzen, die Bildungsregel beschreiben.</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p><strong>Zu a):</strong> Die Arbeit ist schon getan — rechts neben dem Baum aus
+      Aufgabe&nbsp;2 steht bei jedem Pfad das zugehörige <em>k</em>. Sie müssen nur noch abzählen,
+      wie oft jedes <em>k</em> dort auftaucht.</p>
+      <p><strong>Zu b):</strong> Jede Stufe des Baums verzweigt sich in zwei Äste. Wie viele Enden
+      hat der Baum bei 3 Stufen insgesamt? Und was muss deshalb herauskommen, wenn Sie Ihre vier
+      Zahlen addieren?</p>
+      <p><strong>Zu c)/d):</strong> Legen Sie die Zeilen des Dreiecks untereinander und schauen
+      Sie eine einzelne Zahl an, etwa die 6 in der Zeile <em>n</em>&nbsp;=&nbsp;4. Welche beiden
+      Zahlen stehen direkt darüber — schräg links und schräg rechts?</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Weiterhelfen</span></summary>
+    <div class="inhalt">
+      <p>Zeile <em>n</em>&nbsp;=&nbsp;3 lautet 1, 3, 3, 1 und Zeile <em>n</em>&nbsp;=&nbsp;4
+      lautet 1, 4, 6, 4, 1. Betrachten Sie den Übergang Stück für Stück:</p>
+      <div class="formel">
+        1 &nbsp;&nbsp;&nbsp;3 &nbsp;&nbsp;&nbsp;3 &nbsp;&nbsp;&nbsp;1<br>
+        1&nbsp;&nbsp; (1+3) &nbsp; (3+3) &nbsp; (3+1) &nbsp;&nbsp;1
+      </div>
+      <p>Nach derselben Regel bilden Sie nun die Zeile <em>n</em>&nbsp;=&nbsp;5 aus
+      1,&nbsp;4,&nbsp;6,&nbsp;4,&nbsp;1. Außen steht immer eine 1.</p>
+      <p>Für die <em>Begründung</em> in d) hilft diese Frage: Ein Pfad mit <em>k</em> Treffern bei
+      4 Stufen — wie kann er entstanden sein, wenn man den 4.&nbsp;Versuch an einen 3-stufigen
+      Pfad anhängt? Es gibt genau zwei Möglichkeiten, und die entsprechen den beiden Zahlen
+      schräg darüber.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Lösungsweg</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong></p>
+      <table class="eng">
+        <tr><th class="lbl">Treffer <em>k</em></th><th>0</th><th>1</th><th>2</th><th>3</th></tr>
+        <tr><td class="lbl">Anzahl der Pfade</td><td>1</td><td>3</td><td>3</td><td>1</td></tr>
+      </table>
+      <p>(<code>NNN</code> &rarr; <em>k</em>&nbsp;=&nbsp;0 &middot;
+      <code>TNN</code>, <code>NTN</code>, <code>NNT</code> &rarr; <em>k</em>&nbsp;=&nbsp;1 &middot;
+      <code>TTN</code>, <code>TNT</code>, <code>NTT</code> &rarr; <em>k</em>&nbsp;=&nbsp;2 &middot;
+      <code>TTT</code> &rarr; <em>k</em>&nbsp;=&nbsp;3)</p>
+
+      <p><strong>b)</strong> 1 + 3 + 3 + 1 = 8 = 2<sup>3</sup>. Das ist die Gesamtzahl aller Pfade
+      des Baums: Bei jeder der drei Stufen verdoppelt sich die Anzahl der Äste. Stimmt Ihre Summe
+      nicht, haben Sie einen Pfad übersehen oder doppelt gezählt.</p>
+
+      <p><strong>c)</strong> Zeile <em>n</em>&nbsp;=&nbsp;5:</p>
+      <div class="formel pascal">
+        n=4: &nbsp;1&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;6&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;1<br>
+        n=5: 1&nbsp;&nbsp;5&nbsp;&nbsp;10&nbsp;&nbsp;10&nbsp;&nbsp;5&nbsp;&nbsp;1
+      </div>
+      <p>Probe: 1 + 5 + 10 + 10 + 5 + 1 = 32 = 2<sup>5</sup>. ✓</p>
+
+      <p><strong>d) Die Pascal-Regel:</strong> Jede Zahl ist die <strong>Summe der beiden schräg
+      darüberstehenden</strong> Zahlen; am Rand steht immer eine 1.</p>
+      <p>Anschaulich lässt sich das direkt am Baum begründen: Ein Pfad mit <em>k</em> Treffern bei
+      <em>n</em> Stufen entsteht auf genau zwei Arten —</p>
+      <ul>
+        <li>aus einem Pfad mit <em>k</em> Treffern bei <em>n</em>&nbsp;−&nbsp;1 Stufen, an den
+            eine <strong>Niete</strong> angehängt wird, oder</li>
+        <li>aus einem Pfad mit <em>k</em>&nbsp;−&nbsp;1 Treffern, an den ein <strong>Treffer</strong>
+            angehängt wird.</li>
+      </ul>
+      <p>Deshalb addieren sich die beiden Anzahlen von oben. Diese Zahlen heißen
+      <strong>Binomialkoeffizienten</strong>, geschrieben
+      <span style="white-space:nowrap">(<em>n</em> über <em>k</em>)</span>, berechenbar auch als</p>
+      <div class="formel">
+        <em>n</em> über <em>k</em> &nbsp;=&nbsp;
+        <em>n</em>! &frasl; ( <em>k</em>! ⋅ (<em>n</em> − <em>k</em>)! )<br>
+        z.&nbsp;B.: &nbsp; 3 über 2 &nbsp;=&nbsp; 3! &frasl; (2! ⋅ 1!) &nbsp;=&nbsp; 6 &frasl; 2 &nbsp;=&nbsp; 3
+      </div>
+      <p>Die Zeile <em>n</em>&nbsp;=&nbsp;3 des Dreiecks und die Pfadanzahlen aus a) sind also
+      ein und dasselbe.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 4 ================= -->
+<section id="a4">
+  <h2>Aufgabe 4 — Die Formel zum ersten Mal benutzen</h2>
+  <div class="frage">X ~ B(10; 0,05): P(X&nbsp;=&nbsp;0) und P(X&nbsp;=&nbsp;1) von Hand — und der Fehler des Mitschülers.</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p>Notieren Sie sich <em>vor</em> jeder Rechnung die drei Größen getrennt untereinander:
+      <em>n</em>&nbsp;=&nbsp;?, <em>p</em>&nbsp;=&nbsp;?, <em>k</em>&nbsp;=&nbsp;? Erst danach
+      setzen Sie in die Formel ein. Das klingt umständlich, verhindert aber die meisten Fehler.</p>
+      <p>Achten Sie besonders darauf, was hier ein „Treffer“ ist: In diesem Beispiel ist der
+      Treffer das <em>defekte</em> Teil. <em>p</em>&nbsp;=&nbsp;0,05 gehört also zu den defekten
+      Teilen, 0,95 zu den guten.</p>
+      <div class="formel">
+        P(X = <em>k</em>) = (<em>n</em> über <em>k</em>) ⋅ <em>p</em><sup><em>k</em></sup>
+        ⋅ (1 − <em>p</em>)<sup><em>n</em>−<em>k</em></sup>
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Weiterhelfen</span></summary>
+    <div class="inhalt">
+      <p>Setzen Sie für b) <em>k</em>&nbsp;=&nbsp;0 ein und werten Sie jeden der drei Faktoren
+      einzeln aus. Zwei davon sind unspektakulär: (10 über 0)&nbsp;=&nbsp;1 (es gibt nur
+      <em>einen</em> Pfad ohne jeden Treffer) und 0,05<sup>0</sup>&nbsp;=&nbsp;1. Übrig bleibt
+      eine reine Potenz.</p>
+      <p>Für c) mit <em>k</em>&nbsp;=&nbsp;1 ist der Binomialkoeffizient dagegen nicht 1. Fragen
+      Sie sich: An wie vielen verschiedenen Stellen der Stichprobe kann das <em>eine</em> defekte
+      Teil sitzen?</p>
+      <div class="merk">Ein Blick auf die Exponenten als Kontrolle: Sie müssen zusammen immer
+      <em>n</em>&nbsp;=&nbsp;10 ergeben. Bei <em>k</em>&nbsp;=&nbsp;1 also
+      0,05<sup>1</sup> ⋅ 0,95<sup>9</sup> — nicht 0,95<sup>10</sup>.</div>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Lösungsweg</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong> <em>n</em>&nbsp;=&nbsp;10, <em>p</em>&nbsp;=&nbsp;0,05,
+      X&nbsp;=&nbsp;Anzahl der defekten Teile in der Stichprobe, also
+      <strong>X ~ B(10; 0,05)</strong>.</p>
+
+      <p><strong>b)</strong></p>
+      <div class="formel">
+        P(X = 0) = (10 über 0) ⋅ 0,05<sup>0</sup> ⋅ 0,95<sup>10</sup><br>
+        P(X = 0) = 1 ⋅ 1 ⋅ 0,95<sup>10</sup> ≈ <strong>0,5987</strong>
+      </div>
+      <p><em>Deutung:</em> In knapp 60&nbsp;% der Stichproben ist <em>kein einziges</em> Teil
+      defekt. Eine fehlerfreie Stichprobe ist bei dieser Ausschussquote also der Normalfall und
+      für sich genommen noch kein Nachweis guter Qualität.</p>
+
+      <p><strong>c)</strong></p>
+      <div class="formel">
+        P(X = 1) = (10 über 1) ⋅ 0,05<sup>1</sup> ⋅ 0,95<sup>9</sup><br>
+        = 10 ⋅ 0,05 ⋅ 0,6302…<br>
+        = 0,5 ⋅ 0,6302… ≈ <strong>0,3151</strong>
+      </div>
+
+      <p><strong>d) Der Fehler:</strong> Der Mitschüler rechnet
+      0,05 ⋅ 0,95<sup>9</sup> ≈ 0,0315 — und damit nur <em>einen einzigen Pfad</em>, nämlich
+      „erstes Teil defekt, danach neun gute“. Das defekte Teil kann aber ebenso gut das zweite,
+      das dritte … oder das zehnte sein.</p>
+      <table class="eng">
+        <tr><th class="lbl">Pfad</th><th>Wahrscheinlichkeit</th></tr>
+        <tr><td class="lbl"><code>TNNNNNNNNN</code></td><td>0,05 ⋅ 0,95<sup>9</sup></td></tr>
+        <tr><td class="lbl"><code>NTNNNNNNNN</code></td><td>0,95 ⋅ 0,05 ⋅ 0,95<sup>8</sup></td></tr>
+        <tr><td class="lbl">…</td><td>…</td></tr>
+        <tr><td class="lbl"><code>NNNNNNNNNT</code></td><td>0,95<sup>9</sup> ⋅ 0,05</td></tr>
+      </table>
+      <p>Wie in Aufgabe&nbsp;2 sind alle diese Produkte <strong>gleich groß</strong> — es sind
+      dieselben Faktoren, nur in anderer Reihenfolge. Es gibt genau
+      (10 über 1)&nbsp;=&nbsp;10 solcher Pfade, und nach der 2.&nbsp;Pfadregel werden sie addiert.
+      Ihm fehlt also der <strong>Faktor 10</strong>:</p>
+      <div class="formel">
+        0,0315… ⋅ 10 = 0,3151…
+      </div>
+      <div class="warn">Das Weglassen des Binomialkoeffizienten ist der häufigste Fehler bei der
+      Binomialformel. Eine schnelle Gegenprobe: Ist Ihr Ergebnis für P(X&nbsp;=&nbsp;1) kleiner
+      als es Ihr Gefühl erwarten lässt, fehlt fast immer der Vorfaktor.</div>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 5 ================= -->
+<section id="a5">
+  <h2>Aufgabe 5 — Übersetzen und berechnen</h2>
+  <div class="frage">„genau“, „höchstens“, „mindestens“ in Symbole und Rechnerbefehle übersetzen.</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p>Arbeiten Sie strikt in drei Schritten und überspringen Sie keinen:</p>
+      <ul>
+        <li><strong>1.</strong> Deutscher Satz &rarr; Symbolschreibweise
+            (P(X&nbsp;=&nbsp;…), P(X&nbsp;≤&nbsp;…), P(X&nbsp;≥&nbsp;…))</li>
+        <li><strong>2.</strong> Symbolschreibweise &rarr; Rechnerbefehl</li>
+        <li><strong>3.</strong> Befehl &rarr; Zahl</li>
+      </ul>
+      <p>Der Rechner kennt nur zwei Bausteine: <code>binomPdf</code> für <em>einen</em> Balken und
+      <code>binomCdf</code> für eine <em>Summe</em> von Balken, immer von 0 an aufwärts.
+      Nur „mindestens“ passt in keinen der beiden direkt hinein — dort brauchen Sie das
+      Gegenereignis.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Weiterhelfen</span></summary>
+    <div class="inhalt">
+      <p>Für „mindestens <em>k</em>“ gilt:</p>
+      <div class="formel">
+        P(X ≥ <em>k</em>) = 1 − P(X ≤ <em>k</em> − 1)
+      </div>
+      <p>Das <strong><em>k</em>&nbsp;−&nbsp;1</strong> ist der Hauptstolperstein. Überzeugen Sie
+      sich mit kleinen Zahlen davon, statt es auswendig zu lernen. Nehmen Sie
+      <em>n</em>&nbsp;=&nbsp;3, dann sind nur die Werte 0, 1, 2, 3 möglich:</p>
+      <table class="eng">
+        <tr><th class="lbl">Ereignis</th><th>0</th><th>1</th><th>2</th><th>3</th></tr>
+        <tr><td class="lbl">„mindestens 2“</td><td>–</td><td>–</td><td>✓</td><td>✓</td></tr>
+        <tr><td class="lbl">Gegenteil davon</td><td>✓</td><td>✓</td><td>–</td><td>–</td></tr>
+      </table>
+      <p>Das Gegenteil ist {0;&nbsp;1}, und das heißt „höchstens <strong>1</strong>“ — nicht
+      „höchstens 2“. Der Wert <em>k</em>&nbsp;=&nbsp;2 gehört ja selbst noch zu „mindestens 2“
+      dazu und darf im abgezogenen Teil nicht mit vorkommen.</p>
+      <div class="warn">Zögern Sie im Zweifel nie, diese Mini-Tabelle am Rand Ihres Blattes
+      aufzumalen. Das kostet zwanzig Sekunden und klärt die Frage endgültig.</div>
+      <p><strong>Zu b):</strong> Hier ändert sich nur <em>p</em> von 0,05 auf 0,20.
+      <em>n</em>&nbsp;=&nbsp;10 und die Grenze „mindestens 3“ bleiben gleich — die Übersetzung
+      ist also dieselbe wie in der letzten Tabellenzeile.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Lösungsweg</span></summary>
+    <div class="inhalt">
+      <p>Die Tabelle für X ~ B(10; 0,05):</p>
+      <div class="karte">
+        <div class="kopf">genau 2 Teile defekt</div>
+        <div class="zeile"><b>Symbole</b><span>P(X = 2)</span></div>
+        <div class="zeile"><b>Befehl</b><span><code>binomPdf(10;0,05;2)</code></span></div>
+        <div class="zeile"><b>Ergebnis</b><span><strong>0,0746</strong></span></div>
+      </div>
+      <div class="karte">
+        <div class="kopf">höchstens 1 Teil defekt</div>
+        <div class="zeile"><b>Symbole</b><span>P(X ≤ 1)</span></div>
+        <div class="zeile"><b>Befehl</b><span><code>binomCdf(10;0,05;0;1)</code></span></div>
+        <div class="zeile"><b>Ergebnis</b><span><strong>0,9139</strong></span></div>
+      </div>
+      <div class="karte">
+        <div class="kopf">mindestens 1 Teil defekt</div>
+        <div class="zeile"><b>Symbole</b><span>P(X ≥ 1)</span></div>
+        <div class="zeile"><b>Befehl</b><span>1 − <code>binomCdf(10;0,05;0;0)</code></span></div>
+        <div class="zeile"><b>Ergebnis</b><span><strong>0,4013</strong></span></div>
+      </div>
+      <div class="karte">
+        <div class="kopf">mindestens 3 Teile defekt</div>
+        <div class="zeile"><b>Symbole</b><span>P(X ≥ 3)</span></div>
+        <div class="zeile"><b>Befehl</b><span>1 − <code>binomCdf(10;0,05;0;2)</code></span></div>
+        <div class="zeile"><b>Ergebnis</b><span><strong>0,0115</strong></span></div>
+      </div>
+      <p>Beachten Sie die letzten beiden Zeilen: obere Grenze 0 bzw. 2 — jeweils
+      <em>k</em>&nbsp;−&nbsp;1.</p>
+
+      <p><strong>a)</strong> Zurückgewiesen wird ab 3 defekten Teilen:</p>
+      <div class="formel">
+        P(X ≥ 3) = 1 − P(X ≤ 2) = 1 − 0,9885 = <strong>0,0115</strong>
+      </div>
+      <p>Also rund 1,2&nbsp;%. Ein „blinder Alarm“ — eine Zurückweisung, obwohl der Lieferant
+      seine 5&nbsp;% einhält — ist damit selten; die Regel ist für den Lieferanten fair.</p>
+
+      <p><strong>b)</strong> Nun X ~ B(10; 0,20):</p>
+      <div class="formel">
+        P(X ≥ 3) = 1 − P(X ≤ 2) = 1 − 0,6778 = <strong>0,3222</strong>
+      </div>
+      <p><em>Beurteilung:</em> Nur rund 32&nbsp;%. In etwa zwei von drei Fällen rutscht die
+      schlechte Lieferung also durch, obwohl die Ausschussquote viermal so hoch ist wie zugesagt.
+      Die Prüfregel deckt den Pfusch damit <strong>nicht</strong> zuverlässig auf. Abhilfe: eine
+      größere Stichprobe (größeres <em>n</em>) oder eine schärfere Annahmegrenze. Genau darum geht
+      es in der Zusatzaufgabe.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 6 ================= -->
+<section id="a6">
+  <h2>Aufgabe 6 — Histogramm für B(10; 0,20)</h2>
+  <div class="frage">Balken berechnen und zeichnen; Gipfel, Form und Summe der Balkenhöhen.</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p>Hier ist nichts Neues nötig — es ist zehnmal dieselbe Rechnung wie in Aufgabe&nbsp;4,
+      nur mit <em>p</em>&nbsp;=&nbsp;0,20 und wechselndem <em>k</em>. Am schnellsten geht es mit
+      <code>binomPdf(10;0,2;k)</code>, einmal für jedes <em>k</em>.</p>
+      <p>Für die letzte Spalte „≥&nbsp;6“ gibt es einen kürzeren Weg als sechs Einzelrechnungen:
+      Denken Sie an das Gegenereignis.</p>
+      <p>Bevor Sie zeichnen: Suchen Sie Ihren größten Wert und richten Sie die Skala der Hochachse
+      danach aus, damit der höchste Balken das Kästchenfeld gut ausfüllt.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Weiterhelfen</span></summary>
+    <div class="inhalt">
+      <p>Für die Sammelspalte:</p>
+      <div class="formel">
+        P(X ≥ 6) = 1 − P(X ≤ 5) = 1 − <code>binomCdf(10;0,2;0;5)</code>
+      </div>
+      <p><strong>Zu a):</strong> Rechnen Sie <em>n</em> ⋅ <em>p</em> aus und vergleichen Sie diese
+      Zahl mit der Position Ihres höchsten Balkens. Der Zusammenhang ist kein Zufall.</p>
+      <p><strong>Zu b):</strong> Prüfen Sie die Symmetrie handfest: Ist der Balken links vom Gipfel
+      genauso hoch wie der rechts davon? Wie weit reicht die Verteilung nach links, wie weit nach
+      rechts? Der Gipfel liegt bei 2, aber möglich sind Werte bis 10 — das allein schließt
+      Symmetrie schon aus.</p>
+      <p><strong>Zu c):</strong> Die Werte <em>k</em>&nbsp;=&nbsp;0 bis 10 decken alle
+      Möglichkeiten ab. Was gilt für die Summe der Wahrscheinlichkeiten <em>aller</em> möglichen
+      Ausgänge eines Zufallsversuchs?</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Lösungsweg</span></summary>
+    <div class="inhalt">
+      <p>Beispielrechnung für <em>k</em>&nbsp;=&nbsp;2, die übrigen laufen genauso:</p>
+      <div class="formel">
+        P(X = 2) = (10 über 2) ⋅ 0,2<sup>2</sup> ⋅ 0,8<sup>8</sup><br>
+        = 45 ⋅ 0,04 ⋅ 0,16777… ≈ <strong>0,302</strong>
+      </div>
+      <table class="eng">
+        <tr><th class="lbl"><em>k</em></th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>≥ 6</th></tr>
+        <tr><td class="lbl">P(X = <em>k</em>)</td><td>0,107</td><td>0,268</td><td>0,302</td>
+            <td>0,201</td><td>0,088</td><td>0,026</td><td>0,006</td></tr>
+      </table>
+      <p>Die Balken steigen also bis <em>k</em>&nbsp;=&nbsp;2 an und fallen danach immer flacher ab.</p>
+
+      <p><strong>a)</strong> Der höchste Balken steht bei <em>k</em>&nbsp;=&nbsp;2 mit
+      P&nbsp;≈&nbsp;0,302. Zum Vergleich:</p>
+      <div class="formel"><em>n</em> ⋅ <em>p</em> = 10 ⋅ 0,2 = <strong>2</strong></div>
+      <p>Der Gipfel liegt genau bei <em>n</em>&nbsp;⋅&nbsp;<em>p</em>. Das ist der
+      <strong>Erwartungswert</strong> μ — der Wert, den man „im Mittel“ erwartet. Das ist
+      plausibel: Wenn im Schnitt jedes fünfte Teil defekt ist, sind es unter 10 Teilen eben etwa 2.</p>
+
+      <p><strong>b)</strong> Die Verteilung ist <strong>rechtsschief</strong> (auch: linkssteil):
+      Der Gipfel liegt links, nach rechts läuft ein langer flacher Ausläufer bis
+      <em>k</em>&nbsp;=&nbsp;10. Sie ist <strong>nicht symmetrisch</strong> — der Balken bei
+      <em>k</em>&nbsp;=&nbsp;1 (0,268) und der bei <em>k</em>&nbsp;=&nbsp;3 (0,201) sind
+      unterschiedlich hoch, obwohl beide gleich weit vom Gipfel entfernt sind.</p>
+      <p>Der Grund ist die Lage von <em>p</em>: Nach links ist bei
+      <em>k</em>&nbsp;=&nbsp;0 schon nach zwei Schritten Schluss, nach rechts bleiben acht.
+      <strong>Symmetrisch</strong> wird ein Binomial-Histogramm genau dann, wenn
+      <em>p</em>&nbsp;=&nbsp;0,5 ist; je weiter <em>p</em> von 0,5 entfernt liegt, desto schiefer
+      wird das Bild.</p>
+
+      <p><strong>c)</strong> Die Summe aller Balkenhöhen muss <strong>1</strong> ergeben, denn
+      <em>k</em>&nbsp;=&nbsp;0, 1, …, 10 deckt alle Möglichkeiten ab; etwas anderes kann nicht
+      eintreten. Probe mit den Werten oben:</p>
+      <div class="formel">
+        0,107 + 0,268 + 0,302 + 0,201 + 0,088 + 0,026 + 0,006 = 0,998
+      </div>
+      <p>Die kleine Abweichung von 1 kommt nur vom Runden der Einzelwerte. ✓</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= ZUSATZAUFGABE ================= -->
+<section id="a7">
+  <h2>Zusatzaufgabe — Wie groß muss die Stichprobe sein?</h2>
+  <div class="frage">Kleinstes <em>n</em> mit P(X&nbsp;≥&nbsp;1)&nbsp;≥&nbsp;0,90 bei <em>p</em>&nbsp;=&nbsp;0,20 — rechnerisch.</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p><strong>Zu a):</strong> „Mindestens ein defektes Teil“ ist der Grenzfall von
+      „mindestens <em>k</em>“ mit <em>k</em>&nbsp;=&nbsp;1. Nach der Regel aus Aufgabe&nbsp;5 ist
+      das Gegenteil „höchstens 0“ — und das ist derselbe Fall wie „genau 0“, weil es keine
+      negativen Trefferzahlen gibt. Diese eine Wahrscheinlichkeit ist bequem zu berechnen, auch
+      wenn <em>n</em> noch unbekannt ist.</p>
+      <p><strong>Zu b):</strong> Sie erhalten eine Ungleichung, in der <em>n</em> im
+      <em>Exponenten</em> steht. Welches Werkzeug holt eine Variable aus dem Exponenten herunter?</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Weiterhelfen</span></summary>
+    <div class="inhalt">
+      <p>Das Gegenereignis liefert:</p>
+      <div class="formel">
+        P(X ≥ 1) = 1 − P(X = 0) = 1 − (<em>n</em> über 0) ⋅ 0,2<sup>0</sup> ⋅ 0,8<sup><em>n</em></sup>
+        = 1 − 0,8<sup><em>n</em></sup>
+      </div>
+      <p>Damit wird die Forderung zu 1&nbsp;−&nbsp;0,8<sup><em>n</em></sup>&nbsp;≥&nbsp;0,9.
+      Stellen Sie zuerst so um, dass die Potenz allein auf einer Seite steht — und passen Sie beim
+      Umstellen auf das Ungleichheitszeichen auf.</p>
+      <div class="warn">Zwei Stellen in dieser Aufgabe können das Zeichen drehen. Beim Umstellen
+      bringen Sie 0,8<sup><em>n</em></sup> auf die andere Seite — und ganz am Ende teilen Sie
+      durch ln(0,8). Rechnen Sie ln(0,8) aus und schauen Sie sich das <strong>Vorzeichen</strong>
+      an, bevor Sie teilen.</div>
+      <p>Denken Sie zum Schluss daran, was <em>n</em> bedeutet: eine Stückzahl. Ein Ergebnis wie
+      10,32 Teile lässt sich nicht prüfen — in welche Richtung müssen Sie runden, damit die
+      Forderung <em>erfüllt</em> bleibt?</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Lösungsweg</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong> Gegenereignis „kein defektes Teil“:</p>
+      <div class="formel">
+        P(X ≥ 1) = 1 − P(X = 0) = 1 − 0,8<sup><em>n</em></sup>
+      </div>
+
+      <p><strong>b)</strong> Ansatz und Umformung:</p>
+      <div class="formel">
+        1 − 0,8<sup><em>n</em></sup> ≥ 0,9<br>
+        &hArr; &nbsp; −0,8<sup><em>n</em></sup> ≥ −0,1 &nbsp;&nbsp;|&nbsp; ⋅(−1), Zeichen dreht<br>
+        &hArr; &nbsp; 0,8<sup><em>n</em></sup> ≤ 0,1<br>
+        &hArr; &nbsp; <em>n</em> ⋅ ln(0,8) ≤ ln(0,1) &nbsp;&nbsp;|&nbsp; logarithmieren
+      </div>
+      <p>Nun der entscheidende Punkt: <strong>ln(0,8)&nbsp;≈&nbsp;−0,2231 ist negativ.</strong>
+      Beim Teilen durch eine negative Zahl <strong>dreht sich das Ungleichheitszeichen</strong>
+      erneut:</p>
+      <div class="formel">
+        <em>n</em> ≥ ln(0,1) &frasl; ln(0,8) = (−2,3026) &frasl; (−0,2231) ≈ 10,32
+      </div>
+      <p>Da <em>n</em> eine Stückzahl ist, wird auf die nächste ganze Zahl <em>aufgerundet</em>
+      (abrunden würde die Forderung verletzen): <strong><em>n</em> = 11</strong>.</p>
+
+      <p><strong>Probe</strong> — die beiden Nachbarwerte einsetzen:</p>
+      <div class="formel">
+        <em>n</em> = 11: &nbsp; 1 − 0,8<sup>11</sup> ≈ 0,9141 ≥ 0,9 &nbsp; ✓<br>
+        <em>n</em> = 10: &nbsp; 1 − 0,8<sup>10</sup> ≈ 0,8926 &lt; 0,9 &nbsp; ✗
+      </div>
+      <p>11 ist also tatsächlich das <em>kleinste</em> passende <em>n</em>. Diese Probe lohnt sich
+      immer: Sie deckt ein versehentlich nicht gedrehtes Ungleichheitszeichen sofort auf.</p>
+
+      <p><strong>c)</strong> Größere Stichproben kosten Zeit und Geld, und bei zerstörender Prüfung
+      (etwa einem Zugversuch) ist jedes geprüfte Teil danach unbrauchbar. Man wählt <em>n</em>
+      deshalb <em>so klein wie möglich und so groß wie nötig</em> — und genau diese Grenze liefert
+      die Rechnung aus b).</p>
+    </div>
+  </details>
+</section>
+
+<div class="foot">
+  <a class="zurueck" href="index.html">&larr; Zur Materialübersicht</a>
+  <span class="hint">Wenn Ihnen auch nach Stufe&nbsp;3 etwas unklar bleibt, notieren Sie sich die
+  Stelle — wir gehen sie gemeinsam durch.</span>
+</div>
+
+</div>
+</body>
+</html>
