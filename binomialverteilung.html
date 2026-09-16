@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binomialverteilung &ndash; interaktive Simulation | Mathematik 13NP</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    color: #1e293b;
+    padding: 14px;
+    -webkit-text-size-adjust: 100%;
+}
+
+.container { max-width: 820px; margin: 0 auto; }
+
+header {
+    text-align: center;
+    padding: 20px 16px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+}
+header h1 { font-size: 1.45em; color: #7c3aed; margin-bottom: 6px; }
+header .subtitle { color: #64748b; font-size: 0.95em; }
+
+.card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    padding: 18px 16px;
+    margin-bottom: 16px;
+}
+
+.card h2 {
+    font-size: 1.05em;
+    color: #7c3aed;
+    margin-bottom: 14px;
+    letter-spacing: 0.02em;
+}
+
+/* ---------- Regler ---------- */
+.slider-row { margin-bottom: 18px; }
+.slider-row:last-child { margin-bottom: 4px; }
+
+.slider-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    gap: 10px;
+}
+.slider-head .lbl { font-weight: 600; font-size: 1em; }
+.slider-head .lbl .hint { font-weight: 400; color: #64748b; font-size: 0.82em; }
+.slider-head .val {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: #7c3aed;
+    background: #f3e8ff;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 1.05em;
+    min-width: 74px;
+    text-align: center;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 34px;
+    background: transparent;
+    display: block;
+    touch-action: pan-y;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    height: 8px; border-radius: 4px; background: #e2e8f0;
+}
+input[type=range]::-moz-range-track {
+    height: 8px; border-radius: 4px; background: #e2e8f0;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #7c3aed; border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(76,29,149,0.45);
+    margin-top: -11px; cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: #7c3aed; border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(76,29,149,0.45);
+    cursor: pointer;
+}
+
+.step-btns { display: flex; gap: 8px; align-items: center; }
+.step-btns input[type=range] { flex: 1; }
+.stepper {
+    width: 38px; height: 38px; flex: 0 0 auto;
+    border: 2px solid #ddd6fe; background: #faf5ff; color: #7c3aed;
+    border-radius: 10px; font-size: 1.25em; font-weight: 700;
+    line-height: 1; cursor: pointer; touch-action: manipulation;
+}
+.stepper:active { background: #ede9fe; }
+
+/* ---------- Modus-Umschalter ---------- */
+.modes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.modes button {
+    padding: 11px 4px;
+    border: 2px solid #e2e8f0;
+    background: white;
+    color: #475569;
+    border-radius: 11px;
+    font-family: inherit;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1.25;
+    touch-action: manipulation;
+}
+.modes button .sym {
+    display: block;
+    font-size: 0.82em;
+    font-weight: 400;
+    color: #94a3b8;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+}
+.modes button.active {
+    background: #7c3aed; border-color: #7c3aed; color: white;
+}
+.modes button.active .sym { color: #ede9fe; }
+
+.toggle-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid #f1f5f9;
+    font-size: 0.95em; cursor: pointer;
+}
+.toggle-row input[type=checkbox] {
+    width: 22px; height: 22px; accent-color: #7c3aed; flex: 0 0 auto;
+}
+
+/* ---------- Ergebnis ---------- */
+.result-main {
+    background: #faf5ff;
+    border: 2px solid #ddd6fe;
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    margin-bottom: 14px;
+}
+.result-main .rlabel { color: #6d28d9; font-size: 1em; font-weight: 600; }
+.result-main .rvalue {
+    font-size: 2.3em; font-weight: 700; color: #4c1d95;
+    font-variant-numeric: tabular-nums; line-height: 1.15; margin-top: 2px;
+}
+.result-main .rpct { color: #7c3aed; font-size: 0.95em; }
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+}
+.stat {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 9px 10px;
+}
+.stat .sl { color: #64748b; font-size: 0.8em; display: block; }
+.stat .sv {
+    font-weight: 700; font-size: 1.12em; color: #1e293b;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Diagramm ---------- */
+.chart-card { padding: 14px 10px 12px 10px; }
+canvas { width: 100%; display: block; touch-action: pan-y; }
+
+.legend {
+    display: flex; flex-wrap: wrap; gap: 8px 16px;
+    justify-content: center;
+    margin-top: 10px; font-size: 0.83em; color: #475569;
+}
+.legend span { display: flex; align-items: center; gap: 6px; }
+.swatch { width: 15px; height: 15px; border-radius: 3px; flex: 0 0 auto; }
+
+/* ---------- Info ---------- */
+.formula {
+    background: #f8fafc;
+    border-left: 4px solid #7c3aed;
+    border-radius: 8px;
+    padding: 14px 12px;
+    text-align: center;
+    font-size: 1.1em;
+    overflow-x: auto;
+    margin-bottom: 12px;
+}
+.binom {
+    display: inline-flex; align-items: center; vertical-align: middle;
+    margin: 0 1px; line-height: 1;
+}
+.binom .par {
+    font-size: 2.05em; font-weight: 300; line-height: 0.82;
+    display: inline-block; transform: scaleX(0.55); color: #1e293b;
+}
+.binom .nk {
+    display: inline-flex; flex-direction: column; align-items: center;
+    line-height: 1.08; font-size: 0.9em; padding: 0 1px;
+}
+sup { font-size: 0.72em; }
+.infotext { color: #475569; line-height: 1.6; font-size: 0.95em; }
+.infotext p { margin-bottom: 9px; }
+.infotext p:last-child { margin-bottom: 0; }
+.infotext b { color: #1e293b; }
+.nowrap { white-space: nowrap; }
+
+footer {
+    text-align: center; margin: 22px 0 8px;
+    color: #94a3b8; font-size: 0.85em; line-height: 1.6;
+}
+footer a { color: #7c3aed; text-decoration: none; }
+
+@media (min-width: 620px) {
+    body { padding: 22px; }
+    header h1 { font-size: 1.9em; }
+    .card { padding: 24px; }
+    .chart-card { padding: 20px 16px 14px; }
+    .grid { grid-template-columns: repeat(4, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <h1>&#127922; Binomialverteilung B(n; p)</h1>
+        <div class="subtitle">Mathematik LK 13NP &middot; Lore-Lorentz-Schule D&uuml;sseldorf</div>
+    </header>
+
+    <div class="card">
+        <h2>Parameter einstellen</h2>
+
+        <div class="slider-row">
+            <div class="slider-head">
+                <span class="lbl">n <span class="hint">&ndash; Anzahl der Versuche</span></span>
+                <span class="val" id="valN">10</span>
+            </div>
+            <div class="step-btns">
+                <button class="stepper" id="nMinus" type="button" aria-label="n verkleinern">&minus;</button>
+                <input type="range" id="sliderN" min="1" max="50" step="1" value="10">
+                <button class="stepper" id="nPlus" type="button" aria-label="n vergr&ouml;&szlig;ern">+</button>
+            </div>
+        </div>
+
+        <div class="slider-row">
+            <div class="slider-head">
+                <span class="lbl">p <span class="hint">&ndash; Trefferwahrscheinlichkeit</span></span>
+                <span class="val" id="valP">0,50</span>
+            </div>
+            <div class="step-btns">
+                <button class="stepper" id="pMinus" type="button" aria-label="p verkleinern">&minus;</button>
+                <input type="range" id="sliderP" min="0" max="1" step="0.01" value="0.5">
+                <button class="stepper" id="pPlus" type="button" aria-label="p vergr&ouml;&szlig;ern">+</button>
+            </div>
+        </div>
+
+        <div class="slider-row">
+            <div class="slider-head">
+                <span class="lbl">k <span class="hint">&ndash; Trefferanzahl</span></span>
+                <span class="val" id="valK">5</span>
+            </div>
+            <div class="step-btns">
+                <button class="stepper" id="kMinus" type="button" aria-label="k verkleinern">&minus;</button>
+                <input type="range" id="sliderK" min="0" max="10" step="1" value="5">
+                <button class="stepper" id="kPlus" type="button" aria-label="k vergr&ouml;&szlig;ern">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Welche Balken geh&ouml;ren dazu?</h2>
+        <div class="modes">
+            <button type="button" data-mode="exact" class="active">genau k<span class="sym" id="symExact">X = 5</span></button>
+            <button type="button" data-mode="atmost">h&ouml;chstens k<span class="sym" id="symAtmost">X &le; 5</span></button>
+            <button type="button" data-mode="atleast">mindestens k<span class="sym" id="symAtleast">X &ge; 5</span></button>
+        </div>
+        <label class="toggle-row" for="chkMu">
+            <input type="checkbox" id="chkMu">
+            <span>Erwartungswert &mu; und Streubereich &mu; &plusmn; &sigma; einzeichnen</span>
+        </label>
+    </div>
+
+    <div class="card">
+        <h2>Ergebnis</h2>
+        <div class="result-main">
+            <div class="rlabel" id="mainLabel">P(X = 5)</div>
+            <div class="rvalue" id="mainValue">0,2461</div>
+            <div class="rpct" id="mainPct">entspricht 24,61&nbsp;%</div>
+        </div>
+        <div class="grid">
+            <div class="stat"><span class="sl">P(X = k)</span><span class="sv" id="statEq">0,2461</span></div>
+            <div class="stat"><span class="sl">P(X &le; k)</span><span class="sv" id="statLe">0,6230</span></div>
+            <div class="stat"><span class="sl">P(X &ge; k)</span><span class="sv" id="statGe">0,6230</span></div>
+            <div class="stat"><span class="sl">Summe aller P</span><span class="sv" id="statSum">1,0000</span></div>
+            <div class="stat"><span class="sl">&mu; = n &middot; p</span><span class="sv" id="statMu">5,0000</span></div>
+            <div class="stat"><span class="sl">&sigma; = &radic;(n&middot;p&middot;(1&minus;p))</span><span class="sv" id="statSigma">1,5811</span></div>
+            <div class="stat"><span class="sl">&mu; &minus; &sigma;</span><span class="sv" id="statLo">3,4189</span></div>
+            <div class="stat"><span class="sl">&mu; + &sigma;</span><span class="sv" id="statHi">6,5811</span></div>
+        </div>
+    </div>
+
+    <div class="card chart-card">
+        <canvas id="chart"></canvas>
+        <div class="legend">
+            <span><span class="swatch" style="background:#cbd5e1"></span>nicht ausgew&auml;hlt</span>
+            <span><span class="swatch" style="background:#7c3aed"></span>ausgew&auml;hlt</span>
+            <span><span class="swatch" style="background:#f59e0b"></span>Balken bei k</span>
+            <span id="legMu" style="display:none"><span class="swatch" style="background:#dc2626"></span>&mu; und &mu; &plusmn; &sigma;</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Die Formel von Bernoulli</h2>
+        <div class="formula">
+            P(X = k) =
+            <span class="binom"><span class="par">(</span><span class="nk"><span>n</span><span>k</span></span><span class="par">)</span></span>
+            &middot; p<sup>k</sup> &middot; (1 &minus; p)<sup>n &minus; k</sup>
+        </div>
+        <div class="infotext">
+            <p>Ein Zufallsversuch mit genau zwei m&ouml;glichen Ausg&auml;ngen (Treffer / kein Treffer) wird
+            <b>n</b>-mal unabh&auml;ngig wiederholt, die Trefferwahrscheinlichkeit <b>p</b> bleibt dabei
+            konstant. Die Zufallsgr&ouml;&szlig;e <b>X</b> z&auml;hlt die Treffer; sie ist binomialverteilt.</p>
+            <p>Der Binomialkoeffizient <span class="nowrap"><span class="binom"><span class="par">(</span><span class="nk"><span>n</span><span>k</span></span><span class="par">)</span></span></span>
+            gibt an, auf wie viele verschiedene Arten sich die k Treffer auf die n Versuche verteilen k&ouml;nnen.
+            Der Faktor p<sup>k</sup> &middot; (1&minus;p)<sup>n&minus;k</sup> ist die Wahrscheinlichkeit
+            <i>eines</i> solchen Pfades im Baumdiagramm.</p>
+            <p>Schalten Sie zwischen den drei Modi um und beobachten Sie, welche Balken jeweils
+            aufsummiert werden: <b>P(X &le; k)</b> addiert alle Balken von 0 bis k,
+            <b>P(X &ge; k)</b> alle Balken von k bis n. Beide Bereiche &uuml;berlappen sich im Balken bei k &ndash;
+            deshalb gilt <span class="nowrap">P(X &le; k) + P(X &ge; k) = 1 + P(X = k)</span>.</p>
+            <p>Erwartungswert und Standardabweichung: <span class="nowrap">&mu; = n &middot; p</span> und
+            <span class="nowrap">&sigma; = &radic;(n &middot; p &middot; (1 &minus; p))</span>.
+            Bei hinreichend gro&szlig;em n (Faustregel &sigma; &gt; 3) liegen rund 68&nbsp;% aller Ergebnisse
+            im Streubereich <span class="nowrap">&mu; &plusmn; &sigma;</span>.</p>
+        </div>
+    </div>
+
+    <footer>
+        Lore-Lorentz-Schule &middot; Mathematik 13NP &middot; Stochastik<br>
+        <a href="index.html">&larr; zur&uuml;ck zur Materials&uuml;bersicht</a>
+    </footer>
+</div>
+
+<script>
+/* ===BINOM-CORE-START=== */
+/* Log-Gamma nach Lanczos (g = 7, n = 9) -- kein Overflow bei n = 50 */
+var LANCZOS = [
+    0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+    771.32342877765313, -176.61502916214059, 12.507343278686905,
+    -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+];
+
+function logGamma(z) {
+    if (z < 0.5) {
+        return Math.log(Math.PI / Math.sin(Math.PI * z)) - logGamma(1 - z);
+    }
+    z -= 1;
+    var x = LANCZOS[0];
+    for (var i = 1; i < 9; i++) { x += LANCZOS[i] / (z + i); }
+    var t = z + 7.5;
+    return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+}
+
+/* ln( n ueber k ) */
+function logChoose(n, k) {
+    if (k < 0 || k > n) { return -Infinity; }
+    return logGamma(n + 1) - logGamma(k + 1) - logGamma(n - k + 1);
+}
+
+/* Array der Einzelwahrscheinlichkeiten P(X = k) fuer k = 0 .. n */
+function binomPmf(n, p) {
+    var arr = new Array(n + 1).fill(0);
+    if (p <= 0) { arr[0] = 1; return arr; }
+    if (p >= 1) { arr[n] = 1; return arr; }
+    var lp = Math.log(p), lq = Math.log(1 - p);
+    for (var k = 0; k <= n; k++) {
+        arr[k] = Math.exp(logChoose(n, k) + k * lp + (n - k) * lq);
+    }
+    return arr;
+}
+
+/* kumulierte Werte: cdf[k] = P(X <= k) */
+function binomCdf(pmf) {
+    var out = new Array(pmf.length), s = 0;
+    for (var k = 0; k < pmf.length; k++) { s += pmf[k]; out[k] = s; }
+    return out;
+}
+
+function binomStats(n, p) {
+    var pmf = binomPmf(n, p);
+    var cdf = binomCdf(pmf);
+    return {
+        pmf: pmf,
+        cdf: cdf,
+        sum: cdf[n],
+        mu: n * p,
+        sigma: Math.sqrt(n * p * (1 - p))
+    };
+}
+
+/* P(X >= k) = 1 - P(X <= k-1), numerisch stabil ueber Rueckwaertssumme */
+function tailGe(pmf, k) {
+    var s = 0;
+    for (var i = pmf.length - 1; i >= k; i--) { s += pmf[i]; }
+    return s;
+}
+
+/* Zahl mit Dezimalkomma */
+function fmt(x, dec) {
+    if (!isFinite(x)) { return "–"; }
+    var s = x.toFixed(dec);
+    if (s === "-" + (0).toFixed(dec)) { s = (0).toFixed(dec); }
+    return s.replace(".", ",");
+}
+/* ===BINOM-CORE-END=== */
+
+(function () {
+    "use strict";
+
+    var COL_BASE = "#cbd5e1";
+    var COL_BASE_EDGE = "#94a3b8";
+    var COL_SEL = "#7c3aed";
+    var COL_SEL_EDGE = "#4c1d95";
+    var COL_K = "#f59e0b";
+    var COL_K_EDGE = "#b45309";
+    var COL_MU = "#dc2626";
+    var COL_BAND = "rgba(220, 38, 38, 0.09)";
+    var COL_AXIS = "#334155";
+    var COL_GRID = "#e8edf3";
+
+    var sliderN = document.getElementById("sliderN");
+    var sliderP = document.getElementById("sliderP");
+    var sliderK = document.getElementById("sliderK");
+    var chkMu = document.getElementById("chkMu");
+    var canvas = document.getElementById("chart");
+    var ctx = canvas.getContext("2d");
+    var modeButtons = Array.prototype.slice.call(document.querySelectorAll(".modes button"));
+
+    var state = { n: 10, p: 0.5, k: 5, mode: "exact", showMu: false };
+    var st = null;
+
+    function setText(id, txt) { document.getElementById(id).textContent = txt; }
+
+    function readInputs() {
+        state.n = parseInt(sliderN.value, 10);
+        state.p = Math.round(parseFloat(sliderP.value) * 100) / 100;
+        if (parseInt(sliderK.max, 10) !== state.n) {
+            sliderK.max = String(state.n);
+        }
+        var k = parseInt(sliderK.value, 10);
+        if (k > state.n) { k = state.n; sliderK.value = String(k); }
+        if (k < 0 || isNaN(k)) { k = 0; sliderK.value = "0"; }
+        state.k = k;
+        state.showMu = chkMu.checked;
+    }
+
+    function step(slider, delta) {
+        var s = parseFloat(slider.step) || 1;
+        var v = parseFloat(slider.value) + delta * s;
+        v = Math.min(parseFloat(slider.max), Math.max(parseFloat(slider.min), v));
+        slider.value = String(Math.round(v / s) * s);
+        update();
+    }
+
+    function update() {
+        readInputs();
+        var n = state.n, p = state.p, k = state.k;
+        st = binomStats(n, p);
+
+        var pEq = st.pmf[k];
+        var pLe = st.cdf[k];
+        var pGe = tailGe(st.pmf, k);
+
+        setText("valN", String(n));
+        setText("valP", fmt(p, 2));
+        setText("valK", String(k));
+
+        document.getElementById("symExact").textContent = "X = " + k;
+        document.getElementById("symAtmost").textContent = "X ≤ " + k;
+        document.getElementById("symAtleast").textContent = "X ≥ " + k;
+
+        var label, value;
+        if (state.mode === "exact") { label = "P(X = " + k + ")"; value = pEq; }
+        else if (state.mode === "atmost") { label = "P(X ≤ " + k + ")"; value = pLe; }
+        else { label = "P(X ≥ " + k + ")"; value = pGe; }
+
+        setText("mainLabel", label);
+        setText("mainValue", fmt(value, 4));
+        setText("mainPct", "entspricht " + fmt(value * 100, 2) + " %");
+
+        setText("statEq", fmt(pEq, 4));
+        setText("statLe", fmt(pLe, 4));
+        setText("statGe", fmt(pGe, 4));
+        setText("statSum", fmt(st.sum, 4));
+        setText("statMu", fmt(st.mu, 4));
+        setText("statSigma", fmt(st.sigma, 4));
+        setText("statLo", fmt(st.mu - st.sigma, 4));
+        setText("statHi", fmt(st.mu + st.sigma, 4));
+
+        document.getElementById("legMu").style.display = state.showMu ? "flex" : "none";
+
+        draw();
+    }
+
+    function selected(i) {
+        if (state.mode === "exact") { return i === state.k; }
+        if (state.mode === "atmost") { return i <= state.k; }
+        return i >= state.k;
+    }
+
+    function niceStep(raw) {
+        var exp = Math.floor(Math.log(raw) / Math.LN10);
+        var base = Math.pow(10, exp);
+        var f = raw / base;
+        var m = (f <= 1) ? 1 : (f <= 2) ? 2 : (f <= 2.5) ? 2.5 : (f <= 5) ? 5 : 10;
+        return m * base;
+    }
+
+    function resize() {
+        var cssW = canvas.clientWidth || canvas.parentNode.clientWidth;
+        if (!cssW) { cssW = 320; }
+        var cssH = Math.round(Math.min(430, Math.max(250, cssW * 0.66)));
+        var dpr = window.devicePixelRatio || 1;
+        canvas.style.height = cssH + "px";
+        canvas.width = Math.round(cssW * dpr);
+        canvas.height = Math.round(cssH * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        return { w: cssW, h: cssH };
+    }
+
+    function draw() {
+        if (!st) { return; }
+        var dim = resize();
+        var W = dim.w, H = dim.h;
+        var n = state.n;
+
+        ctx.clearRect(0, 0, W, H);
+
+        var mL = 50, mR = 10, mT = 34, mB = 50;
+        var pw = W - mL - mR;
+        var ph = H - mT - mB;
+        if (pw < 40 || ph < 40) { return; }
+
+        var maxP = 0;
+        for (var i = 0; i <= n; i++) { if (st.pmf[i] > maxP) { maxP = st.pmf[i]; } }
+        if (maxP <= 0) { maxP = 1; }
+        var yMax = Math.min(1, maxP * 1.14);
+
+        function X(k) { return mL + (k + 0.5) * (pw / (n + 1)); }
+        function Y(v) { return mT + ph - (v / yMax) * ph; }
+
+        /* y-Achsenbeschriftung oben links */
+        ctx.fillStyle = "#475569";
+        ctx.font = "600 12px 'Segoe UI', Tahoma, sans-serif";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillText("Wahrscheinlichkeit P(X = k)", 2, 15);
+
+        /* Streubereich mu +- sigma */
+        if (state.showMu && st.sigma > 0) {
+            var slot = pw / (n + 1);
+            var xLo = Math.max(mL, mL + (st.mu - st.sigma + 0.5) * slot);
+            var xHi = Math.min(mL + pw, mL + (st.mu + st.sigma + 0.5) * slot);
+            if (xHi > xLo) {
+                ctx.fillStyle = COL_BAND;
+                ctx.fillRect(xLo, mT, xHi - xLo, ph);
+                ctx.strokeStyle = "rgba(220,38,38,0.45)";
+                ctx.lineWidth = 1;
+                ctx.setLineDash([3, 3]);
+                ctx.beginPath();
+                ctx.moveTo(xLo, mT); ctx.lineTo(xLo, mT + ph);
+                ctx.moveTo(xHi, mT); ctx.lineTo(xHi, mT + ph);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        }
+
+        /* y-Gitter und Ticks */
+        var yStep = niceStep(yMax / 4);
+        ctx.font = "11px 'Segoe UI', Tahoma, sans-serif";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        var dec = yStep < 0.01 ? 4 : (yStep < 0.1 ? 3 : 2);
+        for (var v = 0; v <= yMax + 1e-9; v += yStep) {
+            var yy = Y(v);
+            ctx.strokeStyle = COL_GRID;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(mL, yy); ctx.lineTo(mL + pw, yy);
+            ctx.stroke();
+            ctx.fillStyle = "#64748b";
+            ctx.fillText(fmt(v, dec), mL - 6, yy);
+        }
+
+        /* Balken */
+        var slotW = pw / (n + 1);
+        var barW = Math.max(1.5, slotW * 0.78);
+        for (var k = 0; k <= n; k++) {
+            var val = st.pmf[k];
+            var h = (val / yMax) * ph;
+            if (h < 0) { h = 0; }
+            if (val > 0 && h < 1.2) { h = 1.2; }
+            var x = X(k) - barW / 2;
+            var y = mT + ph - h;
+            var isK = (k === state.k);
+            var isSel = selected(k);
+
+            ctx.fillStyle = isK ? COL_K : (isSel ? COL_SEL : COL_BASE);
+            ctx.fillRect(x, y, barW, h);
+            if (barW >= 3) {
+                ctx.strokeStyle = isK ? COL_K_EDGE : (isSel ? COL_SEL_EDGE : COL_BASE_EDGE);
+                ctx.lineWidth = isK ? 2 : 1;
+                ctx.strokeRect(x + 0.5, y + 0.5, barW - 1, Math.max(0, h - 1));
+            }
+        }
+
+        /* mu-Linie */
+        if (state.showMu) {
+            var xMu = mL + (st.mu + 0.5) * slotW;
+            ctx.strokeStyle = COL_MU;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 4]);
+            ctx.beginPath();
+            ctx.moveTo(xMu, mT - 4); ctx.lineTo(xMu, mT + ph);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = COL_MU;
+            ctx.font = "600 12px 'Segoe UI', Tahoma, sans-serif";
+            ctx.textBaseline = "alphabetic";
+            var tw = ctx.measureText("μ = " + fmt(st.mu, 2)).width;
+            ctx.textAlign = "center";
+            var xLab = Math.min(mL + pw - tw / 2, Math.max(mL + tw / 2, xMu));
+            ctx.fillText("μ = " + fmt(st.mu, 2), xLab, mT - 8);
+        }
+
+        /* Achsen */
+        ctx.strokeStyle = COL_AXIS;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(mL, mT); ctx.lineTo(mL, mT + ph); ctx.lineTo(mL + pw, mT + ph);
+        ctx.stroke();
+
+        /* x-Ticks: bei grossem n nicht jeden Wert beschriften */
+        ctx.font = "11px 'Segoe UI', Tahoma, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        var maxLabels = Math.max(4, Math.floor(pw / 30));
+        var xStep = Math.ceil((n + 1) / maxLabels);
+        if (xStep > 2 && xStep < 5) { xStep = 5; }
+        else if (xStep > 5 && xStep < 10) { xStep = 10; }
+
+        var cand = [];
+        for (var t = 0; t <= n; t += xStep) { cand.push(t); }
+        if (cand[cand.length - 1] !== n) { cand.push(n); }
+        /* k hat Vorrang: zu nahe Nachbarlabels entfernen */
+        var minGap = 19;
+        cand = cand.filter(function (t) {
+            return t === state.k || Math.abs(X(t) - X(state.k)) >= minGap;
+        });
+        /* n hat Vorrang vor dem vorletzten Raster-Label */
+        cand = cand.filter(function (t) {
+            return t === n || t === state.k || Math.abs(X(t) - X(n)) >= minGap;
+        });
+        if (cand.indexOf(state.k) === -1) { cand.push(state.k); }
+        cand.sort(function (a, b) { return a - b; });
+
+        cand.forEach(function (t) {
+            var xt = X(t);
+            ctx.strokeStyle = COL_AXIS;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(xt, mT + ph); ctx.lineTo(xt, mT + ph + 4);
+            ctx.stroke();
+            ctx.fillStyle = (t === state.k) ? COL_K_EDGE : "#475569";
+            ctx.font = (t === state.k)
+                ? "700 11px 'Segoe UI', Tahoma, sans-serif"
+                : "11px 'Segoe UI', Tahoma, sans-serif";
+            ctx.fillText(String(t), xt, mT + ph + 6);
+        });
+
+        /* x-Achsentitel */
+        ctx.fillStyle = "#475569";
+        ctx.font = "600 12px 'Segoe UI', Tahoma, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillText("Trefferanzahl k", mL + pw / 2, H - 6);
+    }
+
+    /* Tippen/Ziehen im Diagramm waehlt k */
+    function pickK(evt) {
+        var rect = canvas.getBoundingClientRect();
+        var pt = (evt.touches && evt.touches[0]) ? evt.touches[0] : evt;
+        var x = pt.clientX - rect.left;
+        var mL = 50, mR = 10;
+        var pw = rect.width - mL - mR;
+        if (pw <= 0) { return; }
+        var k = Math.round((x - mL) / (pw / (state.n + 1)) - 0.5);
+        k = Math.min(state.n, Math.max(0, k));
+        if (k !== state.k) { sliderK.value = String(k); update(); }
+    }
+    var dragging = false;
+    canvas.addEventListener("pointerdown", function (e) { dragging = true; pickK(e); });
+    canvas.addEventListener("pointermove", function (e) { if (dragging) { pickK(e); } });
+    window.addEventListener("pointerup", function () { dragging = false; });
+
+    sliderN.addEventListener("input", update);
+    sliderP.addEventListener("input", update);
+    sliderK.addEventListener("input", update);
+    chkMu.addEventListener("change", update);
+
+    document.getElementById("nMinus").addEventListener("click", function () { step(sliderN, -1); });
+    document.getElementById("nPlus").addEventListener("click", function () { step(sliderN, 1); });
+    document.getElementById("pMinus").addEventListener("click", function () { step(sliderP, -1); });
+    document.getElementById("pPlus").addEventListener("click", function () { step(sliderP, 1); });
+    document.getElementById("kMinus").addEventListener("click", function () { step(sliderK, -1); });
+    document.getElementById("kPlus").addEventListener("click", function () { step(sliderK, 1); });
+
+    modeButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            state.mode = btn.getAttribute("data-mode");
+            modeButtons.forEach(function (b) { b.classList.remove("active"); });
+            btn.classList.add("active");
+            update();
+        });
+    });
+
+    window.addEventListener("resize", draw);
+    window.addEventListener("orientationchange", function () { setTimeout(draw, 150); });
+
+    update();
+})();
+</script>
+</body>
+</html>

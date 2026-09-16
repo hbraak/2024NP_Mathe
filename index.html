@@ -172,6 +172,48 @@
         </header>
         
         <div class="material-grid">
+            <a href="arbeitsblatt-binomialverteilung.pdf" class="material-card" data-url="arbeitsblatt-binomialverteilung.pdf">
+                <div class="card-header">
+                    <div class="card-icon green">📄</div>
+                    <div class="card-title">Von der Bernoulli-Kette zur Binomialverteilung</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Arbeitsblatt vom 17.09. (8 Seiten). Bernoulli-Kette, Pfade z&auml;hlen im Baum, das Pascalsche Dreieck und daraus die Formel P(X=k) selbst hergeleitet. Dazu die Rechnerbefehle f&uuml;r &bdquo;genau&ldquo;, &bdquo;h&ouml;chstens&ldquo; und &bdquo;mindestens&ldquo; sowie ein Histogramm zum Zeichnen.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Arbeitsblatt</span>
+                            <span class="tag">PDF</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-bino-ab"></div>
+                </div>
+            </a>
+
+            <a href="binomialverteilung.html" class="material-card" data-url="binomialverteilung.html">
+                <div class="card-header">
+                    <div class="card-icon blue">📊</div>
+                    <div class="card-title">Simulation: Binomialverteilung B(n; p)</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            n, p und k per Schieberegler ver&auml;ndern und sofort sehen, wie sich das Histogramm verformt. Der Umschalter &bdquo;genau k / h&ouml;chstens k / mindestens k&ldquo; hebt genau die Balken hervor, die dazugeh&ouml;ren &ndash; inklusive Erwartungswert &micro; und Streubereich &micro; &plusmn; &sigma;.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Simulation</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Histogramm</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-bino-sim"></div>
+                </div>
+            </a>
+
             <a href="grundlagen-bedingte-wahrscheinlichkeit.pdf" class="material-card" data-url="grundlagen-bedingte-wahrscheinlichkeit.pdf">
                 <div class="card-header">
                     <div class="card-icon green">📄</div>
@@ -549,6 +591,8 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-bino-ab', 'arbeitsblatt-binomialverteilung.pdf');
+            generateQR('qr-bino-sim', 'binomialverteilung.html');
             generateQR('qr-gbw', 'grundlagen-bedingte-wahrscheinlichkeit.pdf');
             generateQR('qr-gbw-lsg', 'loesung-grundlagen-bedingte-wahrscheinlichkeit.pdf');
             generateQR('qr-pp-a', 'partnerpuzzle-vierfeldertafel-a.pdf');
