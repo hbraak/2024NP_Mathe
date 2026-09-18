@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Einstieg Binomialverteilung &ndash; Begleitpr&auml;sentation | Mathematik 13NP</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background:#0f172a;color:#f1f5f9;overflow:hidden;
+  -webkit-text-size-adjust:100%;
+}
+#stage{position:relative;height:100%;width:100%}
+.slide{
+  position:absolute;inset:0;display:none;
+  flex-direction:column;justify-content:center;align-items:center;
+  padding:3vh 4vw 8vh;text-align:center;overflow-y:auto;
+}
+.slide.active{display:flex}
+h1{font-size:clamp(28px,4.4vw,64px);color:#c4b5fd;margin-bottom:.4em;line-height:1.15}
+h2{font-size:clamp(22px,3.2vw,46px);color:#c4b5fd;margin-bottom:.55em;line-height:1.2}
+.sub{font-size:clamp(15px,1.7vw,26px);color:#94a3b8;margin-bottom:1.2em}
+.big{font-size:clamp(20px,2.6vw,40px);line-height:1.45}
+.mid{font-size:clamp(16px,1.9vw,30px);line-height:1.5}
+.small{font-size:clamp(13px,1.3vw,21px);color:#94a3b8}
+.hl{color:#fbbf24;font-weight:700}
+.gr{color:#4ade80;font-weight:700}
+.vi{color:#c4b5fd;font-weight:700}
+.frag{opacity:0;transition:opacity .25s}
+.frag.show{opacity:1}
+.box{
+  background:#1e293b;border:2px solid #475569;border-radius:16px;
+  padding:clamp(12px,2vw,28px) clamp(16px,2.5vw,36px);margin:.5em 0;max-width:1100px;
+}
+.box.acc{border-color:#a78bfa}
+.box.warn{border-color:#f87171}
+.box.ok{border-color:#4ade80}
+.row{display:flex;gap:clamp(10px,2vw,32px);align-items:center;justify-content:center;flex-wrap:wrap}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:.28em .7em;font-size:clamp(12px,1.35vw,22px);border-bottom:1px solid #334155;text-align:center}
+th{color:#94a3b8;font-weight:600}
+td.lbl{text-align:left;color:#cbd5e1;white-space:nowrap}
+tr.peak td{color:#fbbf24;font-weight:700}
+.btn{
+  background:#334155;color:#e2e8f0;border:1px solid #64748b;border-radius:10px;
+  padding:.45em 1em;font-size:clamp(12px,1.25vw,19px);cursor:pointer;font-family:inherit;
+}
+.btn:hover{background:#475569}
+.btn.prim{background:#7c3aed;border-color:#a78bfa;color:#fff}
+.btn.prim:hover{background:#8b5cf6}
+/* --- Diagramm --- */
+.chart{display:flex;align-items:flex-end;justify-content:center;gap:clamp(4px,.8vw,14px);
+  height:44vh;padding:0 1vw;border-bottom:3px solid #64748b;margin-bottom:.3em}
+.col{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
+  width:clamp(26px,4.3vw,70px);height:100%;cursor:pointer;position:relative}
+.col:hover .bar{filter:brightness(1.35)}
+.bar{width:100%;background:#7c3aed;border-radius:5px 5px 0 0;transition:height .2s;min-height:0;position:relative;z-index:1}
+.bar.theo{background:#475569;opacity:.75;position:absolute;bottom:0;width:100%;z-index:0;
+  border:2px dashed #94a3b8;background:transparent}
+.cnt{font-size:clamp(12px,1.3vw,20px);font-weight:700;color:#fbbf24;height:1.4em}
+.axis{display:flex;justify-content:center;gap:clamp(4px,.8vw,14px);padding:0 1vw}
+.axis span{width:clamp(26px,4.3vw,70px);text-align:center;font-size:clamp(12px,1.35vw,21px);color:#cbd5e1}
+/* --- Pascal --- */
+.pascal{display:flex;flex-direction:column;gap:.15em;align-items:center}
+.prow{display:flex;gap:.45em;justify-content:center;font-variant-numeric:tabular-nums;
+  font-size:clamp(10px,1.15vw,19px);color:#e2e8f0;visibility:hidden;transition:color .2s}
+.prow.on{visibility:visible}
+.prow.mark{visibility:visible;color:#fbbf24;font-weight:700}
+.prow span{min-width:2.6em}
+/* --- Chrome --- */
+#bar{position:fixed;left:0;right:0;bottom:0;height:34px;background:#0b1220;
+  display:flex;align-items:center;gap:14px;padding:0 14px;font-size:13px;color:#64748b;z-index:20}
+#prog{flex:1;height:5px;background:#1e293b;border-radius:3px;overflow:hidden}
+#progf{height:100%;width:0;background:#7c3aed;transition:width .25s}
+#bar .nav{cursor:pointer;color:#94a3b8;user-select:none;font-size:18px;padding:0 6px}
+#bar .nav:hover{color:#e2e8f0}
+#help{position:fixed;inset:0;background:rgba(2,6,23,.94);display:none;z-index:30;
+  flex-direction:column;justify-content:center;align-items:center;gap:.7em;font-size:clamp(14px,1.6vw,24px)}
+#help.on{display:flex}
+kbd{background:#334155;border:1px solid #64748b;border-radius:6px;padding:.1em .5em;font-family:inherit}
+@media print{body{overflow:visible}.slide{display:flex;position:static;page-break-after:always;height:100vh}}
+</style>
+</head>
+<body>
+
+<div id="stage">
+
+<!-- 1 Titel -->
+<section class="slide">
+  <h1>Warum es eine Formel braucht</h1>
+  <div class="sub">Die Wette &nbsp;|&nbsp; Der Klassen-M&uuml;nzwurf &nbsp;|&nbsp; Das Z&auml;hlen der Pfade</div>
+  <div class="mid">Mathematik 13NP &ndash; Stochastik III</div>
+  <div class="small" style="margin-top:2em">
+    <kbd>&rarr;</kbd> weiter &nbsp;&nbsp; <kbd>&larr;</kbd> zur&uuml;ck &nbsp;&nbsp; <kbd>F</kbd> Vollbild &nbsp;&nbsp; <kbd>?</kbd> Hilfe
+  </div>
+</section>
+
+<!-- 2 Die Wette -->
+<section class="slide">
+  <h2>Die Wette</h2>
+  <div class="box acc big">
+    Ein Zulieferer liefert Bauteile. <span class="hl">5&nbsp;%</span> sind erfahrungsgem&auml;&szlig; defekt.<br>
+    Sie pr&uuml;fen eine Stichprobe von <span class="hl">10&nbsp;St&uuml;ck</span>.
+  </div>
+  <div class="row" style="margin-top:1em">
+    <div class="box" style="min-width:16em">
+      <div class="big"><span class="vi">A</span></div>
+      <div class="mid">kein einziges defekt</div>
+      <div class="hl" style="font-size:clamp(28px,3.6vw,56px)" id="voteA">0</div>
+      <button class="btn" onclick="vote('A',1)">+1</button>
+      <button class="btn" onclick="vote('A',-1)">&minus;1</button>
+    </div>
+    <div class="box" style="min-width:16em">
+      <div class="big"><span class="vi">B</span></div>
+      <div class="mid">genau <em>eines</em> defekt</div>
+      <div class="hl" style="font-size:clamp(28px,3.6vw,56px)" id="voteB">0</div>
+      <button class="btn" onclick="vote('B',1)">+1</button>
+      <button class="btn" onclick="vote('B',-1)">&minus;1</button>
+    </div>
+  </div>
+  <div class="small frag" style="margin-top:1em">Abstimmen lassen &ndash; <strong>nicht</strong> aufl&ouml;sen. Die Wette bleibt stehen bis zum Stundenende.</div>
+</section>
+
+<!-- 3 Auftrag Münzwurf -->
+<section class="slide">
+  <h2>Der Klassen-M&uuml;nzwurf</h2>
+  <div class="box acc big">
+    Jede und jeder wirft die M&uuml;nze <span class="hl">genau zehnmal</span><br>
+    und notiert <span class="hl">nur eine Zahl</span>: wie oft Kopf kam.
+  </div>
+  <div class="big frag" style="margin-top:.8em">Das ist Ihr <span class="vi">k</span>.</div>
+  <div class="mid frag" style="margin-top:.8em">Ersatz ohne M&uuml;nze: W&uuml;rfel, Treffer = Sechs &nbsp;(dann <span class="vi">p&nbsp;=&nbsp;1/6</span>)</div>
+</section>
+
+<!-- 4 Strichliste interaktiv -->
+<section class="slide">
+  <h2 style="margin-bottom:.2em">Unsere Strichliste</h2>
+  <div class="small" style="margin-bottom:.4em">
+    Klick auf eine S&auml;ule = ein Strich mehr &nbsp;&middot;&nbsp; Shift+Klick = einer weniger &nbsp;&middot;&nbsp;
+    Tasten <kbd>0</kbd>&hellip;<kbd>9</kbd> und <kbd>t</kbd> f&uuml;r k&nbsp;=&nbsp;10
+  </div>
+  <div class="chart" id="chart"></div>
+  <div class="axis" id="axis"></div>
+  <div class="mid" style="margin-top:.5em">
+    k = Anzahl Kopf bei 10 W&uuml;rfen &nbsp;&nbsp;&middot;&nbsp;&nbsp; erfasst: <span class="hl" id="total">0</span>
+  </div>
+  <div class="row" style="margin-top:.6em">
+    <button class="btn prim" onclick="toggleTheo()" id="theoBtn">Erwartung einblenden</button>
+    <button class="btn" onclick="resetTally()">Zur&uuml;cksetzen</button>
+  </div>
+</section>
+
+<!-- 5 Wertetabelle -->
+<section class="slide">
+  <h2>Was zu erwarten war</h2>
+  <div class="sub">n = 10 &nbsp;&middot;&nbsp; p = 0,5 &nbsp;&middot;&nbsp; 24 Sch&uuml;lerinnen und Sch&uuml;ler</div>
+  <div class="box">
+    <table>
+      <tr><th>k</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+      <tr class="frag" id="tr-pfade"><td class="lbl">Pfade</td><td>1</td><td>10</td><td>45</td><td>120</td><td>210</td><td><span class="hl">252</span></td><td>210</td><td>120</td><td>45</td><td>10</td><td>1</td></tr>
+      <tr class="frag" id="tr-p"><td class="lbl">P(X = k) in %</td><td>0,1</td><td>1,0</td><td>4,4</td><td>11,7</td><td>20,5</td><td><span class="hl">24,6</span></td><td>20,5</td><td>11,7</td><td>4,4</td><td>1,0</td><td>0,1</td></tr>
+      <tr class="frag" id="tr-e"><td class="lbl">erwartet von 24</td><td>0</td><td>0</td><td>1</td><td>3</td><td>5</td><td><span class="hl">6</span></td><td>5</td><td>3</td><td>1</td><td>0</td><td>0</td></tr>
+    </table>
+  </div>
+  <div class="mid frag" style="margin-top:.8em">
+    Die Klasse liefert eine <em>Stichprobe</em> &ndash; die reale Liste ist zackiger.<br>
+    <span class="gr">Form stimmt, Details schwanken.</span>
+  </div>
+</section>
+
+<!-- 6 Impulse -->
+<section class="slide">
+  <h2>Drei Fragen</h2>
+  <div class="box big frag" style="text-align:left">1. Warum landet fast niemand bei <span class="vi">k&nbsp;=&nbsp;0</span> oder <span class="vi">k&nbsp;=&nbsp;10</span>?</div>
+  <div class="box big frag" style="text-align:left">2. Jede einzelne Wurffolge hat die Wahrscheinlichkeit <span class="hl">1/1024</span> &ndash;<br>&nbsp;&nbsp;&nbsp;&nbsp;warum ist die S&auml;ule bei <span class="vi">k&nbsp;=&nbsp;5</span> dann so viel h&ouml;her?</div>
+  <div class="box big frag" style="text-align:left">3. Was m&uuml;sste man also z&auml;hlen k&ouml;nnen, um die H&ouml;he vorherzusagen?</div>
+</section>
+
+<!-- 7 Kernsatz -->
+<section class="slide">
+  <h2>Der Kern</h2>
+  <div class="box ok big">
+    Jeder einzelne Pfad ist <span class="gr">gleich wahrscheinlich</span>.<br>
+    Was die S&auml;ulen unterscheidet, ist allein die <span class="hl">Anzahl der Pfade</span>.
+  </div>
+  <div class="box frag">
+    <table style="font-size:1.1em">
+      <tr><td class="lbl">alle m&ouml;glichen Wurffolgen</td><td>2<sup>10</sup></td><td>= <span class="hl">1024</span></td></tr>
+      <tr><td class="lbl">davon mit genau 5&nbsp;Kopf</td><td>C(10;&nbsp;5)</td><td>= <span class="hl">252</span></td></tr>
+      <tr><td class="lbl">davon mit genau 0&nbsp;Kopf</td><td>C(10;&nbsp;0)</td><td>= <span class="hl">1</span></td></tr>
+      <tr class="frag"><td class="lbl">P(X = 5)</td><td>252 / 1024</td><td>&asymp; 24,6&nbsp;%</td></tr>
+      <tr class="frag"><td class="lbl">P(X = 0)</td><td>1 / 1024</td><td>&asymp; 0,1&nbsp;%</td></tr>
+    </table>
+  </div>
+  <div class="mid frag" style="margin-top:.6em">
+    Zehn W&uuml;rfe sind 1024 Pfade. Den Baum dazu zeichnet niemand.<br>
+    <span class="gr">Wir brauchen eine Formel, die uns die Anzahl der Pfade liefert.</span>
+  </div>
+</section>
+
+<!-- 8 Pascal -->
+<section class="slide">
+  <h2 style="margin-bottom:.3em">Woher die Zahlen kommen</h2>
+  <div class="small" style="margin-bottom:.6em">Jede Zeile entsteht aus der dar&uuml;ber &ndash; <kbd>&rarr;</kbd> baut Zeile f&uuml;r Zeile auf</div>
+  <div class="pascal" id="pascal"></div>
+  <div class="mid frag" style="margin-top:.8em">
+    Zeile <span class="vi">n&nbsp;=&nbsp;3</span>: 1&nbsp;&ndash;&nbsp;3&nbsp;&ndash;&nbsp;3&nbsp;&ndash;&nbsp;1 &nbsp;&rarr;&nbsp; das war Aufgabe&nbsp;3 auf dem Blatt.<br>
+    Zeile <span class="hl">n&nbsp;=&nbsp;10</span>: dieselben Zahlen wie in unserer Tabelle.
+  </div>
+</section>
+
+<!-- 9 Simulation -->
+<section class="slide">
+  <h2 style="margin-bottom:.2em">10&nbsp;000 statt 24</h2>
+  <div class="small" style="margin-bottom:.4em">Dieselbe Frage, nur viel h&auml;ufiger gestellt &ndash; die Form wird glatt.</div>
+  <div class="chart" id="simchart"></div>
+  <div class="axis" id="simaxis"></div>
+  <div class="row" style="margin-top:.6em">
+    <button class="btn prim" onclick="runSim(100)">+100 Serien</button>
+    <button class="btn prim" onclick="runSim(1000)">+1000</button>
+    <button class="btn prim" onclick="runSim(10000)">+10000</button>
+    <button class="btn" onclick="resetSim()">Zur&uuml;cksetzen</button>
+    <span class="mid">Serien: <span class="hl" id="simN">0</span></span>
+  </div>
+</section>
+
+<!-- 10 Auflösung -->
+<section class="slide">
+  <h2>Zur&uuml;ck zur Wette</h2>
+  <div class="mid" style="margin-bottom:.6em">n = 10 &nbsp;&middot;&nbsp; p = 0,05 &nbsp;&middot;&nbsp; X = Anzahl defekter Teile</div>
+  <div class="box frag">
+    <div class="mid">P(X = 0) = C(10;0) &middot; 0,05<sup>0</sup> &middot; 0,95<sup>10</sup> = 0,95<sup>10</sup> &nbsp;&asymp;&nbsp; <span class="gr">59,9&nbsp;%</span></div>
+  </div>
+  <div class="box frag">
+    <div class="mid">P(X = 1) = C(10;1) &middot; 0,05<sup>1</sup> &middot; 0,95<sup>9</sup> = 10 &middot; 0,05 &middot; 0,95<sup>9</sup> &nbsp;&asymp;&nbsp; <span class="hl">31,5&nbsp;%</span></div>
+  </div>
+  <div class="box warn frag mid">
+    <span class="vi">A</span> gewinnt &ndash; fast doppelt so h&auml;ufig wie <span class="vi">B</span>.<br>
+    <span class="small">&mu; = n &middot; p = 0,5 defekte Teile &ndash; der wahrscheinlichste Wert liegt <em>nicht</em> bei 1, sondern bei k = 0.</span>
+  </div>
+  <div class="box acc mid frag">Die Formel z&auml;hlt Pfade &ndash; deshalb schl&auml;gt sie das Bauchgef&uuml;hl.</div>
+</section>
+
+</div>
+
+<div id="bar">
+  <span class="nav" onclick="go(-1)">&#9664;</span>
+  <span id="pos">1 / 10</span>
+  <span class="nav" onclick="go(1)">&#9654;</span>
+  <div id="prog"><div id="progf"></div></div>
+  <span class="nav" onclick="fs()" title="Vollbild">&#9974;</span>
+  <span class="nav" onclick="document.getElementById('help').classList.toggle('on')">?</span>
+</div>
+
+<div id="help" onclick="this.classList.remove('on')">
+  <div><kbd>&rarr;</kbd> / <kbd>Leertaste</kbd> &nbsp; n&auml;chster Schritt</div>
+  <div><kbd>&larr;</kbd> &nbsp; zur&uuml;ck</div>
+  <div><kbd>F</kbd> &nbsp; Vollbild &nbsp;&middot;&nbsp; <kbd>Esc</kbd> &nbsp; zur&uuml;ck</div>
+  <div><kbd>Pos1</kbd> &nbsp; erste Folie</div>
+  <div>Strichlisten-Folie: <kbd>0</kbd>&hellip;<kbd>9</kbd>, <kbd>t</kbd> = 10, Klick auf S&auml;ule</div>
+  <div class="small" style="margin-top:1em">Klick zum Schlie&szlig;en</div>
+</div>
+
+<script>
+/* ---------- Navigation mit Fragmenten ---------- */
+const slides=[...document.querySelectorAll('.slide')];
+let s=0,f=0;
+function frags(i){return [...slides[i].querySelectorAll('.frag')];}
+function render(){
+  slides.forEach((el,i)=>el.classList.toggle('active',i===s));
+  frags(s).forEach((el,i)=>el.classList.toggle('show',i<f));
+  if(s===7)pascalRender();
+  document.getElementById('pos').textContent=(s+1)+' / '+slides.length;
+  document.getElementById('progf').style.width=((s+1)/slides.length*100)+'%';
+}
+function go(d){
+  if(d>0){
+    if(f<frags(s).length){f++;}
+    else if(s<slides.length-1){s++;f=0;}
+  }else{
+    if(f>0){f--;}
+    else if(s>0){s--;f=frags(s).length;}
+  }
+  render();
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(-1);}
+  else if(e.key==='Home'){s=0;f=0;render();}
+  else if(e.key==='f'||e.key==='F'){fs();}
+  else if(e.key==='?'){document.getElementById('help').classList.toggle('on');}
+  else if(s===3){
+    if(e.key>='0'&&e.key<='9'){add(+e.key,1);}
+    else if(e.key==='t'||e.key==='T'){add(10,1);}
+  }
+});
+function fs(){ if(!document.fullscreenElement){document.documentElement.requestFullscreen();} else {document.exitFullscreen();} }
+
+/* ---------- Abstimmung ---------- */
+const votes={A:0,B:0};
+function vote(k,d){votes[k]=Math.max(0,votes[k]+d);document.getElementById('vote'+k).textContent=votes[k];}
+
+/* ---------- Strichliste ---------- */
+const N=10, PTH=[1,10,45,120,210,252,210,120,45,10,1], TOT=1024;
+const tally=new Array(11).fill(0);
+let theoOn=false;
+const chart=document.getElementById('chart'), axis=document.getElementById('axis');
+for(let k=0;k<=N;k++){
+  const col=document.createElement('div');col.className='col';
+  col.innerHTML='<div class="cnt"></div><div class="bar theo" style="height:0"></div><div class="bar"style="height:0"></div>';
+  col.onclick=e=>add(k,e.shiftKey?-1:1);
+  chart.appendChild(col);
+  const a=document.createElement('span');a.textContent=k;axis.appendChild(a);
+}
+function add(k,d){tally[k]=Math.max(0,tally[k]+d);drawTally();}
+function resetTally(){tally.fill(0);drawTally();}
+function toggleTheo(){theoOn=!theoOn;
+  document.getElementById('theoBtn').textContent=theoOn?'Erwartung ausblenden':'Erwartung einblenden';
+  drawTally();}
+function drawTally(){
+  const sum=tally.reduce((a,b)=>a+b,0);
+  const theo=PTH.map(p=>p/TOT*(sum||24));
+  const max=Math.max(3,...tally,...(theoOn?theo:[0]));
+  [...chart.children].forEach((col,k)=>{
+    col.querySelector('.cnt').textContent=tally[k]||'';
+    col.querySelectorAll('.bar')[1].style.height=(tally[k]/max*100)+'%';
+    const t=col.querySelector('.theo');
+    t.style.height=theoOn?(theo[k]/max*100)+'%':'0';
+  });
+  document.getElementById('total').textContent=sum;
+}
+drawTally();
+
+/* ---------- Pascal ---------- */
+const pas=document.getElementById('pascal');
+let pasRows=[[1]];
+for(let n=1;n<=10;n++){const p=pasRows[n-1],r=[1];
+  for(let i=0;i<p.length-1;i++)r.push(p[i]+p[i+1]);r.push(1);pasRows.push(r);}
+pas.innerHTML=pasRows.map((r,n)=>
+  '<div class="prow'+(n===3?' markable3':'')+(n===10?' markable10':'')+'" data-n="'+n+'">'
+  +r.map(v=>'<span>'+v+'</span>').join('')+'</div>').join('');
+function pascalRender(){
+  const shown=Math.min(f+1,11);
+  [...pas.children].forEach((row,n)=>{
+    row.classList.toggle('on',n<shown);
+    row.classList.toggle('mark',n<shown&&(n===3||n===10));
+  });
+}
+/* Fragmente für Pascal-Folie erzeugen (11 Zeilen + Schlusstext) */
+(function(){
+  const sl=slides[7];const holder=document.createElement('div');
+  for(let i=0;i<10;i++){const d=document.createElement('span');d.className='frag';holder.appendChild(d);}
+  sl.insertBefore(holder,sl.querySelector('.pascal'));
+})();
+
+/* ---------- Simulation ---------- */
+const sim=new Array(11).fill(0);let simN=0;
+const sc=document.getElementById('simchart'),sa=document.getElementById('simaxis');
+for(let k=0;k<=N;k++){
+  const col=document.createElement('div');col.className='col';
+  col.style.cursor='default';
+  col.innerHTML='<div class="cnt"></div><div class="bar theo" style="height:0"></div><div class="bar" style="height:0"></div>';
+  sc.appendChild(col);
+  const a=document.createElement('span');a.textContent=k;sa.appendChild(a);
+}
+function runSim(n){
+  for(let i=0;i<n;i++){let k=0;for(let j=0;j<10;j++)if(Math.random()<0.5)k++;sim[k]++;}
+  simN+=n;drawSim();
+}
+function resetSim(){sim.fill(0);simN=0;drawSim();}
+function drawSim(){
+  const theo=PTH.map(p=>p/TOT*(simN||1));
+  const max=Math.max(1,...sim,...theo);
+  [...sc.children].forEach((col,k)=>{
+    col.querySelector('.cnt').textContent=simN?(sim[k]/simN*100).toFixed(1).replace('.',',')+'%':'';
+    col.querySelectorAll('.bar')[1].style.height=(sim[k]/max*100)+'%';
+    col.querySelector('.theo').style.height=(theo[k]/max*100)+'%';
+  });
+  document.getElementById('simN').textContent=simN.toLocaleString('de-DE');
+}
+drawSim();
+
+render();
+</script>
+</body>
+</html>
