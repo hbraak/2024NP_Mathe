@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Quiz – Binomialverteilung: mindestens / höchstens</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+  startup: { typeset: false }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  body { font-family: 'Inter', sans-serif; }
+  .option-btn { transition: all 0.2s; }
+  .option-btn:active { transform: scale(0.97); }
+  .option-btn.correct { background: #22c55e !important; color: white !important; border-color: #22c55e !important; }
+  .option-btn.wrong { background: #ef4444 !important; color: white !important; border-color: #ef4444 !important; }
+  .option-btn.reveal { border-color: #22c55e !important; background: #f0fdf4 !important; }
+  .option-btn.dim { opacity: 0.45; }
+  .fade-in { animation: fadeIn 0.35s ease-out; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pop { 0% { transform:scale(1); } 50% { transform:scale(1.15); } 100% { transform:scale(1); } }
+  .pop { animation: pop 0.3s ease; }
+  .progress-bar { transition: width 0.4s ease; }
+  .timer-bar { transition: width 0.1s linear; }
+  mjx-container { font-size: 100% !important; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-violet-50 to-sky-50 min-h-screen">
+
+<div id="app" class="max-w-lg mx-auto px-4 py-6">
+
+  <!-- ==================== STARTSCREEN ==================== -->
+  <div id="start-screen" class="text-center fade-in">
+    <div class="text-6xl mb-4">🎯</div>
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-2">Mindestens oder höchstens?</h1>
+    <p class="text-gray-500 mb-1">Binomialverteilung – kumulierte Wahrscheinlichkeiten</p>
+    <p class="text-gray-400 text-sm mb-8">Mathe-GK 13NP • 14 Fragen • 20 Sekunden pro Frage</p>
+
+    <div class="bg-white rounded-2xl shadow-md p-5 text-left text-sm text-gray-600 space-y-2 mb-6">
+      <p>🗣️ Es geht darum, <strong>Sprache in Formeln</strong> zu übersetzen: „mindestens", „höchstens", „mehr als", „weniger als".</p>
+      <p>⏱️ Je schneller du antwortest, desto mehr Punkte. Richtig ist mindestens 500 Punkte wert.</p>
+      <p>🔥 Mehrere richtige Antworten in Folge geben einen Streak-Bonus.</p>
+      <p>🧠 Nach jeder Frage bekommst du sofort die Begründung.</p>
+      <p>🔒 Keine Namen, keine Daten, nichts wird gespeichert oder gesendet.</p>
+    </div>
+
+    <button onclick="startQuiz()"
+            class="w-full bg-violet-600 hover:bg-violet-700 text-white font-extrabold py-5 rounded-2xl text-xl transition shadow-lg shadow-violet-200 active:scale-95">
+      Los geht's →
+    </button>
+  </div>
+
+  <!-- ==================== QUIZSCREEN ==================== -->
+  <div id="quiz-screen" class="hidden">
+    <div class="flex items-center gap-3 mb-3">
+      <span id="q-counter" class="text-sm font-bold text-gray-500 whitespace-nowrap">1/14</span>
+      <div class="flex-1 bg-gray-200 rounded-full h-2.5">
+        <div id="progress-bar" class="progress-bar h-2.5 rounded-full bg-violet-500" style="width:7%"></div>
+      </div>
+      <span id="streak-display" class="text-sm font-bold text-orange-500 whitespace-nowrap"></span>
+      <span id="score-display" class="text-sm font-extrabold text-violet-700 whitespace-nowrap">0</span>
+    </div>
+
+    <!-- Timer -->
+    <div class="flex items-center gap-2 mb-5">
+      <span id="timer-num" class="text-xs font-bold text-gray-500 w-8 text-right">20</span>
+      <div class="flex-1 bg-gray-200 rounded-full h-3 overflow-hidden">
+        <div id="timer-bar" class="timer-bar h-3 rounded-full bg-emerald-500" style="width:100%"></div>
+      </div>
+    </div>
+
+    <div id="question-card" class="fade-in">
+      <div class="bg-white rounded-2xl shadow-md p-6 mb-4">
+        <div id="q-category" class="text-xs font-semibold uppercase tracking-wide mb-2 text-violet-600"></div>
+        <h2 id="q-text" class="text-lg font-bold text-gray-800 leading-snug"></h2>
+        <div id="q-extra" class="text-sm text-gray-600 mt-3 hidden"></div>
+      </div>
+
+      <div id="options-container" class="space-y-2.5 mb-4"></div>
+
+      <div id="feedback" class="hidden bg-white rounded-2xl shadow-md p-5 mb-4 text-center">
+        <div id="feedback-emoji" class="text-4xl mb-2"></div>
+        <p id="feedback-points" class="text-sm font-extrabold mb-2"></p>
+        <p id="feedback-text" class="text-sm text-gray-600 leading-relaxed"></p>
+      </div>
+
+      <button id="next-btn" onclick="nextQuestion()" class="hidden w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-3.5 rounded-xl transition">
+        Nächste Frage →
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== ERGEBNISSCREEN ==================== -->
+  <div id="result-screen" class="hidden fade-in text-center">
+    <div id="result-emoji" class="text-7xl mb-4"></div>
+    <h2 id="result-title" class="text-2xl font-extrabold text-gray-800 mb-2"></h2>
+    <p id="result-subtitle" class="text-gray-500 mb-6"></p>
+
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-4">
+      <div class="text-5xl font-extrabold mb-1 text-violet-700" id="result-score">0</div>
+      <p class="text-gray-400 text-sm mb-4">Punkte</p>
+      <div class="flex justify-center gap-8 border-t border-gray-100 pt-4">
+        <div>
+          <div class="text-2xl font-extrabold text-emerald-600" id="result-correct">0</div>
+          <p class="text-gray-400 text-xs">richtig von 14</p>
+        </div>
+        <div>
+          <div class="text-2xl font-extrabold text-orange-500" id="result-streak">0</div>
+          <p class="text-gray-400 text-xs">längste Serie</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="result-details" class="bg-white rounded-2xl shadow-md p-5 mb-6 text-left space-y-1"></div>
+
+    <button onclick="restart()" class="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-4 rounded-2xl transition shadow-lg shadow-violet-200 active:scale-95">
+      🔄 Nochmal (gemischt)
+    </button>
+  </div>
+
+</div>
+
+<script>
+// ==================== FRAGEN ====================
+const QUESTIONS = [
+  {
+    category: "① Höchstens",
+    text: "In einer Stichprobe von \\(n = 10\\) Bauteilen ist \\(X\\) die Anzahl der defekten Bauteile. Gesucht ist: „<strong>höchstens 4</strong> Bauteile sind defekt“. Welcher Ausdruck passt?",
+    options: [
+      { t: "\\(\\displaystyle\\sum_{k=0}^{4} P(X=k)\\)", ok: true },
+      { t: "\\(\\displaystyle\\sum_{k=1}^{4} P(X=k)\\)", ok: false },
+      { t: "\\(\\displaystyle\\sum_{k=4}^{10} P(X=k)\\)", ok: false },
+      { t: "\\(1 - \\displaystyle\\sum_{k=0}^{4} P(X=k)\\)", ok: false }
+    ],
+    explanation: "„Höchstens 4“ heißt \\(X \\le 4\\), also \\(k = 0, 1, 2, 3, 4\\). Die <strong>0 gehört dazu</strong> – null Defekte sind ja auch höchstens 4."
+  },
+  {
+    category: "② Mindestens",
+    text: "Ein Test hat \\(n = 12\\) Aufgaben, \\(X\\) = Anzahl der richtig gelösten. Wie berechnest du „<strong>mindestens 5</strong> richtig“ mit der kumulierten Tabelle?",
+    options: [
+      { t: "\\(1 - P(X \\le 4)\\)", ok: true },
+      { t: "\\(1 - P(X \\le 5)\\)", ok: false },
+      { t: "\\(P(X \\le 5)\\)", ok: false },
+      { t: "\\(P(X \\le 4)\\)", ok: false }
+    ],
+    explanation: "\\(P(X \\ge 5) = 1 - P(X \\le 4)\\). Das Gegenereignis von „mindestens 5“ ist „höchstens <strong>4</strong>“ – also \\(k-1\\), nicht \\(k\\)."
+  },
+  {
+    category: "③ Mindestens eine",
+    text: "Bei \\(n = 8\\) Versuchen: Wie groß ist die Wahrscheinlichkeit, dass <strong>mindestens ein</strong> Treffer dabei ist?",
+    options: [
+      { t: "\\(1 - P(X = 0)\\)", ok: true },
+      { t: "\\(1 - P(X \\le 1)\\)", ok: false },
+      { t: "\\(P(X = 1)\\)", ok: false },
+      { t: "\\(P(X \\le 1)\\)", ok: false }
+    ],
+    explanation: "Das Gegenereignis von „mindestens einer“ ist „<strong>gar keiner</strong>“, also \\(X = 0\\). Das ist der Spezialfall \\(k = 1\\) von \\(1 - P(X \\le k-1)\\)."
+  },
+  {
+    category: "④ Mehr als",
+    text: "\\(X\\) ist binomialverteilt mit \\(n = 10\\). Wie schreibst du „<strong>mehr als 3</strong> Treffer“?",
+    options: [
+      { t: "\\(1 - P(X \\le 3)\\)", ok: true },
+      { t: "\\(1 - P(X \\le 2)\\)", ok: false },
+      { t: "\\(P(X \\le 3)\\)", ok: false },
+      { t: "\\(1 - P(X \\le 4)\\)", ok: false }
+    ],
+    explanation: "„Mehr als 3“ heißt \\(X > 3\\), also \\(X \\ge 4\\) – die 3 ist <strong>nicht</strong> dabei. Gegenereignis: \\(X \\le 3\\)."
+  },
+  {
+    category: "⑤ Weniger als",
+    text: "\\(X\\) ist binomialverteilt mit \\(n = 20\\). Wie schreibst du „<strong>weniger als 7</strong> Treffer“?",
+    options: [
+      { t: "\\(P(X \\le 6)\\)", ok: true },
+      { t: "\\(P(X \\le 7)\\)", ok: false },
+      { t: "\\(1 - P(X \\le 6)\\)", ok: false },
+      { t: "\\(P(X \\le 5)\\)", ok: false }
+    ],
+    explanation: "„Weniger als 7“ heißt \\(X < 7\\), und weil \\(X\\) nur ganze Zahlen annimmt: \\(X \\le 6\\). Die 7 selbst zählt nicht mit."
+  },
+  {
+    category: "⑥ Rechnen",
+    text: "Du wirfst eine faire Münze <strong>5-mal</strong>. Wie wahrscheinlich ist <strong>mindestens 4-mal Kopf</strong>?",
+    extra: "\\(n = 5,\\ p = 0{,}5\\) – das geht ohne Rechner: alle Ergebnisse haben die Wahrscheinlichkeit \\(\\tfrac{1}{32}\\).",
+    options: [
+      { t: "\\(0{,}1875\\)", ok: true },
+      { t: "\\(0{,}15625\\)", ok: false },
+      { t: "\\(0{,}03125\\)", ok: false },
+      { t: "\\(0{,}5\\)", ok: false }
+    ],
+    explanation: "\\(P(X \\ge 4) = P(X=4) + P(X=5) = \\tfrac{5}{32} + \\tfrac{1}{32} = \\tfrac{6}{32} = 0{,}1875\\). Wer nur \\(\\tfrac{5}{32} = 0{,}15625\\) nimmt, vergisst den Fall „5-mal Kopf“."
+  },
+  {
+    category: "⑦ Rechnen",
+    text: "Du würfelst <strong>3-mal</strong> mit einem fairen Würfel. Wie wahrscheinlich ist <strong>mindestens eine Sechs</strong>?",
+    extra: "\\(n = 3,\\ p = \\tfrac{1}{6}\\)",
+    options: [
+      { t: "\\(\\tfrac{91}{216} \\approx 0{,}4213\\)", ok: true },
+      { t: "\\(\\tfrac{125}{216} \\approx 0{,}5787\\)", ok: false },
+      { t: "\\(\\tfrac{25}{72} \\approx 0{,}3472\\)", ok: false },
+      { t: "\\(\\tfrac{1}{2} = 0{,}5\\)", ok: false }
+    ],
+    explanation: "\\(1 - P(X=0) = 1 - \\left(\\tfrac{5}{6}\\right)^3 = 1 - \\tfrac{125}{216} = \\tfrac{91}{216}\\). \\(0{,}5787\\) wäre „keine Sechs“, und \\(3 \\cdot \\tfrac{1}{6} = 0{,}5\\) ist kein zulässiges Aufaddieren."
+  },
+  {
+    category: "⑧ Rechnen",
+    text: "Eine faire Münze wird <strong>6-mal</strong> geworfen. Wie wahrscheinlich ist <strong>höchstens 1-mal Kopf</strong>?",
+    extra: "\\(n = 6,\\ p = 0{,}5\\), alle 64 Ergebnisfolgen sind gleich wahrscheinlich.",
+    options: [
+      { t: "\\(\\tfrac{7}{64} \\approx 0{,}1094\\)", ok: true },
+      { t: "\\(\\tfrac{6}{64} = 0{,}09375\\)", ok: false },
+      { t: "\\(\\tfrac{22}{64} = 0{,}34375\\)", ok: false },
+      { t: "\\(\\tfrac{1}{64} \\approx 0{,}0156\\)", ok: false }
+    ],
+    explanation: "\\(P(X \\le 1) = P(X=0) + P(X=1) = \\tfrac{1}{64} + \\tfrac{6}{64} = \\tfrac{7}{64}\\). Bei \\(\\tfrac{6}{64}\\) fehlt der Fall „gar kein Kopf“."
+  },
+  {
+    category: "⑨ Zwischen",
+    text: "\\(X\\) ist binomialverteilt. Gesucht: „die Trefferzahl liegt <strong>zwischen 4 und 9</strong>, beide Werte eingeschlossen“. Welcher Ausdruck stimmt?",
+    options: [
+      { t: "\\(P(X \\le 9) - P(X \\le 3)\\)", ok: true },
+      { t: "\\(P(X \\le 9) - P(X \\le 4)\\)", ok: false },
+      { t: "\\(P(X \\le 8) - P(X \\le 4)\\)", ok: false },
+      { t: "\\(P(X \\le 10) - P(X \\le 4)\\)", ok: false }
+    ],
+    explanation: "\\(P(4 \\le X \\le 9) = P(X \\le 9) - P(X \\le 3)\\). Von der <strong>oberen</strong> Grenze nimmt man den Wert selbst, von der <strong>unteren</strong> den Wert minus 1 – sonst schneidest du die 4 weg."
+  },
+  {
+    category: "⑩ Die Falle",
+    text: "Gesucht ist \\(P(X \\ge 3)\\) („mindestens 3“). Jemand rechnet \\(1 - P(X \\le 3)\\). Was ist passiert?",
+    options: [
+      { t: "Damit wurde \\(P(X \\ge 4)\\) berechnet; richtig wäre \\(1 - P(X \\le 2)\\).", ok: true },
+      { t: "Das ist völlig korrekt so.", ok: false },
+      { t: "Damit wurde \\(P(X \\le 2)\\) berechnet; richtig wäre \\(1 - P(X \\ge 3)\\).", ok: false },
+      { t: "Damit wurde \\(P(X \\ge 2)\\) berechnet; richtig wäre \\(1 - P(X \\le 4)\\).", ok: false }
+    ],
+    explanation: "\\(1 - P(X \\le 3) = P(X > 3) = P(X \\ge 4)\\) – der Fall \\(X = 3\\) fehlt. Bei „mindestens \\(k\\)“ gehört die Grenze \\(k-1\\) in die Tabelle."
+  },
+  {
+    category: "⑪ Kombiniert",
+    text: "Wie schreibst du „<strong>mehr als 2</strong>, aber <strong>weniger als 6</strong> Treffer“ mit kumulierten Wahrscheinlichkeiten?",
+    options: [
+      { t: "\\(P(X \\le 5) - P(X \\le 2)\\)", ok: true },
+      { t: "\\(P(X \\le 5) - P(X \\le 3)\\)", ok: false },
+      { t: "\\(P(X \\le 6) - P(X \\le 2)\\)", ok: false },
+      { t: "\\(P(X \\le 6) - P(X \\le 3)\\)", ok: false }
+    ],
+    explanation: "„Mehr als 2“ \\(\\Rightarrow X \\ge 3\\), „weniger als 6“ \\(\\Rightarrow X \\le 5\\). Also \\(P(3 \\le X \\le 5) = P(X \\le 5) - P(X \\le 2)\\)."
+  },
+  {
+    category: "⑫ Clever rechnen",
+    text: "Bei \\(n = 50\\) Bauteilen mit \\(p = 0{,}04\\) soll \\(P(\\text{mindestens 2 defekt})\\) bestimmt werden – nur mit der Formel von Bernoulli, ohne kumulierte Tabelle. Welcher Weg macht am wenigsten Arbeit?",
+    options: [
+      { t: "\\(1 - P(X=0) - P(X=1)\\)", ok: true },
+      { t: "\\(\\displaystyle\\sum_{k=2}^{50} P(X=k)\\)", ok: false },
+      { t: "\\(1 - P(X=0) - P(X=1) - P(X=2)\\)", ok: false },
+      { t: "\\(P(X=0) + P(X=1)\\)", ok: false }
+    ],
+    explanation: "Über das Gegenereignis „höchstens 1 defekt“ sind es nur <strong>2 Summanden</strong> statt 49. Wer zusätzlich \\(P(X=2)\\) abzieht, berechnet aus Versehen \\(P(X \\ge 3)\\)."
+  },
+  {
+    category: "⑬ Tabelle lesen",
+    text: "Gegeben ist \\(X \\sim B(20; 0{,}3)\\). Wie groß ist \\(P(4 \\le X \\le 8)\\)?",
+    extra: "Kumulierte Werte: \\(P(X \\le 3) = 0{,}1071\\), \\(P(X \\le 4) = 0{,}2375\\), \\(P(X \\le 7) = 0{,}7723\\), \\(P(X \\le 8) = 0{,}8867\\)",
+    options: [
+      { t: "\\(0{,}7796\\)", ok: true },
+      { t: "\\(0{,}6492\\)", ok: false },
+      { t: "\\(0{,}6652\\)", ok: false },
+      { t: "\\(0{,}5348\\)", ok: false }
+    ],
+    explanation: "\\(P(X \\le 8) - P(X \\le 3) = 0{,}8867 - 0{,}1071 = 0{,}7796\\). Bei \\(0{,}6492\\) wurde \\(P(X \\le 4)\\) abgezogen – dann fehlt der Fall \\(X = 4\\)."
+  },
+  {
+    category: "⑭ Tabelle lesen",
+    text: "Gegeben ist \\(X \\sim B(20; 0{,}3)\\). Wie groß ist die Wahrscheinlichkeit für <strong>mindestens 6</strong> Treffer?",
+    extra: "Kumulierte Werte: \\(P(X \\le 4) = 0{,}2375\\), \\(P(X \\le 5) = 0{,}4164\\), \\(P(X \\le 6) = 0{,}6080\\)",
+    options: [
+      { t: "\\(0{,}5836\\)", ok: true },
+      { t: "\\(0{,}3920\\)", ok: false },
+      { t: "\\(0{,}6080\\)", ok: false },
+      { t: "\\(0{,}7625\\)", ok: false }
+    ],
+    explanation: "\\(P(X \\ge 6) = 1 - P(X \\le 5) = 1 - 0{,}4164 = 0{,}5836\\). \\(0{,}3920 = 1 - 0{,}6080\\) wäre \\(P(X \\ge 7)\\) – der klassische Fehler um eins."
+  }
+];
+
+// ==================== EINSTELLUNGEN ====================
+const TIME_PER_Q = 20;      // Sekunden
+const BASE_POINTS = 1000;
+const MIN_POINTS = 500;
+const STREAK_STEP = 50;     // Bonus pro Serien-Schritt
+const STREAK_MAX = 250;     // Bonus-Obergrenze
+
+// ==================== STATE ====================
+let questions = [];
+let currentQ = 0;
+let score = 0;
+let correctCount = 0;
+let streak = 0;
+let bestStreak = 0;
+let answered = false;
+let answers = [];
+let timerId = null;
+let timeLeft = TIME_PER_Q;
+
+// ==================== HILFSFUNKTIONEN ====================
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function fmtNum(n) {
+  return n.toLocaleString('de-DE');
+}
+
+function prepareQuestions() {
+  return shuffle(QUESTIONS).map(q => {
+    const opts = shuffle(q.options);
+    return {
+      category: q.category,
+      text: q.text,
+      extra: q.extra || null,
+      explanation: q.explanation,
+      options: opts,
+      correct: opts.findIndex(o => o.ok)
+    };
+  });
+}
+
+function typeset(el) {
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([el]).catch(() => {});
+  }
+}
+
+// ==================== ABLAUF ====================
+function startQuiz() {
+  questions = prepareQuestions();
+  currentQ = 0;
+  score = 0;
+  correctCount = 0;
+  streak = 0;
+  bestStreak = 0;
+  answers = [];
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  showQuestion();
+}
+
+function restart() {
+  startQuiz();
+  window.scrollTo(0, 0);
+}
+
+function showQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+
+  const card = document.getElementById('question-card');
+  card.classList.remove('fade-in');
+  void card.offsetWidth;
+  card.classList.add('fade-in');
+
+  document.getElementById('q-counter').textContent = (currentQ + 1) + '/' + questions.length;
+  document.getElementById('progress-bar').style.width = ((currentQ + 1) / questions.length * 100) + '%';
+  document.getElementById('score-display').textContent = fmtNum(score);
+  document.getElementById('streak-display').textContent = streak >= 2 ? ('🔥' + streak) : '';
+  document.getElementById('q-category').textContent = q.category;
+  document.getElementById('q-text').innerHTML = q.text;
+
+  const extraEl = document.getElementById('q-extra');
+  if (q.extra) {
+    extraEl.innerHTML = '<div class="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">' + q.extra + '</div>';
+    extraEl.classList.remove('hidden');
+  } else {
+    extraEl.classList.add('hidden');
+    extraEl.innerHTML = '';
+  }
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = q.options.map((opt, i) =>
+    '<button class="option-btn w-full text-left px-4 py-3.5 rounded-xl border-2 border-gray-200 bg-white font-medium text-gray-700 hover:border-violet-300 hover:bg-violet-50 transition flex items-center gap-3"' +
+    ' onclick="selectAnswer(' + i + ')" id="opt-' + i + '">' +
+    '<span class="shrink-0 inline-block w-7 h-7 rounded-full bg-gray-100 text-center text-sm font-bold leading-7 text-gray-500">' +
+    String.fromCharCode(65 + i) + '</span>' +
+    '<span class="flex-1">' + opt.t + '</span>' +
+    '</button>'
+  ).join('');
+
+  document.getElementById('feedback').classList.add('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+
+  typeset(card);
+  startTimer();
+}
+
+function startTimer() {
+  stopTimer();
+  timeLeft = TIME_PER_Q;
+  updateTimerUI();
+  timerId = setInterval(() => {
+    timeLeft -= 0.1;
+    if (timeLeft <= 0) {
+      timeLeft = 0;
+      updateTimerUI();
+      stopTimer();
+      selectAnswer(-1);
+      return;
+    }
+    updateTimerUI();
+  }, 100);
+}
+
+function stopTimer() {
+  if (timerId !== null) {
+    clearInterval(timerId);
+    timerId = null;
+  }
+}
+
+function updateTimerUI() {
+  const frac = Math.max(0, timeLeft / TIME_PER_Q);
+  const bar = document.getElementById('timer-bar');
+  bar.style.width = (frac * 100) + '%';
+  bar.className = 'timer-bar h-3 rounded-full ' +
+    (frac > 0.5 ? 'bg-emerald-500' : frac > 0.25 ? 'bg-amber-500' : 'bg-red-500');
+  document.getElementById('timer-num').textContent = Math.ceil(timeLeft);
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  stopTimer();
+
+  const q = questions[currentQ];
+  const timedOut = (idx === -1);
+  const isCorrect = !timedOut && idx === q.correct;
+
+  let points = 0;
+  let bonus = 0;
+  if (isCorrect) {
+    points = Math.max(MIN_POINTS, Math.round(BASE_POINTS * (timeLeft / TIME_PER_Q)));
+    streak++;
+    if (streak > bestStreak) bestStreak = streak;
+    if (streak >= 2) bonus = Math.min(STREAK_MAX, (streak - 1) * STREAK_STEP);
+    score += points + bonus;
+    correctCount++;
+  } else {
+    streak = 0;
+  }
+
+  answers.push({ category: q.category, isCorrect: isCorrect, timedOut: timedOut, correctText: q.options[q.correct].t });
+
+  for (let i = 0; i < q.options.length; i++) {
+    const btn = document.getElementById('opt-' + i);
+    btn.setAttribute('onclick', '');
+    if (i === idx && !isCorrect) btn.classList.add('wrong');
+    else if (i === q.correct) btn.classList.add(isCorrect ? 'correct' : 'reveal');
+    else btn.classList.add('dim');
+  }
+
+  const fb = document.getElementById('feedback');
+  fb.classList.remove('hidden');
+
+  const emojiEl = document.getElementById('feedback-emoji');
+  emojiEl.textContent = isCorrect ? '🎉' : (timedOut ? '⏰' : '🤔');
+  emojiEl.classList.remove('pop');
+  void emojiEl.offsetWidth;
+  emojiEl.classList.add('pop');
+
+  const ptsEl = document.getElementById('feedback-points');
+  if (isCorrect) {
+    ptsEl.className = 'text-sm font-extrabold mb-2 text-emerald-600';
+    ptsEl.textContent = 'Richtig! +' + fmtNum(points) + ' Punkte' +
+      (bonus > 0 ? ('  🔥 Serie ×' + streak + ': +' + fmtNum(bonus)) : '');
+  } else {
+    ptsEl.className = 'text-sm font-extrabold mb-2 text-red-500';
+    ptsEl.textContent = timedOut ? 'Zeit abgelaufen – 0 Punkte' : 'Leider nicht – 0 Punkte';
+  }
+
+  document.getElementById('feedback-text').innerHTML = q.explanation;
+  document.getElementById('score-display').textContent = fmtNum(score);
+  document.getElementById('streak-display').textContent = streak >= 2 ? ('🔥' + streak) : '';
+
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.classList.remove('hidden');
+  nextBtn.textContent = (currentQ < questions.length - 1) ? 'Nächste Frage →' : 'Ergebnis anzeigen 🏆';
+
+  typeset(fb);
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ < questions.length) {
+    showQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  stopTimer();
+  document.getElementById('quiz-screen').classList.add('hidden');
+  const rs = document.getElementById('result-screen');
+  rs.classList.remove('hidden', 'fade-in');
+  void rs.offsetWidth;
+  rs.classList.add('fade-in');
+  window.scrollTo(0, 0);
+
+  const pct = correctCount / questions.length;
+  let emoji, title, subtitle;
+  if (pct >= 0.93)      { emoji = '🏆'; title = 'Perfekt unterwegs!'; subtitle = 'Du übersetzt „mindestens“ und „höchstens“ sicher in Formeln.'; }
+  else if (pct >= 0.79) { emoji = '🌟'; title = 'Richtig stark!';      subtitle = 'Der Gegenereignis-Trick sitzt. Schau dir nur die Stellen mit − 1 noch mal an.'; }
+  else if (pct >= 0.64) { emoji = '👍'; title = 'Guter Stand!';        subtitle = 'Die Grundidee hast du. Die Grenzen (\\(k\\) oder \\(k-1\\)?) lohnen sich zum Üben.'; }
+  else if (pct >= 0.43) { emoji = '💪'; title = 'Auf dem Weg!';        subtitle = 'Merke dir als Anker: mindestens \\(k\\) \\(\\Rightarrow\\) \\(1 - P(X \\le k-1)\\).'; }
+  else                  { emoji = '🧭'; title = 'Jetzt in Ruhe sortieren.'; subtitle = 'Geh die Erklärungen unten durch – danach gern nochmal starten.'; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-subtitle').innerHTML = subtitle;
+  document.getElementById('result-score').textContent = fmtNum(score);
+  document.getElementById('result-correct').textContent = correctCount;
+  document.getElementById('result-streak').textContent = bestStreak;
+
+  const details = document.getElementById('result-details');
+  details.innerHTML = '<h3 class="font-bold text-gray-700 mb-3">Deine Übersicht</h3>' +
+    answers.map((a, i) =>
+      '<div class="flex items-start gap-2 py-1.5 ' + (i < answers.length - 1 ? 'border-b border-gray-100' : '') + '">' +
+      '<span class="text-lg leading-none mt-0.5">' + (a.isCorrect ? '✅' : (a.timedOut ? '⏰' : '❌')) + '</span>' +
+      '<div class="flex-1">' +
+      '<span class="text-sm text-gray-600">' + a.category + '</span>' +
+      (!a.isCorrect ? '<div class="text-xs text-emerald-700 mt-0.5">Richtig: ' + a.correctText + '</div>' : '') +
+      '</div></div>'
+    ).join('');
+
+  setTimeout(() => { typeset(rs); }, 80);
+}
+</script>
+</body>
+</html>
