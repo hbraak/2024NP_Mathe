@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Baumdiagramm – Pfadwahrscheinlichkeiten addieren</title>
+<style>
+  :root{ --ink:#1e293b; --accent:#4f46e5; --mark:#e65100; --gegen:#0277bd;
+         --muted:#64748b; --line:#94a3b8; --ok:#2e7d32; }
+  *{ box-sizing:border-box; }
+  body{ font-family:system-ui,-apple-system,sans-serif; margin:0; padding:.8rem;
+        color:var(--ink); background:#f8fafc; }
+  #wrap{ max-width:56rem; margin:0 auto; }
+  h1{ font-size:1.15rem; margin:0 0 .15rem; }
+  .sub{ color:var(--muted); font-size:.85rem; margin:0 0 .7rem; }
+  .card{ background:#fff; border:1px solid #e2e8f0; border-radius:12px;
+         padding:.7rem .8rem; margin-bottom:.7rem; }
+  .row{ display:flex; align-items:center; gap:.6rem; margin:.45rem 0; font-size:.92rem;
+        flex-wrap:wrap; }
+  .row label{ flex:0 0 7.5rem; }
+  .row input[type=range]{ flex:1; min-width:9rem; accent-color:var(--accent); }
+  .row output{ flex:0 0 4rem; text-align:right; font-variant-numeric:tabular-nums;
+               font-weight:600; }
+  .btns{ display:flex; gap:.35rem; flex-wrap:wrap; }
+  button{ padding:.4rem .7rem; border:1px solid #cbd5e1; border-radius:9px;
+          background:#fff; color:var(--ink); font-size:.9rem; cursor:pointer; }
+  button.on{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  button.k.on{ background:var(--mark); border-color:var(--mark); }
+  .lbl{ font-size:.8rem; color:var(--muted); flex:0 0 7.5rem; }
+  svg{ display:block; background:#fff; border-radius:10px; max-width:none; }
+  #svgbox{ overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch; }
+  #swipe{ display:none; }
+  #frage{ font-size:1rem; font-weight:600; margin:.1rem 0 .5rem; }
+  #frage em{ color:var(--mark); font-style:normal; }
+  .nowrap{ white-space:nowrap; }
+  .kette{ font-variant-numeric:tabular-nums; font-size:.95rem; line-height:1.7;
+          word-break:break-word; }
+  .kette b{ color:var(--mark); }
+  .erg{ font-size:1.05rem; font-weight:700; margin-top:.3rem; }
+  .gegen{ margin-top:.55rem; padding-top:.5rem; border-top:1px dashed #cbd5e1;
+          font-size:.92rem; }
+  .gegen b{ color:var(--gegen); }
+  .tipp{ color:var(--muted); font-size:.82rem; margin-top:.45rem; }
+  table.vt{ width:100%; border-collapse:collapse; font-size:.88rem;
+            font-variant-numeric:tabular-nums; }
+  table.vt th,table.vt td{ border:1px solid #e2e8f0; padding:.25rem .4rem;
+            text-align:center; }
+  table.vt tr.hit td{ background:#fff3e0; font-weight:600; }
+  .balken{ height:.7rem; background:var(--accent); border-radius:3px; }
+  .balken.hit{ background:var(--mark); }
+  details{ font-size:.9rem; }
+  summary{ cursor:pointer; font-weight:600; }
+  .ov{ text-decoration:overline; }
+  .foot{ color:var(--muted); font-size:.78rem; text-align:center; margin:1rem 0 .3rem; }
+  @media (max-width:32rem){
+    .row{ gap:.4rem .5rem; }
+    .row label, .row .lbl{ flex:0 0 100%; }
+    .row input[type=range]{ min-width:6rem; }
+    .row output{ flex:0 0 3.2rem; }
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+
+<h1>Baumdiagramm: Pfadwahrscheinlichkeiten addieren</h1>
+<p class="sub">Qualitätsprüfung: <span class="nn">n</span> Bauteile werden geprüft.
+<b>D</b> = Teil ist defekt, <b><span class="ov">D</span></b> = Teil ist nicht defekt.
+<span class="nn2">X</span> = Anzahl der defekten Teile.</p>
+
+<div class="card">
+  <div class="row"><label>Stichprobe n</label>
+    <div class="btns" id="nbtns"></div>
+  </div>
+  <div class="row"><label>Ausfallquote p</label>
+    <input id="p" type="range" min="0.05" max="0.95" step="0.05" value="0.2">
+    <output id="po">0,20</output>
+  </div>
+  <div class="row"><span class="lbl">Ereignis</span>
+    <div class="btns" id="mbtns"></div>
+  </div>
+  <div class="row"><span class="lbl">Trefferzahl k</span>
+    <div class="btns" id="kbtns"></div>
+  </div>
+  <div class="row"><span class="lbl">Anzeige</span>
+    <div class="btns">
+      <button id="tRech">Rechnung im Baum</button>
+      <button id="tGegen">Gegenereignis zeigen</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div id="frage">–</div>
+  <div id="svgbox"><svg id="tree" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div class="tipp" id="swipe">Der Baum ist breiter als der Bildschirm – seitlich wischen.</div>
+</div>
+
+<div class="card">
+  <div class="kette" id="kette">–</div>
+  <div class="erg" id="erg">–</div>
+  <div class="gegen" id="gegen"></div>
+  <div class="tipp" id="tipp"></div>
+</div>
+
+<div class="card">
+  <details id="vdet">
+    <summary>Alle Trefferzahlen auf einen Blick (Verteilung von X)</summary>
+    <div style="margin-top:.5rem"><table class="vt" id="vtab"></table></div>
+    <p class="tipp">Die Spalte „Pfade“ ist der Binomialkoeffizient n über k – die Zeile des
+    Pascalschen Dreiecks. Alle P(X = k) zusammen ergeben 1.</p>
+  </details>
+</div>
+
+<p class="foot">Mathematik 13NP · Lore-Lorentz-Schule Düsseldorf</p>
+</div>
+
+<script>
+"use strict";
+const el = id => document.getElementById(id);
+const SVGNS = "http://www.w3.org/2000/svg";
+
+let n = 3, p = 0.2, mode = "genau", k = 1, showRech = true, showGegen = false;
+
+/* ---------- Zahlformat: Dezimalkomma, keine unnoetigen Nullen ---------- */
+function fmt(x, dmax){
+  const d = dmax === undefined ? 5 : dmax;
+  let s = x.toFixed(d);
+  if (s.indexOf(".") >= 0) s = s.replace(/0+$/,"").replace(/\.$/,"");
+  return s.replace(".", ",");
+}
+function fmt2(x){ return x.toFixed(2).replace(".", ","); }
+
+/* ---------- Pfade aufbauen: code[i] = 1 -> D (defekt), 0 -> D quer ---------- */
+function pfade(){
+  const out = [], q = 1 - p;
+  for (let i = 0; i < (1 << n); i++){
+    const code = [];
+    // fuehrendes Bit = erste Stufe; 1 (=D) soll oben liegen
+    for (let s = n - 1; s >= 0; s--) code.push((i >> s) & 1);
+    const treffer = code.reduce((a,b) => a + b, 0);
+    out.push({ code, k: treffer, P: Math.pow(p, treffer) * Math.pow(q, n - treffer) });
+  }
+  // Index 0 = lauter 1en (DDD...) -> oben im Baum
+  out.reverse();
+  return out;
+}
+function trifft(kk){
+  if (mode === "genau")    return kk === k;
+  if (mode === "hoechst")  return kk <= k;
+  return kk >= k;                        // mindest
+}
+function pfadWort(z){ return z + (z === 1 ? " Pfad" : " Pfade"); }
+function summandWort(z){ return z + (z === 1 ? " Summand" : " Summanden"); }
+function binom(nn, kk){
+  let r = 1;
+  for (let i = 1; i <= kk; i++) r = r * (nn - kk + i) / i;
+  return Math.round(r);
+}
+
+/* ---------- SVG-Helfer ---------- */
+function mk(tag, attrs, text){
+  const e = document.createElementNS(SVGNS, tag);
+  for (const a in attrs) e.setAttribute(a, attrs[a]);
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+/* Buchstabenfolge D / D-quer zeichnen, Querstrich als echte Linie */
+function ergebnis(g, x, y, code, hit){
+  const dx = 13, col = hit ? "var(--mark)" : "#1e293b";
+  code.forEach((c, i) => {
+    const cx = x + i * dx;
+    g.appendChild(mk("text", { x: cx, y: y, "font-size": 13,
+      "font-weight": hit ? 700 : 400, fill: col }, "D"));
+    if (!c) g.appendChild(mk("line", { x1: cx - 0.5, y1: y - 11.5,
+      x2: cx + 9, y2: y - 11.5, stroke: col, "stroke-width": hit ? 1.6 : 1.1 }));
+  });
+  return x + code.length * dx;
+}
+/* Knotenlabel D bzw. D-quer */
+function knoten(g, x, y, c, hit){
+  const col = hit ? "var(--mark)" : "#1e293b";
+  g.appendChild(mk("text", { x: x, y: y, "font-size": 13, "font-weight": 600,
+    fill: col }, "D"));
+  if (!c) g.appendChild(mk("line", { x1: x - 0.5, y1: y - 11.5, x2: x + 9,
+    y2: y - 11.5, stroke: col, "stroke-width": 1.4 }));
+}
+
+/* ---------- Baum zeichnen ---------- */
+function zeichne(ps){
+  const svg = el("tree");
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+  const rows = ps.length;
+  const rh   = rows > 8 ? 24 : (rows > 4 ? 30 : 38);
+  const top  = 34, bot = 14;
+  const H    = top + rows * rh + bot;
+  const treeW = 90 + n * 74;                       // Breite des Baumteils (inkl. Rand links)
+  const colX  = treeW + 16;                        // Spalte Ergebnis
+  const colK  = colX + Math.max(n * 13, 46) + 18;  // Spalte k
+  const colR  = colK + 34;                         // Spalte Rechnung
+  const colP  = colR + (showRech ? n * 40 + 14 : 0); // Spalte Wert
+  const W     = colP + 62;
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  svg.setAttribute("width", W); svg.setAttribute("height", H);
+
+  const g = mk("g", {});
+  svg.appendChild(g);
+
+  const yOf = i => top + rh * (i + 0.5);
+  const q = 1 - p;
+
+  /* Kanten stufenweise: Knoten einer Stufe = Praefix der Laenge s */
+  // Mittelpunkt aller Endzeilen, die zu einem Praefix gehoeren
+  function mid(prefix){
+    let a = null, b = null;
+    ps.forEach((pf, i) => {
+      let ok = true;
+      for (let j = 0; j < prefix.length; j++) if (pf.code[j] !== prefix[j]) { ok = false; break; }
+      if (ok){ if (a === null) a = i; b = i; }
+    });
+    return (yOf(a) + yOf(b)) / 2;
+  }
+  function px(s){ return 74 + s * 74; }            // x des Knotens nach s Stufen
+
+  const hitOf = prefix => {
+    // Praefix gehoert zu einem markierten Teilbaum, wenn ALLE seine Pfade markiert sind?
+    // Hier: Kante ist markiert, wenn mindestens ein markierter Pfad durch sie laeuft.
+    return ps.some(pf => {
+      if (!trifft(pf.k)) return false;
+      for (let j = 0; j < prefix.length; j++) if (pf.code[j] !== prefix[j]) return false;
+      return true;
+    });
+  };
+
+  // Wurzel
+  g.appendChild(mk("circle", { cx: px(0) - 34, cy: mid([]), r: 3.5, fill: "#1e293b" }));
+  g.appendChild(mk("text", { x: px(0) - 42, y: mid([]) + 4, "font-size": 11,
+    "text-anchor": "end", fill: "var(--muted)" }, "Start"));
+
+  // rekursiv Kanten
+  (function kanten(prefix){
+    if (prefix.length === n) return;
+    const s = prefix.length;
+    const x1 = s === 0 ? px(0) - 34 : px(s - 1) + 10;
+    const y1 = mid(prefix);
+    [1, 0].forEach(c => {
+      const child = prefix.concat([c]);
+      const x2 = px(s) - 4, y2 = mid(child);
+      const hit = hitOf(child);
+      g.appendChild(mk("line", { x1: x1, y1: y1, x2: x2, y2: y2,
+        stroke: hit ? "var(--mark)" : "var(--line)",
+        "stroke-width": hit ? 2.6 : 1.2 }));
+      // Kantenbeschriftung
+      const mxx = x1 + (x2 - x1) * 0.55, myy = y1 + (y2 - y1) * 0.55;
+      g.appendChild(mk("rect", { x: mxx - 13, y: myy - 15, width: 26, height: 13,
+        fill: "#fff", opacity: 0.9 }));
+      g.appendChild(mk("text", { x: mxx, y: myy - 5, "font-size": 10.5,
+        "text-anchor": "middle", fill: hit ? "var(--mark)" : "var(--muted)" },
+        fmt2(c ? p : q)));
+      knoten(g, px(s), y2 + 4.5, c, hit);
+      kanten(child);
+    });
+  })([]);
+
+  /* Spaltenkoepfe */
+  const kopf = (x, t, anchor) => g.appendChild(mk("text", { x: x, y: 18,
+    "font-size": 10.5, "font-weight": 700, "text-anchor": anchor || "start",
+    fill: "var(--muted)" }, t));
+  kopf(colX, "Ergebnis");
+  kopf(colK, "k");
+  if (showRech) kopf(colR, "Rechnung");
+  kopf(colP + 56, "Pfadwahrsch.", "end");
+
+  /* Endzeilen */
+  ps.forEach((pf, i) => {
+    const y = yOf(i) + 4.5, hit = trifft(pf.k);
+    if (hit) g.appendChild(mk("rect", { x: colX - 6, y: y - 15, width: W - colX,
+      height: 20, fill: "#fff3e0", rx: 4 }));
+    ergebnis(g, colX, y, pf.code, hit);
+    g.appendChild(mk("text", { x: colK, y: y, "font-size": 12,
+      "font-weight": hit ? 700 : 400,
+      fill: hit ? "var(--mark)" : "#1e293b" }, pf.k));
+    if (showRech){
+      const teile = pf.code.map(c => fmt2(c ? p : q)).join(" · ");
+      g.appendChild(mk("text", { x: colR, y: y, "font-size": 11.5,
+        fill: hit ? "var(--mark)" : "var(--muted)" }, teile));
+    }
+    g.appendChild(mk("text", { x: colP + 56, y: y, "font-size": 12,
+      "text-anchor": "end", "font-weight": hit ? 700 : 500,
+      fill: hit ? "var(--mark)" : "#1e293b" }, fmt(pf.P, 5)));
+  });
+}
+
+/* ---------- Summe / Texte ---------- */
+function ovD(c){ return c ? "D" : '<span class="ov">D</span>'; }
+
+function auswerten(ps){
+  const hits = ps.filter(x => trifft(x.k));
+  const summe = hits.reduce((a, b) => a + b.P, 0);
+  const wort = mode === "genau" ? "genau" : (mode === "hoechst" ? "höchstens" : "mindestens");
+  const zeichen = mode === "genau" ? "=" : (mode === "hoechst" ? "≤" : "≥");
+
+  el("frage").innerHTML = "Ereignis: <em>" + wort + " " + k +
+    (k === 1 ? " defektes Teil" : " defekte Teile") +
+    "</em> &nbsp;→&nbsp; <span class=\"nowrap\">P(X " + zeichen + " " + k + ")</span>";
+
+  /* Additionskette, nach Trefferzahl gruppiert */
+  const grup = [];
+  for (let kk = 0; kk <= n; kk++){
+    const g = hits.filter(x => x.k === kk);
+    if (g.length) grup.push({ k: kk, anz: g.length, P: g[0].P });
+  }
+  let kette = "";
+  if (!hits.length){
+    kette = "Kein Pfad gehört zu diesem Ereignis – die Wahrscheinlichkeit ist 0.";
+  } else if (hits.length === 1){
+    kette = "P = <b>" + fmt(summe, 5) + "</b> – zu diesem Ereignis gehört nur ein einziger Pfad.";
+  } else if (hits.length <= 8){
+    kette = "P = " + hits.map(x => fmt(x.P, 5)).join(" + ") + " = <b>" + fmt(summe, 5) + "</b>";
+    if (grup.some(g => g.anz > 1)){
+      kette += "<br>zusammengefasst: P = " +
+        grup.map(g => (g.anz > 1 ? g.anz + " · " : "") + fmt(g.P, 5)).join(" + ") +
+        " = <b>" + fmt(summe, 5) + "</b>";
+    }
+  } else {
+    kette = pfadWort(hits.length) + " – einzeln zu viele. Nach Trefferzahl zusammengefasst:<br>P = " +
+      grup.map(g => (g.anz > 1 ? g.anz + " · " : "") + fmt(g.P, 5)).join(" + ") +
+      " = <b>" + fmt(summe, 5) + "</b>";
+  }
+  el("kette").innerHTML = kette;
+  el("erg").innerHTML = "<span class=\"nowrap\">P(X " + zeichen + " " + k + ") = " +
+    fmt(summe, 5) + "</span> &nbsp;≈&nbsp; <span class=\"nowrap\">" +
+    (summe * 100).toFixed(1).replace(".", ",") + " %</span>" +
+    " &nbsp;&nbsp;<span style='font-weight:400;color:var(--muted);font-size:.85rem'>(" +
+    hits.length + " von " + ps.length + " Pfaden)</span>";
+
+  /* Gegenereignis */
+  const geg = ps.filter(x => !trifft(x.k));
+  let gt = "";
+  if (showGegen && mode !== "genau" && geg.length){
+    const gWort = mode === "hoechst" ? "mindestens " + (k + 1) : "höchstens " + (k - 1);
+    const gZ = mode === "hoechst" ? "≥ " + (k + 1) : "≤ " + (k - 1);
+    const gS = geg.reduce((a, b) => a + b.P, 0);
+    const gGrup = [];
+    for (let kk = 0; kk <= n; kk++){
+      const g = geg.filter(x => x.k === kk);
+      if (g.length) gGrup.push((g.length > 1 ? g.length + " · " : "") + fmt(g[0].P, 5));
+    }
+    const nDir = grup.length, nGeg = gGrup.length;
+    gt = "<b>Über das Gegenereignis</b> („" + gWort + "“, " + pfadWort(geg.length) + "):<br>" +
+      "P(X " + gZ + ") = " + gGrup.join(" + ") + " = " + fmt(gS, 5) + "<br>" +
+      "P(X " + zeichen + " " + k + ") = 1 − " + fmt(gS, 5) + " = <b>" + fmt(summe, 5) + "</b><br>" +
+      (nGeg < nDir
+        ? "<span style='color:var(--ok)'>Hier lohnt sich der Umweg: " + summandWort(nGeg) +
+          " statt " + nDir + ".</span>"
+        : "<span style='color:var(--muted)'>Hier lohnt sich der Umweg nicht: " + summandWort(nGeg) +
+          " gegenüber " + nDir + " – der direkte Weg ist nicht länger.</span>");
+  } else if (showGegen && mode === "genau"){
+    gt = "<span style='color:var(--muted)'>Bei „genau k“ hilft das Gegenereignis nicht – " +
+         "es umfasst alle anderen Trefferzahlen.</span>";
+  }
+  el("gegen").innerHTML = gt;
+
+  /* Tipp */
+  let tipp = "";
+  if (mode === "genau"){
+    const b = binom(n, k);
+    tipp = "Alle " + b + (b === 1 ? " Pfad" : " Pfade") + " zu k = " + k +
+      " haben dieselbe Pfadwahrscheinlichkeit – nur die Reihenfolge unterscheidet sie. " +
+      "Genau das ist der Faktor \u201en über k\u201c = " + b + " in der Binomialformel: " +
+      "P(X = " + k + ") = " + b + " · " + fmt2(p) + "<sup>" + k + "</sup> · " + fmt2(1 - p) +
+      "<sup>" + (n - k) + "</sup> = " + fmt(summe, 5) + ".";
+  } else {
+    tipp = "„" + wort + " " + k + "“ bedeutet: mehrere Trefferzahlen gehören dazu (" +
+      grup.map(g => "k = " + g.k).join(", ") + "). Deren Wahrscheinlichkeiten werden addiert.";
+  }
+  if (mode !== "genau" && hits.length > ps.length / 2 && !showGegen){
+    tipp += " Fast alle Pfade sind markiert – dann ist das Gegenereignis meist der kürzere Weg.";
+  }
+  el("tipp").innerHTML = tipp;
+
+  /* Verteilungstabelle */
+  let maxP = 0;
+  const zeilen = [];
+  for (let kk = 0; kk <= n; kk++){
+    const g = ps.filter(x => x.k === kk);
+    const P = g.reduce((a, b) => a + b.P, 0);
+    maxP = Math.max(maxP, P);
+    zeilen.push({ k: kk, anz: g.length, ein: g[0].P, P: P, hit: trifft(kk) });
+  }
+  let html = "<tr><th>k</th><th>Pfade</th><th>je Pfad</th><th>P(X = k)</th><th>Anteil</th></tr>";
+  zeilen.forEach(z => {
+    html += "<tr class='" + (z.hit ? "hit" : "") + "'><td>" + z.k + "</td><td>" + z.anz +
+      "</td><td>" + fmt(z.ein, 5) + "</td><td>" + fmt(z.P, 5) +
+      "</td><td><div class='balken" + (z.hit ? " hit" : "") + "' style='width:" +
+      Math.max(2, Math.round(z.P / maxP * 100)) + "%'></div></td></tr>";
+  });
+  const sum = zeilen.reduce((a, b) => a + b.P, 0);
+  html += "<tr><td colspan='3' style='text-align:right'><b>Summe</b></td><td><b>" +
+    fmt(sum, 3) + "</b></td><td></td></tr>";
+  el("vtab").innerHTML = html;
+}
+
+/* ---------- Bedienelemente ---------- */
+function bauKnoepfe(){
+  const nb = el("nbtns"); nb.innerHTML = "";
+  [2, 3, 4].forEach(v => {
+    const b = document.createElement("button");
+    b.textContent = v; b.className = (v === n ? "on" : "");
+    b.onclick = () => { n = v; if (k > n) k = n; render(); };
+    nb.appendChild(b);
+  });
+  const mb = el("mbtns"); mb.innerHTML = "";
+  [["genau","genau k"],["hoechst","höchstens k"],["mindest","mindestens k"]].forEach(m => {
+    const b = document.createElement("button");
+    b.textContent = m[1]; b.className = (m[0] === mode ? "on" : "");
+    b.onclick = () => { mode = m[0]; render(); };
+    mb.appendChild(b);
+  });
+  const kb = el("kbtns"); kb.innerHTML = "";
+  for (let v = 0; v <= n; v++){
+    const b = document.createElement("button");
+    b.textContent = v; b.className = "k" + (v === k ? " on" : "");
+    b.onclick = () => { k = v; render(); };
+    kb.appendChild(b);
+  }
+  el("tRech").className = showRech ? "on" : "";
+  el("tGegen").className = showGegen ? "on" : "";
+}
+
+function render(){
+  p = parseFloat(el("p").value);
+  el("po").textContent = fmt2(p);
+  document.querySelectorAll(".nn").forEach(e => e.textContent = n);
+  bauKnoepfe();
+  const ps = pfade();
+  zeichne(ps);
+  auswerten(ps);
+  const box = el("svgbox");
+  el("swipe").style.display = box.scrollWidth > box.clientWidth + 2 ? "block" : "none";
+}
+window.addEventListener("resize", () => {
+  const box = el("svgbox");
+  el("swipe").style.display = box.scrollWidth > box.clientWidth + 2 ? "block" : "none";
+});
+
+el("p").addEventListener("input", render);
+el("tRech").onclick  = () => { showRech  = !showRech;  render(); };
+el("tGegen").onclick = () => { showGegen = !showGegen; render(); };
+render();
+</script>
+</body>
+</html>
