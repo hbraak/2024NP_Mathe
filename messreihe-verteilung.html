@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Von der Messreihe zur Verteilung</title>
+<style>
+  :root{ --ink:#1e293b; --accent:#4f46e5; --mark:#e65100; --gegen:#0277bd;
+         --muted:#64748b; --line:#94a3b8; --ok:#2e7d32; --warn:#b91c1c; }
+  *{ box-sizing:border-box; }
+  body{ font-family:system-ui,-apple-system,sans-serif; margin:0; padding:.8rem;
+        color:var(--ink); background:#f8fafc; -webkit-text-size-adjust:100%; }
+  #wrap{ max-width:56rem; margin:0 auto; }
+  h1{ font-size:1.15rem; margin:0 0 .15rem; }
+  .sub{ color:var(--muted); font-size:.85rem; margin:0 0 .7rem; }
+  .card{ background:#fff; border:1px solid #e2e8f0; border-radius:12px;
+         padding:.7rem .8rem; margin-bottom:.7rem; }
+  .row{ display:flex; align-items:center; gap:.6rem; margin:.45rem 0; font-size:.92rem;
+        flex-wrap:wrap; }
+  .row label{ flex:0 0 7.5rem; }
+  .row input[type=range]{ flex:1; min-width:9rem; accent-color:var(--accent); height:1.6rem; }
+  .row output{ flex:0 0 4rem; text-align:right; font-variant-numeric:tabular-nums;
+               font-weight:600; }
+  .lbl{ font-size:.8rem; color:var(--muted); flex:0 0 7.5rem; }
+  .btns{ display:flex; gap:.35rem; flex-wrap:wrap; }
+  button{ padding:.5rem .75rem; border:1px solid #cbd5e1; border-radius:9px;
+          background:#fff; color:var(--ink); font-size:.9rem; cursor:pointer;
+          min-height:2.4rem; touch-action:manipulation; }
+  button:active{ transform:scale(.97); }
+  button.on{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  button.k.on{ background:var(--mark); border-color:var(--mark); }
+  #tabs{ display:flex; gap:.35rem; margin-bottom:.7rem; }
+  #tabs button{ flex:1; font-weight:600; font-size:.92rem; padding:.55rem .3rem; }
+  svg{ display:block; width:100%; height:auto; background:#fff; border-radius:10px; }
+  .stats{ display:flex; flex-wrap:wrap; gap:.3rem .9rem; font-size:.92rem;
+          font-variant-numeric:tabular-nums; margin:.1rem 0 .35rem; }
+  .stats b{ color:var(--accent); }
+  .flash{ font-size:1.05rem; font-weight:700; min-height:1.6rem; margin:.1rem 0 .3rem;
+          font-variant-numeric:tabular-nums; color:var(--mark); }
+  .flash.quiet{ color:var(--muted); font-weight:500; font-size:.92rem; }
+  .bandinfo{ font-size:.9rem; font-variant-numeric:tabular-nums; line-height:1.65; }
+  .bandinfo .s1{ color:var(--accent); font-weight:700; }
+  .bandinfo .s2{ color:var(--gegen); font-weight:700; }
+  .bandinfo .miss{ color:var(--muted); }
+  .tipp{ color:var(--muted); font-size:.82rem; margin-top:.45rem; line-height:1.5; }
+  .hint{ font-size:.88rem; line-height:1.55; }
+  .hint.ok{ color:var(--ok); } .hint.bad{ color:var(--warn); }
+  h2{ font-size:1rem; margin:0 0 .4rem; }
+  .pointe{ font-size:.92rem; line-height:1.6; }
+  .pointe b{ color:var(--mark); }
+  .ausblick{ margin-top:.5rem; padding-top:.5rem; border-top:1px dashed #cbd5e1;
+             font-size:1rem; font-weight:700; color:var(--accent); }
+  .grid2{ display:grid; grid-template-columns:1fr; gap:.7rem; }
+  .foot{ color:var(--muted); font-size:.78rem; text-align:center; margin:1rem 0 .3rem; }
+  .hidden{ display:none; }
+  @media (min-width:48rem){ .grid2{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:32rem){
+    .row{ gap:.4rem .5rem; }
+    .row label, .row .lbl{ flex:0 0 100%; }
+    .row input[type=range]{ min-width:6rem; }
+    .row output{ flex:0 0 3.2rem; }
+    #tabs button{ font-size:.85rem; }
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+
+<h1>Von der Messreihe zur Verteilung</h1>
+<p class="sub">Vom Stoppuhr-Messwert über den Münzwurf zur Glockenkurve.
+Mathe-GK 13NP · Stochastik</p>
+
+<div id="tabs">
+  <button id="tab1" class="on">1 · Messreihe</button>
+  <button id="tab2">2 · Münzwurf</button>
+  <button id="tab3">3 · Vergleich</button>
+</div>
+
+<!-- ================= MODUS 1 ================= -->
+<div id="panel1">
+  <div class="card">
+    <div class="row"><span class="lbl">Stoppuhr</span>
+      <div class="btns">
+        <button id="m1">1 Messung</button>
+        <button id="m10">10 Messungen</button>
+        <button id="m100">100 Messungen</button>
+        <button id="mreset">Zurücksetzen</button>
+      </div>
+    </div>
+    <div class="row"><span class="lbl">Arbeitsblatt</span>
+      <div class="btns"><button id="mab">Daten vom Arbeitsblatt laden</button></div>
+    </div>
+    <div class="row"><span class="lbl">Einzeichnen</span>
+      <div class="btns">
+        <button id="tMean">Mittelwert x̄</button>
+        <button id="tS1" class="k">x̄ ± s</button>
+        <button id="tS2" class="k">x̄ ± 2s</button>
+        <button id="tBell">Glockenkurve</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="flash quiet" id="flash">Noch keine Messung. Drücke „1 Messung“.</div>
+    <div class="stats" id="stats1"></div>
+    <svg id="svg1" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="tipp">Fadenpendel, Länge l = 1,00 m. Gemessen wird die Zeit für
+      10 Schwingungen mit einer Stoppuhr (Hundertstelsekunden).</div>
+  </div>
+
+  <div class="card">
+    <h2>Wie viele Werte liegen im Band?</h2>
+    <div class="bandinfo" id="band1"></div>
+    <div class="tipp">Bei wenigen Messungen schwanken diese Anteile stark.
+      Ab etwa n = 100 landen sie zuverlässig bei 68 % und 95 %.</div>
+  </div>
+
+  <div class="card">
+    <h2>Und was sagt die Physik?</h2>
+    <div class="stats" id="phys1"></div>
+    <div class="tipp" id="physTipp"></div>
+  </div>
+</div>
+
+<!-- ================= MODUS 2 ================= -->
+<div id="panel2" class="hidden">
+  <div class="card">
+    <div class="row"><label>Würfe pro Experiment n</label>
+      <input id="bn" type="range" min="1" max="200" step="1" value="100">
+      <output id="bno">100</output>
+    </div>
+    <div class="row"><label>Trefferwahrsch. p</label>
+      <input id="bp" type="range" min="0.05" max="0.95" step="0.05" value="0.5">
+      <output id="bpo">0,50</output>
+    </div>
+    <div class="row"><span class="lbl">Experimente</span>
+      <div class="btns">
+        <button id="b1">1 Experiment</button>
+        <button id="b100">100 Experimente</button>
+        <button id="b1000">1000 Experimente</button>
+        <button id="breset">Zurücksetzen</button>
+      </div>
+    </div>
+    <div class="row"><span class="lbl">Einzeichnen</span>
+      <div class="btns">
+        <button id="tExact" class="on">exakte Binomialverteilung</button>
+        <button id="tBS1" class="k">µ ± σ</button>
+        <button id="tBS2" class="k">µ ± 2σ</button>
+        <button id="tBBell">Glockenkurve</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="flash quiet" id="bflash">Noch kein Experiment. Ein Experiment =
+      n Münzwürfe, gezählt wird X = Anzahl Treffer.</div>
+    <div class="stats" id="stats2"></div>
+    <svg id="svg2" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div class="card">
+    <h2>Wie viel liegt im Band?</h2>
+    <div class="bandinfo" id="band2"></div>
+    <div class="tipp">Die Grenzen werden nach innen gerundet – so wie im Unterricht.</div>
+  </div>
+
+  <div class="card">
+    <h2>Passt die Glockenkurve schon?</h2>
+    <div class="hint" id="laplace"></div>
+    <div class="tipp">Faustregel (Laplace-Bedingung): Ab σ &gt; 3 beschreibt die
+      Glockenkurve die Binomialverteilung gut. Bei kleinem n oder p nahe 0 bzw. 1
+      ist die Verteilung schief – dann passt sie sichtbar schlecht.</div>
+  </div>
+</div>
+
+<!-- ================= MODUS 3 ================= -->
+<div id="panel3" class="hidden">
+  <div class="card">
+    <h2>Beides auf eine Achse gelegt</h2>
+    <div class="pointe">Beide Verteilungen sind hier <b>z-standardisiert</b>:
+      Auf der Achse steht nicht mehr die Zeit bzw. die Trefferzahl, sondern die
+      Abweichung vom Mittelwert – gemessen in <b>s</b> bzw. <b>σ</b>.</div>
+    <div class="tipp" id="cmpStatus"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Pendel-Messreihe</h2>
+      <div class="stats" id="cstat1"></div>
+      <svg id="svg3a" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="card">
+      <h2>Münzwurf</h2>
+      <div class="stats" id="cstat2"></div>
+      <svg id="svg3b" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pointe">Dieselbe Glockenform – obwohl das eine ein <b>Pendel</b>
+      mit einer Stoppuhr ist und das andere eine <b>Münze</b>. Die beiden
+      Experimente haben nichts miteinander zu tun, und doch liegt über beiden
+      Histogrammen dieselbe Kurve.</div>
+    <div class="ausblick">Diese Kurve ist die Normalverteilung – unser nächstes Thema.</div>
+  </div>
+</div>
+
+<p class="foot">Mathematik 13NP · Lore-Lorentz-Schule Düsseldorf</p>
+</div>
+
+<script>
+"use strict";
+const el = id => document.getElementById(id);
+const SVGNS = "http://www.w3.org/2000/svg";
+
+/* ================= Zahlformat (immer Dezimalkomma) ================= */
+function fmt(x, d){
+  if (!isFinite(x)) return "–";
+  return x.toFixed(d === undefined ? 2 : d).replace(".", ",");
+}
+function pct(x){ return fmt(100 * x, 1) + " %"; }
+
+/* ================= Mathe-Kern ================= */
+function mean(a){ let s = 0; for (const x of a) s += x; return s / a.length; }
+function sdev(a){                                   // empirische Standardabw. mit n-1
+  const n = a.length; if (n < 2) return NaN;
+  const m = mean(a); let q = 0;
+  for (const x of a) q += (x - m) * (x - m);
+  return Math.sqrt(q / (n - 1));
+}
+function gauss(){                                   // Box-Muller
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+function phi(z){ return Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI); }
+function dens(x, mu, sd){ return phi((x - mu) / sd) / sd; }
+
+function lgamma(x){                                 // Lanczos, g = 7
+  const g = [676.5203681218851, -1259.1392167224028, 771.32342877765313,
+    -176.61502916214059, 12.507343278686905, -0.13857109526572012,
+    9.9843695780195716e-6, 1.5056327351493116e-7];
+  if (x < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * x)) - lgamma(1 - x);
+  x -= 1;
+  let a = 0.99999999999980993;
+  const t = x + 7.5;
+  for (let i = 0; i < 8; i++) a += g[i] / (x + i + 1);
+  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+}
+function logBinom(n, k){                            // log(n ueber k), numerisch stabil
+  return lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1);
+}
+function binomPmf(n, k, p){
+  if (k < 0 || k > n) return 0;
+  if (p <= 0) return k === 0 ? 1 : 0;
+  if (p >= 1) return k === n ? 1 : 0;
+  return Math.exp(logBinom(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p));
+}
+function binomRange(n, a, b, p){                    // P(a <= X <= b), exakt
+  let s = 0;
+  const lo = Math.max(0, Math.ceil(a)), hi = Math.min(n, Math.floor(b));
+  for (let k = lo; k <= hi; k++) s += binomPmf(n, k, p);
+  return s;
+}
+function zstd(x, m, s){ return (x - m) / s; }       // z-Standardisierung
+
+/* Test-Hook: identische Kerne wie im Pruefskript */
+window.MV = { mean, sdev, binomPmf, binomRange, dens, zstd, logBinom };
+
+/* ================= SVG-Helfer ================= */
+function mk(tag, attrs, text){
+  const e = document.createElementNS(SVGNS, tag);
+  for (const a in attrs) e.setAttribute(a, attrs[a]);
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+function clear(svg){ while (svg.firstChild) svg.removeChild(svg.firstChild); }
+
+/* Allgemeines Histogramm.
+   cfg: {W,H, lo, binW, counts[], yMax, yLabel, xLabel, ticks[{x,label}],
+         curve: x=>y oder null, outline:[{x,y}] oder null,
+         bands:[{a,b,color,label}], lines:[{x,color,label}], hl:index}      */
+function drawHist(svg, cfg){
+  clear(svg);
+  const W = cfg.W, H = cfg.H;
+  const L = 52, R = 14, T = 16, B = 46;
+  const pw = W - L - R, ph = H - T - B;
+  const nb = cfg.counts.length;
+  const hi = cfg.lo + nb * cfg.binW;
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  const g = mk("g", {}); svg.appendChild(g);
+
+  const X = x => L + (x - cfg.lo) / (hi - cfg.lo) * pw;
+  const yMax = cfg.yMax > 0 ? cfg.yMax : 1;
+  const Y = y => T + ph - Math.max(0, Math.min(1, y / yMax)) * ph;
+
+  /* Baender hinter den Balken */
+  (cfg.bands || []).forEach(bd => {
+    const x1 = Math.max(L, X(bd.a)), x2 = Math.min(L + pw, X(bd.b));
+    if (x2 <= x1) return;
+    g.appendChild(mk("rect", { x: x1, y: T, width: x2 - x1, height: ph,
+      fill: bd.color, opacity: .13 }));
+    [x1, x2].forEach(xx => g.appendChild(mk("line", { x1: xx, y1: T, x2: xx, y2: T + ph,
+      stroke: bd.color, "stroke-width": 1.4, "stroke-dasharray": "5 4" })));
+    if (bd.label) g.appendChild(mk("text", { x: Math.max(L + 24, x2 - 5),
+      y: T + 13 + 16 * (bd.lvl || 0),
+      "font-size": 13, "text-anchor": "end", "font-weight": 700,
+      fill: bd.color }, bd.label));
+  });
+
+  /* y-Gitter + Ticks */
+  const step = niceStep(yMax / 4);
+  for (let v = 0; v <= yMax + 1e-9; v += step){
+    const yy = Y(v);
+    g.appendChild(mk("line", { x1: L, y1: yy, x2: L + pw, y2: yy,
+      stroke: "#e2e8f0", "stroke-width": 1 }));
+    g.appendChild(mk("text", { x: L - 7, y: yy + 4, "font-size": 12,
+      "text-anchor": "end", fill: "var(--muted)" }, fmtTick(v, step)));
+  }
+
+  /* Balken */
+  cfg.counts.forEach((c, i) => {
+    if (!c) return;
+    const x1 = X(cfg.lo + i * cfg.binW), x2 = X(cfg.lo + (i + 1) * cfg.binW);
+    const yy = Y(c);
+    g.appendChild(mk("rect", { x: x1 + .6, y: yy, width: Math.max(.8, x2 - x1 - 1.2),
+      height: T + ph - yy, rx: 1.5,
+      fill: i === cfg.hl ? "var(--mark)" : (cfg.barColor || "var(--accent)"),
+      opacity: i === cfg.hl ? 1 : .78 }));
+  });
+
+  /* Glockenkurve */
+  if (cfg.curve){
+    const pts = [];
+    for (let i = 0; i <= 200; i++){
+      const x = cfg.lo + (hi - cfg.lo) * i / 200;
+      const y = cfg.curve(x);
+      if (isFinite(y)) pts.push(X(x).toFixed(1) + "," + Y(y).toFixed(1));
+    }
+    g.appendChild(mk("polyline", { points: pts.join(" "), fill: "none",
+      stroke: "var(--mark)", "stroke-width": 3.4, "stroke-linejoin": "round" }));
+  }
+
+  /* exakter Umriss (Binomial) */
+  if (cfg.outline && cfg.outline.length > 1){
+    const pts = cfg.outline.map(o => X(o.x).toFixed(1) + "," + Y(o.y).toFixed(1)).join(" ");
+    g.appendChild(mk("polyline", { points: pts, fill: "none",
+      stroke: "var(--ok)", "stroke-width": 2, "stroke-linejoin": "round" }));
+    cfg.outline.forEach(o => {
+      if (cfg.outline.length <= 40)
+        g.appendChild(mk("circle", { cx: X(o.x), cy: Y(o.y), r: 2.2, fill: "var(--ok)" }));
+    });
+  }
+
+  /* senkrechte Linien (Mittelwert) */
+  (cfg.lines || []).forEach(ln => {
+    const xx = X(ln.x);
+    if (xx < L - 1 || xx > L + pw + 1) return;
+    g.appendChild(mk("line", { x1: xx, y1: T, x2: xx, y2: T + ph,
+      stroke: ln.color, "stroke-width": 2.4 }));
+    if (ln.label) g.appendChild(mk("text", { x: xx, y: T - 3, "font-size": 13,
+      "text-anchor": "middle", "font-weight": 700, fill: ln.color }, ln.label));
+  });
+
+  /* Achsen */
+  g.appendChild(mk("line", { x1: L, y1: T + ph, x2: L + pw, y2: T + ph,
+    stroke: "var(--ink)", "stroke-width": 1.4 }));
+  g.appendChild(mk("line", { x1: L, y1: T, x2: L, y2: T + ph,
+    stroke: "var(--ink)", "stroke-width": 1.4 }));
+
+  (cfg.ticks || []).forEach(t => {
+    const xx = X(t.x);
+    if (xx < L - .5 || xx > L + pw + .5) return;
+    g.appendChild(mk("line", { x1: xx, y1: T + ph, x2: xx, y2: T + ph + 5,
+      stroke: "var(--ink)", "stroke-width": 1.2 }));
+    g.appendChild(mk("text", { x: xx, y: T + ph + 19, "font-size": 12.5,
+      "text-anchor": "middle", fill: "var(--ink)" }, t.label));
+  });
+
+  g.appendChild(mk("text", { x: L + pw, y: H - 7, "font-size": 12.5,
+    "text-anchor": "end", fill: "var(--muted)" }, cfg.xLabel));
+  g.appendChild(mk("text", { x: 13, y: T + ph / 2, "font-size": 12.5,
+    "text-anchor": "middle", fill: "var(--muted)",
+    transform: "rotate(-90 13 " + (T + ph / 2) + ")" }, cfg.yLabel));
+}
+function niceStep(raw){
+  if (!(raw > 0)) return 1;
+  const e = Math.pow(10, Math.floor(Math.log10(raw)));
+  const m = raw / e;
+  const f = m < 1.5 ? 1 : (m < 3.5 ? 2 : (m < 7.5 ? 5 : 10));
+  return f * e;
+}
+function fmtTick(v, step){
+  const d = step >= 1 ? 0 : (step >= 0.1 ? 1 : 2);
+  return fmt(v, d);
+}
+function svgW(){ return window.innerWidth < 560 ? 420 : 620; }
+
+/* ================= MODUS 1: Messreihe ================= */
+const T_TRUE = 20.06, SIG_T = 0.25, LEN = 1.00;
+const BINW = 0.2, BLO = 19.0, BHI = 21.2;
+const AB = [19.69,19.79,19.83,19.90,19.92,19.95,19.95,19.99,20.03,20.06,
+            20.07,20.09,20.10,20.13,20.13,20.14,20.14,20.15,20.16,20.24,
+            20.25,20.33,20.37,20.38,20.39,20.44,20.50,20.50,20.54,20.58];
+
+let mess = [], lastMess = null, hlTimer = null, hlBin = -1;
+let sMean = false, sS1 = false, sS2 = false, sBell = false;
+
+function binsOf(data, lo, hi, w){
+  const nb = Math.round((hi - lo) / w);
+  const c = new Array(nb).fill(0);
+  data.forEach(x => {
+    let i = Math.floor((x - lo) / w + 1e-9);
+    if (i < 0) i = 0; if (i >= nb) i = nb - 1;
+    c[i]++;
+  });
+  return c;
+}
+function messung(){
+  const v = Math.round((T_TRUE + SIG_T * gauss()) * 100) / 100;
+  mess.push(v); lastMess = v;
+  return v;
+}
+function addMess(k){
+  let v = null;
+  for (let i = 0; i < k; i++) v = messung();
+  hlBin = Math.max(0, Math.min(Math.round((BHI - BLO) / BINW) - 1,
+            Math.floor((v - BLO) / BINW + 1e-9)));
+  el("flash").className = "flash";
+  el("flash").textContent = k === 1 ? "gestoppt: " + fmt(v, 2) + " s"
+    : k + " Messungen – zuletzt gestoppt: " + fmt(v, 2) + " s";
+  if (hlTimer) clearTimeout(hlTimer);
+  hlTimer = setTimeout(() => { hlBin = -1; render1(); }, 700);
+  render1();
+}
+function render1(){
+  el("tMean").className = sMean ? "on" : "";
+  el("tS1").className   = "k" + (sS1 ? " on" : "");
+  el("tS2").className   = "k" + (sS2 ? " on" : "");
+  el("tBell").className = sBell ? "on" : "";
+
+  const n = mess.length, m = n ? mean(mess) : NaN, s = n > 1 ? sdev(mess) : NaN;
+  el("stats1").innerHTML =
+    "<span>n = <b>" + n + "</b></span>" +
+    "<span>x̄ = <b>" + (n ? fmt(m, 3) + " s" : "–") + "</b></span>" +
+    "<span>s = <b>" + (n > 1 ? fmt(s, 3) + " s" : "–") + "</b></span>";
+
+  /* Achse ggf. erweitern, falls Ausreisser ausserhalb liegen */
+  let lo = BLO, hi = BHI;
+  mess.forEach(x => {
+    while (x < lo) lo -= BINW;
+    while (x >= hi) hi += BINW;
+  });
+  const counts = binsOf(mess, lo, hi, BINW);
+  const maxC = Math.max(1, ...counts);
+  let yMax = niceStep(maxC / 4) * 4;
+  while (yMax < maxC) yMax += niceStep(maxC / 4);
+
+  const bands = [], lines = [];
+  if (n > 1 && sS2) bands.push({ a: m - 2 * s, b: m + 2 * s, color: "var(--gegen)", label: "x̄ ± 2s", lvl: 1 });
+  if (n > 1 && sS1) bands.push({ a: m - s, b: m + s, color: "var(--accent)", label: "x̄ ± s", lvl: 0 });
+  if (n && sMean) lines.push({ x: m, color: "var(--mark)", label: "x̄" });
+
+  let curve = null;
+  if (n > 1 && sBell && s > 0) curve = x => dens(x, m, s) * n * BINW;
+  if (curve){
+    const peak = curve(m);
+    if (peak > yMax) { yMax = niceStep(peak / 4) * 4; while (yMax < peak) yMax += niceStep(peak / 4); }
+  }
+
+  const ticks = [];
+  const nb = counts.length;
+  for (let i = 0; i <= nb; i++){
+    const x = lo + i * BINW;
+    if (i % 2 === 0) ticks.push({ x: x, label: fmt(x, 1) });
+  }
+
+  drawHist(el("svg1"), { W: svgW(), H: 300, lo: lo, binW: BINW, counts: counts,
+    yMax: yMax, yLabel: "Anzahl Messungen", xLabel: "Zeit für 10 Schwingungen in s",
+    ticks: ticks, curve: curve, bands: bands, lines: lines, hl: hlBin });
+
+  /* Baender: Anteile */
+  let bi = "";
+  if (n > 1){
+    const in1 = mess.filter(x => Math.abs(x - m) <= s).length;
+    const in2 = mess.filter(x => Math.abs(x - m) <= 2 * s).length;
+    bi = "<div><span class='s1'>x̄ ± s</span> = " + fmt(m - s, 3) + " s … " +
+      fmt(m + s, 3) + " s → <b>" + in1 + " von " + n + " = " + pct(in1 / n) +
+      "</b> &nbsp;<span class='miss'>(Zielwert 68,3 %)</span></div>" +
+      "<div><span class='s2'>x̄ ± 2s</span> = " + fmt(m - 2 * s, 3) + " s … " +
+      fmt(m + 2 * s, 3) + " s → <b>" + in2 + " von " + n + " = " + pct(in2 / n) +
+      "</b> &nbsp;<span class='miss'>(Zielwert 95,4 %)</span></div>";
+  } else {
+    bi = "<span class='miss'>Für s brauchst du mindestens 2 Messungen.</span>";
+  }
+  el("band1").innerHTML = bi;
+
+  /* Physik */
+  if (n > 1){
+    const Tp = m / 10, gg = 4 * Math.PI * Math.PI * LEN / (Tp * Tp);
+    const um = s / Math.sqrt(n);
+    el("phys1").innerHTML =
+      "<span>T = x̄/10 = <b>" + fmt(Tp, 4) + " s</b></span>" +
+      "<span>g = 4π²·l/T² = <b>" + fmt(gg, 3) + " m/s²</b></span>" +
+      "<span>s/√n = <b>" + fmt(um, 3) + " s</b></span>";
+    el("physTipp").textContent = "s/√n ist die Unsicherheit des Mittelwerts: " +
+      "viermal so viele Messungen halbieren sie. Dass g hier systematisch etwas " +
+      "unter 9,81 m/s² liegen kann, ist KEIN Zufallsfehler – er ließe sich durch " +
+      "mehr Messungen nicht wegmitteln (z. B. zu große Auslenkung oder eine " +
+      "ungenau gemessene Pendellänge).";
+  } else {
+    el("phys1").innerHTML = "<span class='miss'>Noch zu wenige Messungen.</span>";
+    el("physTipp").textContent = "";
+  }
+}
+
+/* ================= MODUS 2: Muenzwurf / Binomial ================= */
+let bN = 100, bP = 0.5, wurf = [], wCounts = new Array(201).fill(0), bLast = null;
+let eExact = true, eS1 = false, eS2 = false, eBell = false;
+
+function experiment(){
+  let x = 0;
+  for (let i = 0; i < bN; i++) if (Math.random() < bP) x++;
+  wurf.push(x); wCounts[x]++; bLast = x;
+  return x;
+}
+function addExp(k){
+  let v = null;
+  for (let i = 0; i < k; i++) v = experiment();
+  if (k > 1) bLast = null;                          // Markierung nur beim Einzelexperiment
+  el("bflash").className = "flash";
+  el("bflash").textContent = k === 1
+    ? "Experiment: X = " + v + " Treffer bei " + bN + " Würfen"
+    : k + " Experimente – zuletzt X = " + v;
+  render2();
+}
+function resetExp(){
+  wurf = []; wCounts = new Array(bN + 1).fill(0); bLast = null;
+  el("bflash").className = "flash quiet";
+  el("bflash").textContent = "Noch kein Experiment. Ein Experiment = n Münzwürfe, " +
+    "gezählt wird X = Anzahl Treffer.";
+}
+function render2(){
+  el("tExact").className = eExact ? "on" : "";
+  el("tBS1").className  = "k" + (eS1 ? " on" : "");
+  el("tBS2").className  = "k" + (eS2 ? " on" : "");
+  el("tBBell").className = eBell ? "on" : "";
+  el("bno").textContent = String(bN);
+  el("bpo").textContent = fmt(bP, 2);
+
+  const N = wurf.length;
+  const mu = bN * bP, sg = Math.sqrt(bN * bP * (1 - bP));
+
+  /* Darstellungsbereich in k */
+  let kLo = 0, kHi = bN;
+  if (bN > 24){
+    kLo = Math.max(0, Math.floor(mu - 4.5 * sg));
+    kHi = Math.min(bN, Math.ceil(mu + 4.5 * sg));
+  }
+  wurf.forEach(x => { if (x < kLo) kLo = x; if (x > kHi) kHi = x; });
+  const nb = kHi - kLo + 1;
+  const counts = new Array(nb).fill(0);
+  for (let k = kLo; k <= kHi; k++) counts[k - kLo] = wCounts[k] || 0;
+
+  const probMode = N === 0;
+  const scale = probMode ? 1 : N;                       // Umrechnung P -> erwartete Anzahl
+  const maxC = Math.max(1e-9, ...counts);
+  let maxP = 0;
+  for (let k = kLo; k <= kHi; k++) maxP = Math.max(maxP, binomPmf(bN, k, bP));
+  let top = probMode ? maxP : Math.max(maxC, maxP * scale);
+  let yMax = niceStep(top / 4) * 4;
+  while (yMax < top) yMax += niceStep(top / 4);
+
+  /* exakte Binomialverteilung als Umriss */
+  let outline = null;
+  if (eExact){
+    outline = [];
+    for (let k = kLo; k <= kHi; k++)
+      outline.push({ x: k, y: binomPmf(bN, k, bP) * scale });
+  }
+
+  /* Baender, Grenzen nach innen gerundet */
+  const a1 = Math.ceil(mu - sg), b1 = Math.floor(mu + sg);
+  const a2 = Math.ceil(mu - 2 * sg), b2 = Math.floor(mu + 2 * sg);
+  const bands = [], lines = [];
+  if (eS2) bands.push({ a: a2 - .5, b: b2 + .5, color: "var(--gegen)", label: "µ ± 2σ", lvl: 1 });
+  if (eS1) bands.push({ a: a1 - .5, b: b1 + .5, color: "var(--accent)", label: "µ ± σ", lvl: 0 });
+  lines.push({ x: mu, color: "var(--mark)", label: "µ" });
+
+  let curve = null;
+  if (eBell && sg > 0){
+    curve = x => dens(x, mu, sg) * scale;             // Klassenbreite = 1
+    const peak = curve(mu);
+    if (peak > yMax){ yMax = niceStep(peak / 4) * 4; while (yMax < peak) yMax += niceStep(peak / 4); }
+  }
+
+  const stepK = Math.max(1, niceStep((kHi - kLo) / 7));
+  const ticks = [];
+  const start = Math.ceil(kLo / stepK) * stepK;
+  for (let k = start; k <= kHi; k += stepK) ticks.push({ x: k, label: String(k) });
+
+  drawHist(el("svg2"), { W: svgW(), H: 300, lo: kLo - .5, binW: 1, counts: counts,
+    yMax: yMax, yLabel: probMode ? "Wahrscheinlichkeit" : "Anzahl Experimente",
+    xLabel: "X = Anzahl Treffer", ticks: ticks, curve: curve, outline: outline,
+    bands: bands, lines: lines, hl: (bLast !== null && bLast >= kLo && bLast <= kHi) ? bLast - kLo : -1 });
+
+  el("stats2").innerHTML =
+    "<span>N = <b>" + N + "</b> Experimente</span>" +
+    "<span>µ = n·p = <b>" + fmt(mu, 2) + "</b></span>" +
+    "<span>σ = √(n·p·(1−p)) = <b>" + fmt(sg, 3) + "</b></span>" +
+    (N ? "<span>x̄ = <b>" + fmt(mean(wurf), 2) + "</b></span>" : "") +
+    (N > 1 ? "<span>s = <b>" + fmt(sdev(wurf), 3) + "</b></span>" : "");
+
+  const P1 = binomRange(bN, a1, b1, bP), P2 = binomRange(bN, a2, b2, bP);
+  const c1 = wurf.filter(x => x >= a1 && x <= b1).length;
+  const c2 = wurf.filter(x => x >= a2 && x <= b2).length;
+  el("band2").innerHTML =
+    "<div><span class='s1'>µ ± σ</span>: P(" + a1 + " ≤ X ≤ " + b1 + ") = <b>" +
+      fmt(P1, 4) + "</b> = " + pct(P1) +
+      (N ? " &nbsp;→ simuliert <b>" + c1 + " von " + N + " = " + pct(c1 / N) + "</b>"
+         : " <span class='miss'>(noch nichts simuliert)</span>") + "</div>" +
+    "<div><span class='s2'>µ ± 2σ</span>: P(" + a2 + " ≤ X ≤ " + b2 + ") = <b>" +
+      fmt(P2, 4) + "</b> = " + pct(P2) +
+      (N ? " &nbsp;→ simuliert <b>" + c2 + " von " + N + " = " + pct(c2 / N) + "</b>"
+         : " <span class='miss'>(noch nichts simuliert)</span>") + "</div>";
+
+  const okL = sg > 3;
+  el("laplace").className = "hint " + (okL ? "ok" : "bad");
+  el("laplace").innerHTML = "σ = " + fmt(sg, 3) +
+    (okL ? " &gt; 3 → Laplace-Bedingung erfüllt: die Glockenkurve passt gut."
+         : " ≤ 3 → Laplace-Bedingung NICHT erfüllt: die Glockenkurve passt hier schlecht" +
+           (Math.min(bP, 1 - bP) <= 0.15 ? " (p liegt nahe am Rand, die Verteilung ist schief)."
+                                         : " (n ist noch zu klein)."));
+}
+
+/* ================= MODUS 3: Vergleich ================= */
+const ZLO = -4, ZHI = 4, ZW = 0.5;
+function zHist(svg, data, m, s, color, label){
+  const nb = Math.round((ZHI - ZLO) / ZW);
+  const counts = new Array(nb).fill(0);
+  let drin = 0;
+  data.forEach(x => {
+    const z = zstd(x, m, s);
+    const i = Math.floor((z - ZLO) / ZW + 1e-9);
+    if (i >= 0 && i < nb){ counts[i]++; drin++; }
+  });
+  /* auf Dichte normieren -> beide Histogramme gleich hoch, Standardnormalverteilung passt direkt */
+  const n = data.length;
+  const d = counts.map(c => n ? c / (n * ZW) : 0);
+  let top = Math.max(0.42, ...d);
+  let yMax = niceStep(top / 4) * 4;
+  while (yMax < top) yMax += niceStep(top / 4);
+
+  const ticks = [];
+  for (let z = ZLO; z <= ZHI + 1e-9; z += 1) ticks.push({ x: z, label: fmt(z, 0) });
+
+  drawHist(svg, { W: window.innerWidth < 768 ? 420 : 460, H: 290, lo: ZLO, binW: ZW,
+    counts: d, yMax: yMax, yLabel: "Häufigkeitsdichte", xLabel: label,
+    ticks: ticks, curve: x => phi(x), bands: [],
+    lines: [{ x: 0, color: "var(--mark)" }], hl: -1, barColor: color });
+  return drin;
+}
+function render3(){
+  const n1 = mess.length, n2 = wurf.length;
+  const m1 = n1 ? mean(mess) : NaN, s1 = n1 > 1 ? sdev(mess) : NaN;
+  const mu = bN * bP, sg = Math.sqrt(bN * bP * (1 - bP));
+
+  el("cstat1").innerHTML = n1 > 1
+    ? "<span>n = <b>" + n1 + "</b></span><span>x̄ = <b>" + fmt(m1, 3) +
+      " s</b></span><span>s = <b>" + fmt(s1, 3) + " s</b></span>"
+    : "<span class='miss'>Noch zu wenige Messungen – gehe zu Modus 1.</span>";
+  el("cstat2").innerHTML = n2 > 0
+    ? "<span>N = <b>" + n2 + "</b></span><span>µ = <b>" + fmt(mu, 2) +
+      "</b></span><span>σ = <b>" + fmt(sg, 3) + "</b></span>"
+    : "<span class='miss'>Noch keine Experimente – gehe zu Modus 2.</span>";
+
+  if (n1 > 1 && s1 > 0) zHist(el("svg3a"), mess, m1, s1, "var(--accent)",
+    "(t − x̄) / s"); else clear(el("svg3a"));
+  if (n2 > 0 && sg > 0) zHist(el("svg3b"), wurf, mu, sg, "var(--gegen)",
+    "(X − µ) / σ"); else clear(el("svg3b"));
+
+  const fehlt = [];
+  if (n1 < 2) fehlt.push("Messreihe (Modus 1)");
+  if (n2 < 1) fehlt.push("Münzwurf (Modus 2)");
+  el("cmpStatus").textContent = fehlt.length
+    ? "Noch keine Daten für: " + fehlt.join(" und ") + ". Erzeuge dort zuerst Daten."
+    : "Links " + n1 + " Pendelmessungen, rechts " + n2 + " Münzwurf-Experimente – " +
+      "beide auf dieselbe Achse umgerechnet, darüber dieselbe Glockenkurve.";
+}
+
+/* ================= Tabs ================= */
+let modus = 1;
+function setModus(k){
+  modus = k;
+  [1, 2, 3].forEach(i => {
+    el("tab" + i).className = i === k ? "on" : "";
+    el("panel" + i).className = i === k ? "" : "hidden";
+  });
+  if (k === 1) render1(); else if (k === 2) render2(); else render3();
+}
+el("tab1").onclick = () => setModus(1);
+el("tab2").onclick = () => setModus(2);
+el("tab3").onclick = () => setModus(3);
+
+/* ================= Bedienung Modus 1 ================= */
+el("m1").onclick = () => addMess(1);
+el("m10").onclick = () => addMess(10);
+el("m100").onclick = () => addMess(100);
+el("mreset").onclick = () => {
+  mess = []; lastMess = null; hlBin = -1;
+  el("flash").className = "flash quiet";
+  el("flash").textContent = "Noch keine Messung. Drücke „1 Messung“.";
+  render1();
+};
+el("mab").onclick = () => {
+  mess = AB.slice(); hlBin = -1;
+  el("flash").className = "flash";
+  el("flash").textContent = "30 Werte vom Arbeitsblatt geladen – vergleiche mit deiner Rechnung.";
+  sMean = true; sS1 = true;
+  render1();
+};
+el("tMean").onclick = () => { sMean = !sMean; render1(); };
+el("tS1").onclick   = () => { sS1 = !sS1; render1(); };
+el("tS2").onclick   = () => { sS2 = !sS2; render1(); };
+el("tBell").onclick = () => { sBell = !sBell; render1(); };
+
+/* ================= Bedienung Modus 2 ================= */
+el("bn").addEventListener("input", () => {
+  bN = parseInt(el("bn").value, 10); resetExp(); render2();
+});
+el("bp").addEventListener("input", () => {
+  bP = parseFloat(el("bp").value); resetExp(); render2();
+});
+el("b1").onclick = () => addExp(1);
+el("b100").onclick = () => addExp(100);
+el("b1000").onclick = () => addExp(1000);
+el("breset").onclick = () => { resetExp(); render2(); };
+el("tExact").onclick = () => { eExact = !eExact; render2(); };
+el("tBS1").onclick  = () => { eS1 = !eS1; render2(); };
+el("tBS2").onclick  = () => { eS2 = !eS2; render2(); };
+el("tBBell").onclick = () => { eBell = !eBell; render2(); };
+
+let rz = null;
+window.addEventListener("resize", () => {
+  if (rz) clearTimeout(rz);
+  rz = setTimeout(() => setModus(modus), 150);
+});
+
+resetExp();
+setModus(1);
+</script>
+</body>
+</html>

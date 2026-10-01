@@ -45,6 +45,7 @@
         
         .material-grid {
             display: grid;
+            grid-template-columns: minmax(0, 1fr);
             gap: 20px;
         }
         
@@ -160,6 +161,12 @@
         
         .card-text {
             flex: 1;
+            min-width: 0;
+        }
+
+        .card-title,
+        .card-description {
+            overflow-wrap: break-word;
         }
 
         /* --- Gliederung nach Datum --- */
@@ -235,6 +242,103 @@
             margin-left: 8px;
         }
 
+        /* --- Filterleisten (Thema / Materialart) --- */
+        [hidden] {
+            display: none !important;
+        }
+
+        .nav-block + .nav-block {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        button.chip {
+            border: none;
+            font-family: inherit;
+            cursor: pointer;
+            line-height: 1.3;
+            min-height: 38px;
+            text-align: left;
+        }
+
+        button.chip:hover {
+            background: #ddd0fb;
+        }
+
+        button.chip.on {
+            background: #7c3aed;
+            color: white;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.35);
+        }
+
+        .chips-klein button.chip {
+            font-size: 0.88em;
+            padding: 5px 12px;
+            min-height: 34px;
+        }
+
+        .nav-fuss {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        button.chip-reset {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        button.chip-reset:hover {
+            background: #e2e8f0;
+        }
+
+        .zaehler {
+            color: #94a3b8;
+            font-size: 0.9em;
+        }
+
+        .chip.chip-leer {
+            opacity: 0.35;
+        }
+
+        .leer-hinweis {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            color: #64748b;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 38px;
+        }
+
+        @media (max-width: 420px) {
+            body {
+                padding: 14px;
+            }
+
+            .schnellzugriff {
+                padding: 16px 14px;
+            }
+
+            .chips {
+                gap: 7px;
+            }
+
+            button.chip {
+                font-size: 0.85em;
+                padding: 7px 11px;
+            }
+
+            .chips-klein button.chip {
+                font-size: 0.82em;
+            }
+        }
+
         .archiv {
             background: white;
             border-radius: 15px;
@@ -278,24 +382,137 @@
         </header>
         
         <nav class="schnellzugriff">
-            <div class="schnellzugriff-titel">Aktuelles Halbjahr &ndash; Stochastik</div>
-            <div class="chips">
-                <a class="chip" href="#d20260930">30.09.</a>
-                <a class="chip" href="#d20260924">24.09.</a>
-                <a class="chip" href="#d20260923">23.09.</a>
-                <a class="chip" href="#d20260917">17.09.</a>
-                <a class="chip" href="#d20260910">10.09.</a>
-                <a class="chip" href="#d20260909">09.09.</a>
-                <a class="chip" href="#d20260903">03.09.</a>
+            <div class="nav-block">
+                <div class="schnellzugriff-titel">Nach Datum &ndash; aktuelles Halbjahr (Stochastik)</div>
+                <div class="chips" id="datum-chips">
+                    <a class="chip" href="#d20261001">01.10.</a>
+                    <a class="chip" href="#d20260930">30.09.</a>
+                    <a class="chip" href="#d20260924">24.09.</a>
+                    <a class="chip" href="#d20260923">23.09.</a>
+                    <a class="chip" href="#d20260917">17.09.</a>
+                    <a class="chip" href="#d20260910">10.09.</a>
+                    <a class="chip" href="#d20260909">09.09.</a>
+                    <a class="chip" href="#d20260903">03.09.</a>
+                </div>
+            </div>
+            <div class="nav-block" id="nav-thema" hidden>
+                <div class="schnellzugriff-titel">Nach Thema</div>
+                <div class="chips">
+                    <button type="button" class="chip" data-thema-filter="zufall">Zufall &amp; Pr&uuml;fverfahren</button>
+                    <button type="button" class="chip" data-thema-filter="vierfeldertafel">Vierfeldertafel &amp; bedingte W.</button>
+                    <button type="button" class="chip" data-thema-filter="baumdiagramm">Baumdiagramm &amp; Pfadregeln</button>
+                    <button type="button" class="chip" data-thema-filter="gegenereignis">Gegenereignis / mindestens&ndash;h&ouml;chstens</button>
+                    <button type="button" class="chip" data-thema-filter="bernoulli">Bernoulli-Kette &amp; Binomialverteilung</button>
+                    <button type="button" class="chip" data-thema-filter="binomialkoeffizient">Binomialkoeffizient</button>
+                    <button type="button" class="chip" data-thema-filter="kumuliert">Kumulierte Wahrscheinlichkeiten</button>
+                    <button type="button" class="chip" data-thema-filter="erwartungswert">Erwartungswert &amp; Standardabweichung</button>
+                    <button type="button" class="chip" data-thema-filter="messwerte">Streuung von Messwerten (Physik)</button>
+                    <button type="button" class="chip" data-thema-filter="kurvendiskussion">Kurvendiskussion</button>
+                    <button type="button" class="chip" data-thema-filter="efunktion">e-Funktionen &amp; Logarithmus</button>
+                    <button type="button" class="chip" data-thema-filter="integral">Integralrechnung</button>
+                    <button type="button" class="chip" data-thema-filter="ableitung">Ableitungsregeln</button>
+                </div>
+            </div>
+            <div class="nav-block" id="nav-art" hidden>
+                <div class="schnellzugriff-titel">Nach Materialart</div>
+                <div class="chips chips-klein">
+                    <button type="button" class="chip" data-art-filter="arbeitsblatt">Arbeitsblatt</button>
+                    <button type="button" class="chip" data-art-filter="loesung">L&ouml;sung</button>
+                    <button type="button" class="chip" data-art-filter="simulation">Simulation</button>
+                    <button type="button" class="chip" data-art-filter="quiz">Quiz</button>
+                    <button type="button" class="chip" data-art-filter="vorlage">Vorlage</button>
+                    <button type="button" class="chip" data-art-filter="hilfen">Hilfen</button>
+                </div>
+            </div>
+            <div class="nav-fuss" id="nav-fuss" hidden>
+                <button type="button" class="chip chip-reset" id="alles-zeigen">Alles zeigen</button>
+                <span class="zaehler" id="zaehler"></span>
             </div>
         </nav>
+        <div class="leer-hinweis" id="leer-hinweis" hidden>
+            Zu dieser Auswahl gibt es (noch) kein Material. Tippe auf &bdquo;Alles zeigen&ldquo;.
+        </div>
+        <section class="datum-gruppe" id="d20261001">
+            <div class="datum-kopf">
+                <div class="datum">Do, 01.10.2026 <span class="neu">neu</span></div>
+                <div class="thema">Erwartungswert und Standardabweichung &ndash; wie Messwerte streuen</div>
+            </div>
+            <div class="material-grid">
+            <a href="arbeitsblatt-messreihe-verteilung.pdf" class="material-card" data-url="arbeitsblatt-messreihe-verteilung.pdf" data-thema="erwartungswert messwerte" data-art="arbeitsblatt">
+                <div class="card-header">
+                    <div class="card-icon green">&#9201;&#65039;</div>
+                    <div class="card-title">Von der Messreihe zur Verteilung</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            30 Personen stoppen am Fadenpendel (l&nbsp;=&nbsp;1,00&nbsp;m) unabh&auml;ngig voneinander die Zeit f&uuml;r 10 Schwingungen. Aus diesen Messwerten entstehen Histogramm, Mittelwert und Standardabweichung &ndash; danach dasselbe ohne Messger&auml;t am M&uuml;nzwurf (n&nbsp;=&nbsp;100) mit &micro; und &sigma;. Die Gegen&uuml;berstellung zeigt, warum x&#772; und &micro; nicht dasselbe sind, obwohl beide &bdquo;Mittelwert&ldquo; hei&szlig;en. Sternaufgabe: g&nbsp;=&nbsp;9,72 statt 9,81&nbsp;m/s&sup2; &ndash; Streuung oder systematischer Fehler?
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Arbeitsblatt</span>
+                            <span class="tag">PDF</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Erwartungswert</span>
+                            <span class="tag">Standardabweichung</span>
+                            <span class="tag">Physik</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-mv-ab"></div>
+                </div>
+            </a>
+
+            <a href="loesung-messreihe-verteilung.pdf" class="material-card" data-url="loesung-messreihe-verteilung.pdf" data-thema="erwartungswert messwerte" data-art="loesung">
+                <div class="card-header">
+                    <div class="card-icon purple">&#9989;</div>
+                    <div class="card-title">L&ouml;sung: Von der Messreihe zur Verteilung</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Ausf&uuml;hrliche L&ouml;sungen zum Arbeitsblatt vom 01.10.: das ausgez&auml;hlte Histogramm der 30 Stoppzeiten, Mittelwert und Standardabweichung mit Rechenweg, die Werte &micro; und &sigma; beim M&uuml;nzwurf sowie der Vergleich von x&#772; und &micro; &ndash; inklusive der Sternaufgabe zum systematischen Fehler.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">L&ouml;sung</span>
+                            <span class="tag">PDF</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-mv-lsg"></div>
+                </div>
+            </a>
+
+            <a href="messreihe-verteilung.html" class="material-card" data-url="messreihe-verteilung.html" data-thema="erwartungswert messwerte" data-art="simulation">
+                <div class="card-header">
+                    <div class="card-icon blue">&#128202;</div>
+                    <div class="card-title">Simulation: Von der Messreihe zur Verteilung</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Drei Modi: die virtuelle Stoppuhr mit live wachsendem Histogramm &ndash; man sieht, wie sich die 68-%- und 95-%-B&auml;nder erst ab etwa n&nbsp;=&nbsp;100 festsetzen; der M&uuml;nzwurf mit regelbarem n und p gegen die exakte Binomialverteilung; und ein Vergleich, der beides auf dieselbe Achse legt. Der Knopf &bdquo;Daten vom Arbeitsblatt laden&ldquo; holt die 30 Messwerte zur Kontrolle der eigenen Rechnung.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Simulation</span>
+                            <span class="tag">interaktiv</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Histogramm</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-mv-sim"></div>
+                </div>
+            </a>
+            </div>
+        </section>
         <section class="datum-gruppe" id="d20260930">
             <div class="datum-kopf">
-                <div class="datum">Mi, 30.09.2026 <span class="neu">neu</span></div>
+                <div class="datum">Mi, 30.09.2026</div>
                 <div class="thema">Baumdiagramm: Pfadwahrscheinlichkeiten addieren</div>
             </div>
             <div class="material-grid">
-            <a href="arbeitsblatt-baumdiagramm-einstieg.pdf" class="material-card" data-url="arbeitsblatt-baumdiagramm-einstieg.pdf">
+            <a href="arbeitsblatt-baumdiagramm-einstieg.pdf" class="material-card" data-url="arbeitsblatt-baumdiagramm-einstieg.pdf" data-thema="baumdiagramm gegenereignis" data-art="arbeitsblatt">
                 <div class="card-header">
                     <div class="card-icon green">🌲</div>
                     <div class="card-title">Einstieg: Pfadwahrscheinlichkeiten addieren</div>
@@ -317,7 +534,7 @@
                 </div>
             </a>
 
-            <a href="loesung-baumdiagramm-einstieg.pdf" class="material-card" data-url="loesung-baumdiagramm-einstieg.pdf">
+            <a href="loesung-baumdiagramm-einstieg.pdf" class="material-card" data-url="loesung-baumdiagramm-einstieg.pdf" data-thema="baumdiagramm gegenereignis" data-art="loesung">
                 <div class="card-header">
                     <div class="card-icon purple">✅</div>
                     <div class="card-title">L&ouml;sung: Pfadwahrscheinlichkeiten addieren</div>
@@ -338,7 +555,7 @@
                 </div>
             </a>
 
-            <a href="baumdiagramm.html" class="material-card" data-url="baumdiagramm.html">
+            <a href="baumdiagramm.html" class="material-card" data-url="baumdiagramm.html" data-thema="baumdiagramm" data-art="simulation">
                 <div class="card-header">
                     <div class="card-icon blue">🌳</div>
                     <div class="card-title">Simulation: Baumdiagramm &ndash; Pfadwahrscheinlichkeiten addieren</div>
@@ -359,7 +576,7 @@
                 </div>
             </a>
 
-            <a href="vorlage-baumdiagramm-4stufig.pdf" class="material-card" data-url="vorlage-baumdiagramm-4stufig.pdf">
+            <a href="vorlage-baumdiagramm-4stufig.pdf" class="material-card" data-url="vorlage-baumdiagramm-4stufig.pdf" data-thema="baumdiagramm" data-art="vorlage">
                 <div class="card-header">
                     <div class="card-icon amber">📄</div>
                     <div class="card-title">Vorlage: leeres Baumdiagramm, 4 Stufen</div>
@@ -381,7 +598,7 @@
                 </div>
             </a>
 
-            <a href="vorlage-baumdiagramm-5stufig-a3.pdf" class="material-card" data-url="vorlage-baumdiagramm-5stufig-a3.pdf">
+            <a href="vorlage-baumdiagramm-5stufig-a3.pdf" class="material-card" data-url="vorlage-baumdiagramm-5stufig-a3.pdf" data-thema="baumdiagramm" data-art="vorlage">
                 <div class="card-header">
                     <div class="card-icon amber">📄</div>
                     <div class="card-title">Vorlage: leeres Baumdiagramm, 5 Stufen (A3)</div>
@@ -403,7 +620,7 @@
                 </div>
             </a>
 
-            <a href="vorlage-baumdiagramm-5stufig-a4.pdf" class="material-card" data-url="vorlage-baumdiagramm-5stufig-a4.pdf">
+            <a href="vorlage-baumdiagramm-5stufig-a4.pdf" class="material-card" data-url="vorlage-baumdiagramm-5stufig-a4.pdf" data-thema="baumdiagramm" data-art="vorlage">
                 <div class="card-header">
                     <div class="card-icon amber">📄</div>
                     <div class="card-title">Vorlage: leeres Baumdiagramm, 5 Stufen (A4, kompakt)</div>
@@ -431,7 +648,7 @@
                 <div class="thema">Mindestens und h&ouml;chstens &ndash; kumulierte Wahrscheinlichkeiten</div>
             </div>
             <div class="material-grid">
-            <a href="arbeitsblatt-mindestens-hoechstens.pdf" class="material-card" data-url="arbeitsblatt-mindestens-hoechstens.pdf">
+            <a href="arbeitsblatt-mindestens-hoechstens.pdf" class="material-card" data-url="arbeitsblatt-mindestens-hoechstens.pdf" data-thema="kumuliert gegenereignis" data-art="arbeitsblatt">
                 <div class="card-header">
                     <div class="card-icon green">✏️</div>
                     <div class="card-title">Mindestens und h&ouml;chstens</div>
@@ -452,7 +669,7 @@
                 </div>
             </a>
 
-            <a href="loesung-mindestens-hoechstens.pdf" class="material-card" data-url="loesung-mindestens-hoechstens.pdf">
+            <a href="loesung-mindestens-hoechstens.pdf" class="material-card" data-url="loesung-mindestens-hoechstens.pdf" data-thema="kumuliert gegenereignis" data-art="loesung">
                 <div class="card-header">
                     <div class="card-icon purple">✅</div>
                     <div class="card-title">L&ouml;sung: Mindestens und h&ouml;chstens</div>
@@ -473,7 +690,7 @@
                 </div>
             </a>
 
-            <a href="quiz-mindestens-hoechstens.html" class="material-card" data-url="quiz-mindestens-hoechstens.html">
+            <a href="quiz-mindestens-hoechstens.html" class="material-card" data-url="quiz-mindestens-hoechstens.html" data-thema="kumuliert gegenereignis" data-art="quiz">
                 <div class="card-header">
                     <div class="card-icon amber">🧠</div>
                     <div class="card-title">Quiz: Mindestens oder h&ouml;chstens?</div>
@@ -501,7 +718,7 @@
                 <div class="thema">Der Binomialkoeffizient</div>
             </div>
             <div class="material-grid">
-            <a href="arbeitsblatt-binomialkoeffizient.pdf" class="material-card" data-url="arbeitsblatt-binomialkoeffizient.pdf">
+            <a href="arbeitsblatt-binomialkoeffizient.pdf" class="material-card" data-url="arbeitsblatt-binomialkoeffizient.pdf" data-thema="binomialkoeffizient bernoulli" data-art="arbeitsblatt">
                 <div class="card-header">
                     <div class="card-icon green">✏️</div>
                     <div class="card-title">Der Binomialkoeffizient &ndash; rechnen und anwenden</div>
@@ -522,7 +739,7 @@
                 </div>
             </a>
 
-            <a href="loesung-binomialkoeffizient.pdf" class="material-card" data-url="loesung-binomialkoeffizient.pdf">
+            <a href="loesung-binomialkoeffizient.pdf" class="material-card" data-url="loesung-binomialkoeffizient.pdf" data-thema="binomialkoeffizient bernoulli" data-art="loesung">
                 <div class="card-header">
                     <div class="card-icon purple">✅</div>
                     <div class="card-title">L&ouml;sung: Der Binomialkoeffizient</div>
@@ -550,7 +767,7 @@
                 <div class="thema">Von der Bernoulli-Kette zur Binomialverteilung</div>
             </div>
             <div class="material-grid">
-            <a href="arbeitsblatt-binomialverteilung.pdf" class="material-card" data-url="arbeitsblatt-binomialverteilung.pdf">
+            <a href="arbeitsblatt-binomialverteilung.pdf" class="material-card" data-url="arbeitsblatt-binomialverteilung.pdf" data-thema="bernoulli binomialkoeffizient baumdiagramm kumuliert" data-art="arbeitsblatt">
                 <div class="card-header">
                     <div class="card-icon green">📄</div>
                     <div class="card-title">Von der Bernoulli-Kette zur Binomialverteilung</div>
@@ -571,7 +788,7 @@
                 </div>
             </a>
 
-            <a href="binomialverteilung.html" class="material-card" data-url="binomialverteilung.html">
+            <a href="binomialverteilung.html" class="material-card" data-url="binomialverteilung.html" data-thema="bernoulli kumuliert erwartungswert" data-art="simulation">
                 <div class="card-header">
                     <div class="card-icon blue">📊</div>
                     <div class="card-title">Simulation: Binomialverteilung B(n; p)</div>
@@ -592,7 +809,7 @@
                 </div>
             </a>
 
-            <a href="hinweise-bino.html" class="material-card" data-url="hinweise-bino.html">
+            <a href="hinweise-bino.html" class="material-card" data-url="hinweise-bino.html" data-thema="bernoulli" data-art="hilfen">
                 <div class="card-header">
                     <div class="card-icon purple">🔍</div>
                     <div class="card-title">Hilfen: Binomialverteilung</div>
@@ -619,7 +836,7 @@
                 <div class="thema">Bedingte Wahrscheinlichkeit &ndash; Grundlagen</div>
             </div>
             <div class="material-grid">
-            <a href="grundlagen-bedingte-wahrscheinlichkeit.pdf" class="material-card" data-url="grundlagen-bedingte-wahrscheinlichkeit.pdf">
+            <a href="grundlagen-bedingte-wahrscheinlichkeit.pdf" class="material-card" data-url="grundlagen-bedingte-wahrscheinlichkeit.pdf" data-thema="vierfeldertafel baumdiagramm" data-art="arbeitsblatt">
                 <div class="card-header">
                     <div class="card-icon green">📄</div>
                     <div class="card-title">Bedingte Wahrscheinlichkeit &ndash; die Grundlagen</div>
@@ -640,7 +857,7 @@
                 </div>
             </a>
 
-            <a href="loesung-grundlagen-bedingte-wahrscheinlichkeit.pdf" class="material-card" data-url="loesung-grundlagen-bedingte-wahrscheinlichkeit.pdf">
+            <a href="loesung-grundlagen-bedingte-wahrscheinlichkeit.pdf" class="material-card" data-url="loesung-grundlagen-bedingte-wahrscheinlichkeit.pdf" data-thema="vierfeldertafel baumdiagramm" data-art="loesung">
                 <div class="card-header">
                     <div class="card-icon purple">✅</div>
                     <div class="card-title">L&ouml;sung: Bedingte Wahrscheinlichkeit &ndash; die Grundlagen</div>
@@ -668,7 +885,7 @@
                 <div class="thema">Partnerpuzzle: Vierfeldertafel und Baumdiagramm</div>
             </div>
             <div class="material-grid">
-            <a href="partnerpuzzle-vierfeldertafel-a.pdf" class="material-card" data-url="partnerpuzzle-vierfeldertafel-a.pdf">
+            <a href="partnerpuzzle-vierfeldertafel-a.pdf" class="material-card" data-url="partnerpuzzle-vierfeldertafel-a.pdf" data-thema="vierfeldertafel" data-art="arbeitsblatt">
                 <div class="card-header">
                     <div class="card-icon green">📄</div>
                     <div class="card-title">Partnerpuzzle Fassung A: Vierfeldertafel</div>
@@ -689,7 +906,7 @@
                 </div>
             </a>
 
-            <a href="partnerpuzzle-baumdiagramm-b.pdf" class="material-card" data-url="partnerpuzzle-baumdiagramm-b.pdf">
+            <a href="partnerpuzzle-baumdiagramm-b.pdf" class="material-card" data-url="partnerpuzzle-baumdiagramm-b.pdf" data-thema="baumdiagramm" data-art="arbeitsblatt">
                 <div class="card-header">
                     <div class="card-icon green">📄</div>
                     <div class="card-title">Partnerpuzzle Fassung B: Baumdiagramm</div>
@@ -710,7 +927,7 @@
                 </div>
             </a>
 
-            <a href="loesung-partnerpuzzle.pdf" class="material-card" data-url="loesung-partnerpuzzle.pdf">
+            <a href="loesung-partnerpuzzle.pdf" class="material-card" data-url="loesung-partnerpuzzle.pdf" data-thema="vierfeldertafel baumdiagramm" data-art="loesung">
                 <div class="card-header">
                     <div class="card-icon purple">✅</div>
                     <div class="card-title">Lösung: Partnerpuzzle A und B</div>
@@ -738,7 +955,7 @@
                 <div class="thema">Einstieg Stochastik: Wie sicher ist ein Pr&uuml;fverfahren?</div>
             </div>
             <div class="material-grid">
-            <a href="comic-pruefverfahren.html" class="material-card" data-url="comic-pruefverfahren.html">
+            <a href="comic-pruefverfahren.html" class="material-card" data-url="comic-pruefverfahren.html" data-thema="zufall" data-art="simulation">
                 <div class="card-header">
                     <div class="card-icon blue">🏭</div>
                     <div class="card-title">Die Naht, die keiner sieht</div>
@@ -758,7 +975,7 @@
                 </div>
             </a>
 
-            <a href="arbeitsblatt-qualitaetskontrolle.pdf" class="material-card" data-url="arbeitsblatt-qualitaetskontrolle.pdf">
+            <a href="arbeitsblatt-qualitaetskontrolle.pdf" class="material-card" data-url="arbeitsblatt-qualitaetskontrolle.pdf" data-thema="zufall vierfeldertafel baumdiagramm" data-art="arbeitsblatt">
                 <div class="card-header">
                     <div class="card-icon green">📄</div>
                     <div class="card-title">Arbeitsblatt: Wie sicher ist ein Prüfverfahren?</div>
@@ -779,7 +996,7 @@
                 </div>
             </a>
 
-            <a href="hinweise-qk.html" class="material-card" data-url="hinweise-qk.html">
+            <a href="hinweise-qk.html" class="material-card" data-url="hinweise-qk.html" data-thema="zufall vierfeldertafel baumdiagramm" data-art="hilfen">
                 <div class="card-header">
                     <div class="card-icon purple">🔍</div>
                     <div class="card-title">Hilfen: Wie sicher ist ein Prüfverfahren?</div>
@@ -808,7 +1025,7 @@
                     <div class="thema">Jahresr&uuml;ckblick</div>
                 </div>
                 <div class="material-grid">
-            <a href="mathe_jahresrueckblick_quiz.html" class="material-card" data-url="mathe_jahresrueckblick_quiz.html">
+            <a href="mathe_jahresrueckblick_quiz.html" class="material-card" data-url="mathe_jahresrueckblick_quiz.html" data-thema="ableitung efunktion integral" data-art="quiz">
                 <div class="card-header">
                     <div class="card-icon amber">📈</div>
                     <div class="card-title">Mathe-Jahresrückblick — Quiz</div>
@@ -835,7 +1052,7 @@
                     <div class="thema">Q4 &ndash; Integralrechnung</div>
                 </div>
                 <div class="material-grid">
-            <a href="quiz-q4.html" class="material-card" data-url="quiz-q4.html">
+            <a href="quiz-q4.html" class="material-card" data-url="quiz-q4.html" data-thema="integral" data-art="quiz">
                 <div class="card-header">
                     <div class="card-icon amber">⚡</div>
                     <div class="card-title">Quiz-Duell: Q4 — Integralrechnung</div>
@@ -856,7 +1073,7 @@
                 </div>
             </a>
 
-            <a href="lernliste-integral-q4.html" class="material-card" data-url="lernliste-integral-q4.html">
+            <a href="lernliste-integral-q4.html" class="material-card" data-url="lernliste-integral-q4.html" data-thema="integral" data-art="hilfen">
                 <div class="card-header">
                     <div class="card-icon green">📋</div>
                     <div class="card-title">Lernliste: Q4 — Integralrechnung</div>
@@ -885,7 +1102,7 @@
                     <div class="thema">Q3 und Q2 &ndash; Lernlisten</div>
                 </div>
                 <div class="material-grid">
-            <a href="index_eFunktionen_Q3.html" class="material-card" data-url="index_eFunktionen_Q3.html">
+            <a href="index_eFunktionen_Q3.html" class="material-card" data-url="index_eFunktionen_Q3.html" data-thema="efunktion kurvendiskussion ableitung" data-art="hilfen">
                 <div class="card-header">
                     <div class="card-icon green">📋</div>
                     <div class="card-title">Lernliste: Q3 — e-Funktionen & Kurvendiskussion</div>
@@ -907,7 +1124,7 @@
                 </div>
             </a>
 
-            <a href="lernliste-analysis-q2.html" class="material-card" data-url="lernliste-analysis-q2.html">
+            <a href="lernliste-analysis-q2.html" class="material-card" data-url="lernliste-analysis-q2.html" data-thema="kurvendiskussion ableitung" data-art="hilfen">
                 <div class="card-header">
                     <div class="card-icon purple">📋</div>
                     <div class="card-title">Lernliste: Q2 — GRF & Kurvendiskussion</div>
@@ -936,7 +1153,7 @@
                     <div class="thema">Ableitungen, e-Funktion, Exponentialfunktionen</div>
                 </div>
                 <div class="material-grid">
-            <a href="ableitungen_sin_cos.html" class="material-card" data-url="ableitungen_sin_cos.html">
+            <a href="ableitungen_sin_cos.html" class="material-card" data-url="ableitungen_sin_cos.html" data-thema="ableitung" data-art="simulation">
                 <div class="card-header">
                     <div class="card-icon blue">📈</div>
                     <div class="card-title">Ableitungen von Sinus & Cosinus</div>
@@ -957,7 +1174,7 @@
                 </div>
             </a>
 
-            <a href="e-funktion-visualisierung-toggles.html" class="material-card" data-url="e-funktion-visualisierung-toggles.html">
+            <a href="e-funktion-visualisierung-toggles.html" class="material-card" data-url="e-funktion-visualisierung-toggles.html" data-thema="efunktion" data-art="simulation">
                 <div class="card-header">
                     <div class="card-icon green">📊</div>
                     <div class="card-title">e-Funktion — Interaktive Visualisierung</div>
@@ -978,7 +1195,7 @@
                 </div>
             </a>
 
-            <a href="exponentialfunktionen_logarithmus.html" class="material-card" data-url="exponentialfunktionen_logarithmus.html">
+            <a href="exponentialfunktionen_logarithmus.html" class="material-card" data-url="exponentialfunktionen_logarithmus.html" data-thema="efunktion" data-art="simulation">
                 <div class="card-header">
                     <div class="card-icon amber">🔢</div>
                     <div class="card-title">Exponentialfunktionen & Logarithmus</div>
@@ -999,7 +1216,7 @@
                 </div>
             </a>
 
-            <a href="radioaktiver-zerfall-erweitert.html" class="material-card" data-url="radioaktiver-zerfall-erweitert.html">
+            <a href="radioaktiver-zerfall-erweitert.html" class="material-card" data-url="radioaktiver-zerfall-erweitert.html" data-thema="efunktion" data-art="simulation">
                 <div class="card-header">
                     <div class="card-icon green">☢️</div>
                     <div class="card-title">Radioaktiver Zerfall — Simulation</div>
@@ -1040,6 +1257,9 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-mv-ab', 'arbeitsblatt-messreihe-verteilung.pdf');
+            generateQR('qr-mv-lsg', 'loesung-messreihe-verteilung.pdf');
+            generateQR('qr-mv-sim', 'mv/');
             generateQR('qr-bino-ab', 'arbeitsblatt-binomialverteilung.pdf');
             generateQR('qr-bino-koeff', 'arbeitsblatt-binomialkoeffizient.pdf');
             generateQR('qr-bk-lsg', 'loesung-binomialkoeffizient.pdf');
@@ -1072,6 +1292,114 @@
             generateQR('qr-explog', 'exponentialfunktionen_logarithmus.html');
             generateQR('qr-zerfall', 'radioaktiver-zerfall-erweitert.html');
         });
+
+        /* ---- Filter nach Thema und Materialart (reines Vanilla-JS) ---- */
+        (function () {
+            var karten = Array.prototype.slice.call(document.querySelectorAll('.material-card'));
+            var gruppen = Array.prototype.slice.call(document.querySelectorAll('.datum-gruppe'));
+            var themaKnoepfe = Array.prototype.slice.call(document.querySelectorAll('[data-thema-filter]'));
+            var artKnoepfe = Array.prototype.slice.call(document.querySelectorAll('[data-art-filter]'));
+            var datumChips = Array.prototype.slice.call(document.querySelectorAll('#datum-chips .chip'));
+            var archiv = document.querySelector('.archiv');
+            var zaehler = document.getElementById('zaehler');
+            var leerHinweis = document.getElementById('leer-hinweis');
+            var gesamt = karten.length;
+            var aktivesThema = null;
+            var aktiveArt = null;
+
+            /* Filterleisten erst einblenden, wenn JS laeuft (ohne JS bleibt alles sichtbar) */
+            ['nav-thema', 'nav-art', 'nav-fuss'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) { el.hidden = false; }
+            });
+
+            function passt(karte) {
+                if (aktivesThema) {
+                    var themen = (karte.getAttribute('data-thema') || '').split(/\s+/);
+                    if (themen.indexOf(aktivesThema) === -1) { return false; }
+                }
+                if (aktiveArt && karte.getAttribute('data-art') !== aktiveArt) { return false; }
+                return true;
+            }
+
+            function anwenden() {
+                var sichtbar = 0;
+                karten.forEach(function (karte) {
+                    var ok = passt(karte);
+                    karte.style.display = ok ? '' : 'none';
+                    if (ok) { sichtbar++; }
+                });
+
+                gruppen.forEach(function (gruppe) {
+                    var treffer = gruppe.querySelectorAll('.material-card');
+                    var hat = false;
+                    for (var i = 0; i < treffer.length; i++) {
+                        if (treffer[i].style.display !== 'none') { hat = true; break; }
+                    }
+                    /* Datums-Ueberschrift bleibt sichtbar, solange die Gruppe Treffer hat */
+                    gruppe.style.display = hat ? '' : 'none';
+                });
+
+                /* Datums-Chips abblenden, wenn ihre Gruppe gerade leer ist */
+                datumChips.forEach(function (chip) {
+                    var ziel = document.getElementById(chip.getAttribute('href').substring(1));
+                    var leer = !ziel || ziel.style.display === 'none';
+                    chip.classList.toggle('chip-leer', leer);
+                });
+
+                if (archiv) {
+                    var archivTreffer = 0;
+                    archiv.querySelectorAll('.material-card').forEach(function (k) {
+                        if (k.style.display !== 'none') { archivTreffer++; }
+                    });
+                    archiv.hidden = (archivTreffer === 0);
+                    if (aktivesThema || aktiveArt) {
+                        archiv.open = archivTreffer > 0;
+                    }
+                }
+
+                zaehler.textContent = sichtbar + ' von ' + gesamt + ' Materialien';
+                leerHinweis.hidden = (sichtbar > 0);
+            }
+
+            function setzeAktiv(knoepfe, wert, attribut) {
+                knoepfe.forEach(function (b) {
+                    b.classList.toggle('on', b.getAttribute(attribut) === wert);
+                    b.setAttribute('aria-pressed', b.getAttribute(attribut) === wert ? 'true' : 'false');
+                });
+            }
+
+            themaKnoepfe.forEach(function (b) {
+                b.setAttribute('aria-pressed', 'false');
+                b.addEventListener('click', function () {
+                    var wert = b.getAttribute('data-thema-filter');
+                    aktivesThema = (aktivesThema === wert) ? null : wert;
+                    setzeAktiv(themaKnoepfe, aktivesThema, 'data-thema-filter');
+                    anwenden();
+                });
+            });
+
+            artKnoepfe.forEach(function (b) {
+                b.setAttribute('aria-pressed', 'false');
+                b.addEventListener('click', function () {
+                    var wert = b.getAttribute('data-art-filter');
+                    aktiveArt = (aktiveArt === wert) ? null : wert;
+                    setzeAktiv(artKnoepfe, aktiveArt, 'data-art-filter');
+                    anwenden();
+                });
+            });
+
+            document.getElementById('alles-zeigen').addEventListener('click', function () {
+                aktivesThema = null;
+                aktiveArt = null;
+                setzeAktiv(themaKnoepfe, null, 'data-thema-filter');
+                setzeAktiv(artKnoepfe, null, 'data-art-filter');
+                if (archiv) { archiv.open = false; }
+                anwenden();
+            });
+
+            anwenden();
+        })();
     </script>
 </body>
 </html>
