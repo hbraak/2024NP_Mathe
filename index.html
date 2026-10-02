@@ -422,6 +422,7 @@
                     <button type="button" class="chip" data-art-filter="quiz">Quiz</button>
                     <button type="button" class="chip" data-art-filter="vorlage">Vorlage</button>
                     <button type="button" class="chip" data-art-filter="hilfen">Hilfen</button>
+                    <button type="button" class="chip" data-art-filter="anleitung">Anleitung</button>
                 </div>
             </div>
             <div class="nav-fuss" id="nav-fuss" hidden>
@@ -502,6 +503,29 @@
                         </div>
                     </div>
                     <div class="qr-code" id="qr-mv-sim"></div>
+                </div>
+            </a>
+
+            <a href="cas-anleitung-binomialverteilung.pdf" class="material-card" data-url="cas-anleitung-binomialverteilung.pdf" data-thema="bernoulli kumuliert gegenereignis erwartungswert" data-art="anleitung">
+                <div class="card-header">
+                    <div class="card-icon green">&#128290;</div>
+                    <div class="card-title">CAS-Anleitung: Binomialverteilung (TI-nspire)</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Zweiseitige Kurzanleitung f&uuml;r den TI-nspire CX II-T CAS: der Men&uuml;weg &uuml;ber menu &rarr; Wahrscheinlichkeit &rarr; Verteilungen, die Entscheidung Pdf (genau ein Wert) gegen Cdf (von &hellip; bis) und alle Eingabefelder im Dialog. Dazu eine &Uuml;bersetzungstabelle vom Aufgabentext zur Eingabe (&bdquo;h&ouml;chstens&ldquo;, &bdquo;mindestens&ldquo;, &bdquo;weniger als&ldquo;, &bdquo;zwischen&ldquo;) und die zwei Stolperstellen: die obere Schranke ist n, und &bdquo;weniger/mehr als&ldquo; verschiebt um 1. Durchgerechnetes Beispiel n&nbsp;=&nbsp;20, p&nbsp;=&nbsp;0,3 mit sieben Fragestellungen, die Direkteingabe binomPdf/binomCdf samt Dezimalpunkt-Falle sowie Gegenereignis und &micro;,&nbsp;&sigma; ohne Verteilungsbefehl.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Anleitung</span>
+                            <span class="tag">PDF</span>
+                            <span class="tag">CAS</span>
+                            <span class="tag">TI-nspire</span>
+                            <span class="tag">Binomialverteilung</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-cas"></div>
                 </div>
             </a>
             </div>
@@ -1260,6 +1284,7 @@
             generateQR('qr-mv-ab', 'arbeitsblatt-messreihe-verteilung.pdf');
             generateQR('qr-mv-lsg', 'loesung-messreihe-verteilung.pdf');
             generateQR('qr-mv-sim', 'mv/');
+            generateQR('qr-cas', 'cas/');
             generateQR('qr-bino-ab', 'arbeitsblatt-binomialverteilung.pdf');
             generateQR('qr-bino-koeff', 'arbeitsblatt-binomialkoeffizient.pdf');
             generateQR('qr-bk-lsg', 'loesung-binomialkoeffizient.pdf');
