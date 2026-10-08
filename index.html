@@ -433,9 +433,63 @@
         <div class="leer-hinweis" id="leer-hinweis" hidden>
             Zu dieser Auswahl gibt es (noch) kein Material. Tippe auf &bdquo;Alles zeigen&ldquo;.
         </div>
+        <section class="datum-gruppe" id="d20261008">
+            <div class="datum-kopf">
+                <div class="datum">Do, 08.10.2026 <span class="neu">neu</span></div>
+                <div class="thema">Erwartungswert und Standardabweichung &ndash; &micro; und &sigma; der Binomialverteilung</div>
+            </div>
+            <div class="material-grid">
+            <a href="arbeitsblatt-erwartungswert-standardabweichung.pdf" class="material-card" data-url="arbeitsblatt-erwartungswert-standardabweichung.pdf" data-thema="erwartungswert bernoulli" data-art="arbeitsblatt">
+                <div class="card-header">
+                    <div class="card-icon green">&#127922;</div>
+                    <div class="card-title">Erwartungswert und Standardabweichung</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            F&uuml;nf Aufgaben vom gewichteten Mittelwert zur Binomialverteilung: Der Schulfest-Stand &bdquo;W&uuml;rfelgl&uuml;ck&ldquo; (Einsatz 1&nbsp;&euro;, Auszahlung je Augensumme 0/2/5/15&nbsp;&euro;) f&uuml;hrt auf &micro;&nbsp;=&nbsp;&minus;5/36&nbsp;&asymp;&nbsp;&minus;0,14&nbsp;&euro; pro Spiel. Danach wird &micro; f&uuml;r n&nbsp;=&nbsp;3 W&uuml;rfelw&uuml;rfe mit p&nbsp;=&nbsp;1/6 &uuml;ber die Summenformel nachgerechnet und mit n&nbsp;&middot;&nbsp;p verglichen. Zwei Varianten mit demselben &micro;&nbsp;=&nbsp;4 (n&nbsp;=&nbsp;20, p&nbsp;=&nbsp;0,2 und n&nbsp;=&nbsp;400, p&nbsp;=&nbsp;0,01) zeigen, warum &micro; allein eine Verteilung nicht beschreibt; den Abschluss bildet der Parkscheinautomat (4&nbsp;% von 500 Karten) mit &micro;&nbsp;=&nbsp;20, &sigma;&nbsp;&asymp;&nbsp;4,38 und der 2&sigma;-Umgebung.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Arbeitsblatt</span>
+                            <span class="tag">PDF</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Erwartungswert</span>
+                            <span class="tag">Standardabweichung</span>
+                            <span class="tag">Binomialverteilung</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-ew-ab"></div>
+                </div>
+            </a>
+
+            <a href="loesung-erwartungswert-standardabweichung.pdf" class="material-card" data-url="loesung-erwartungswert-standardabweichung.pdf" data-thema="erwartungswert bernoulli" data-art="loesung">
+                <div class="card-header">
+                    <div class="card-icon purple">&#9989;</div>
+                    <div class="card-title">L&ouml;sung: Erwartungswert und Standardabweichung</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Ausf&uuml;hrliche L&ouml;sungen zum Arbeitsblatt vom 08.10.: die vollst&auml;ndig gef&uuml;llte Gewinntabelle zu &bdquo;W&uuml;rfelgl&uuml;ck&ldquo; samt Beurteilung des Stands, der Nachweis &micro;&nbsp;=&nbsp;n&nbsp;&middot;&nbsp;p f&uuml;r n&nbsp;=&nbsp;3 und p&nbsp;=&nbsp;1/6, die &sigma;-Werte der beiden Varianten mit gleichem &micro; sowie der Parkscheinautomat mit 2&sigma;-Umgebung 12&nbsp;&le;&nbsp;X&nbsp;&le;&nbsp;28 und Antwortsatz. Zum Beobachtungsauftrag an der Simulation gibt es Musterantworten &ndash; die gr&ouml;&szlig;te Streuung tritt bei p&nbsp;=&nbsp;0,5 auf.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">L&ouml;sung</span>
+                            <span class="tag">PDF</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Erwartungswert</span>
+                            <span class="tag">Standardabweichung</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-ew-lsg"></div>
+                </div>
+            </a>
+            </div>
+        </section>
         <section class="datum-gruppe" id="d20261001">
             <div class="datum-kopf">
-                <div class="datum">Do, 01.10.2026 <span class="neu">neu</span></div>
+                <div class="datum">Do, 01.10.2026</div>
                 <div class="thema">Erwartungswert und Standardabweichung &ndash; wie Messwerte streuen</div>
             </div>
             <div class="material-grid">
@@ -1282,6 +1336,8 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-ew-ab', 'arbeitsblatt-erwartungswert-standardabweichung.pdf');
+            generateQR('qr-ew-lsg', 'loesung-erwartungswert-standardabweichung.pdf');
             generateQR('qr-mv-ab', 'arbeitsblatt-messreihe-verteilung.pdf');
             generateQR('qr-mv-lsg', 'loesung-messreihe-verteilung.pdf');
             generateQR('qr-mv-sim', 'mv/');
