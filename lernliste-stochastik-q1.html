@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernliste Q1: Stochastik &ndash; Mathematik 13NP</title>
+
+<!-- MathJax -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)'], ['$','$']], displayMath: [['\\[','\\]'], ['$$','$$']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="vendor/mathjax/tex-mml-chtml.js"></script>
+
+<link href="vendor/ibmplexsans-ibmplexmono-ibmplexserif.css" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #f5f2eb;
+  --surface: #ffffff;
+  --surface2: #f0ece2;
+  --border: #d4cfc4;
+  --text: #1a1915;
+  --text-muted: #6b6760;
+  --accent: #2b4c8c;
+  --accent-light: #dce6f5;
+  --green: #1a6b3a;
+  --green-light: #d4edde;
+  --yellow-light: #fdf5d0;
+  --formula-bg: #0f1923;
+  --afb1: #1a5c8c;  --afb1-bg: #dceef8;
+  --afb2: #7a5200;  --afb2-bg: #fef0cc;
+  --afb3: #7a1a1a;  --afb3-bg: #fde8e8;
+  --star: #b06000;  --star-bg: #fff0d0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* -- Header -- */
+header {
+  background: var(--accent);
+  color: white;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.22);
+}
+.header-inner {
+  max-width: 920px; margin: 0 auto;
+  padding: 16px 24px 8px;
+}
+.header-school { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.header-title  { font-size: 1.3rem; font-weight: 700; margin: 3px 0 4px; }
+.header-sub    { font-size: 0.8rem; opacity: 0.78; font-family: 'IBM Plex Serif', serif; font-style: italic; }
+.progress-wrap { max-width: 920px; margin: 0 auto; padding: 6px 24px 14px; }
+.progress-label { font-size: 0.73rem; color: rgba(255,255,255,0.7); display: flex; justify-content: space-between; margin-bottom: 4px; }
+.progress-track { height: 7px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
+.progress-fill  { height: 100%; background: #7ecba0; border-radius: 4px; transition: width .5s; width: 0; }
+
+/* -- AFB legend -- */
+.afb-legend {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+}
+.afb-legend-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+.afb-legend-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.afb-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  border-radius: 4px; padding: 3px 9px; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.04em;
+  border: 1.5px solid transparent;
+}
+.afb1 { background: var(--afb1-bg); color: var(--afb1); border-color: #9ac4de; }
+.afb2 { background: var(--afb2-bg); color: var(--afb2); border-color: #e8c96a; }
+.afb3 { background: var(--afb3-bg); color: var(--afb3); border-color: #e8a0a0; }
+.star-pill { background: var(--star-bg); color: var(--star); border-color: #e8c070; }
+
+/* -- Formula strip -- */
+.formula-strip {
+  background: var(--formula-bg);
+  color: #c8e8ff;
+  padding: 10px 0;
+  overflow-x: auto;
+}
+.formula-strip-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.formula-strip-label { font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.fchip {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px; padding: 3px 10px;
+  font-size: 0.82rem; white-space: nowrap;
+  color: #ddf0ff;
+}
+.fchip .mjx-container { display: inline !important; }
+
+/* -- Main -- */
+main { max-width: 920px; margin: 0 auto; padding: 26px 24px 60px; }
+
+/* -- Section -- */
+.section { margin-bottom: 26px; }
+.section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.section-icon {
+  width: 32px; height: 32px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; flex-shrink: 0;
+}
+.s-stamm      .section-icon { background: #e0f0ff; }
+.s-hauptsatz  .section-icon { background: #fdecd8; }
+.s-bestimmt   .section-icon { background: #f5f0d8; }
+.s-anfang     .section-icon { background: #dce6f5; }
+.s-anwendung  .section-icon { background: #ece0f5; }
+.s-flaeche    .section-icon { background: #dff0e8; }
+.s-symmetrie  .section-icon { background: #fde8e8; }
+.section-title { font-size: 0.98rem; font-weight: 700; }
+.section-count { font-size: 0.72rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-left: auto; }
+
+/* -- Cards -- */
+.card-list { display: flex; flex-direction: column; gap: 5px; }
+
+.comp-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  display: flex; align-items: stretch;
+  transition: border-color .18s, box-shadow .18s;
+  overflow: hidden;
+}
+.comp-card:hover { border-color: #a8bed8; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.comp-card.done { background: var(--green-light); border-color: #a0d4b8; }
+.comp-card.done .comp-text { text-decoration: line-through; color: #3a7a54; opacity: 0.72; }
+.comp-card.star-card { border-color: #e0c060; background: var(--yellow-light); }
+.comp-card.star-card.done { background: var(--green-light); border-color: #a0d4b8; }
+
+/* Checkbox */
+.comp-check {
+  width: 46px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.comp-check:hover { background: rgba(0,0,0,0.03); }
+.checkbox {
+  width: 19px; height: 19px;
+  border: 2px solid var(--border); border-radius: 4px;
+  background: white; display: flex; align-items: center; justify-content: center;
+  pointer-events: none; transition: all .15s;
+}
+.comp-card.done .checkbox { background: var(--green); border-color: var(--green); }
+.checkbox::after {
+  content: ''; display: none;
+  width: 4px; height: 8px;
+  border: 2px solid white; border-top: none; border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+.comp-card.done .checkbox::after { display: block; }
+
+/* Body */
+.comp-body { flex: 1; padding: 9px 10px; min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-text { font-size: 0.875rem; line-height: 1.45; flex: 1; min-width: 160px; }
+.comp-text .mjx-container { display: inline !important; }
+
+/* AFB badge on card */
+.card-afb { flex-shrink: 0; }
+
+/* Ueben button */
+.comp-btn {
+  padding: 0 14px; background: none; border: none;
+  border-left: 1.5px solid var(--border);
+  color: var(--accent); font-size: 0.76rem; font-weight: 700;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer; white-space: nowrap; letter-spacing: 0.03em;
+  transition: background .14s;
+}
+.comp-btn:hover { background: var(--accent-light); }
+
+/* -- Modal -- */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(10,10,14,0.54); z-index: 500;
+  justify-content: center; align-items: flex-start;
+  padding: 36px 14px 20px; overflow-y: auto;
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 12px;
+  width: 100%; max-width: 640px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+  animation: slideUp .2s ease; overflow: hidden;
+}
+@keyframes slideUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+.modal-head {
+  background: var(--accent); color: white;
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+}
+.modal-head h3 { font-size: 0.93rem; font-weight: 600; }
+.modal-close {
+  background: rgba(255,255,255,0.15); border: none; color: white;
+  width: 26px; height: 26px; border-radius: 5px; cursor: pointer; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: rgba(255,255,255,0.28); }
+
+.modal-tabs { display: flex; border-bottom: 2px solid var(--border); background: var(--surface2); }
+.mtab {
+  flex: 1; padding: 9px 8px; border: none; background: none;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+  color: var(--text-muted); cursor: pointer;
+  border-bottom: 2.5px solid transparent; margin-bottom: -2px;
+  transition: color .14s;
+}
+.mtab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
+
+.modal-body { padding: 18px 20px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Task / solution content */
+.task-box {
+  background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 13px 15px; font-size: 0.875rem; line-height: 1.65;
+  margin-bottom: 12px;
+}
+.task-box p { margin-bottom: 5px; }
+.task-box p:last-child { margin-bottom: 0; }
+.given {
+  display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.8em;
+  background: rgba(0,0,0,0.06); padding: 7px 10px; border-radius: 5px; margin: 7px 0;
+  line-height: 1.7;
+}
+.subtasks {
+  margin: 8px 0 4px; display: flex; flex-direction: column; gap: 5px;
+}
+.subtask {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 0.875rem; line-height: 1.55;
+}
+.subtask-label {
+  flex-shrink: 0; width: 20px;
+  font-weight: 700; color: var(--accent);
+}
+.subtask-body { flex: 1; }
+.hint-box {
+  background: rgba(43,76,140,0.07); border-left: 3px solid var(--accent);
+  border-radius: 0 5px 5px 0; padding: 5px 10px;
+  font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;
+  font-style: italic;
+}
+.sol-toggle {
+  width: 100%; background: none; border: 1.5px solid var(--border); border-radius: 6px;
+  padding: 8px 14px; font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.8rem; font-weight: 600; color: var(--text-muted); cursor: pointer;
+  margin-bottom: 10px; transition: all .14s; text-align: left;
+}
+.sol-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sol-box {
+  display: none; background: var(--green-light); border: 1.5px solid #a0d4b8;
+  border-radius: 8px; padding: 13px 15px; font-size: 0.855rem; line-height: 1.65;
+}
+.sol-box.open { display: block; animation: fadeIn .18s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.sol-step { display: flex; gap: 8px; margin-bottom: 9px; }
+.sol-step:last-child { margin-bottom: 0; }
+.snum {
+  width: 19px; height: 19px; flex-shrink: 0; margin-top: 2px;
+  background: var(--green); color: white; border-radius: 50%;
+  font-size: 0.67rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.sol-step .mjx-container { display: inline !important; }
+.fbox {
+  display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.82em;
+  background: rgba(255,255,255,0.72); padding: 3px 8px; border-radius: 4px; margin: 2px 0;
+}
+.result {
+  display: inline-block; background: var(--green); color: white;
+  border-radius: 5px; padding: 5px 12px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.83em; font-weight: 600; margin-top: 8px;
+}
+.dmath { text-align: center; margin: 8px 0; overflow-x: auto; }
+
+/* Prompt tab */
+.prompt-box {
+  background: var(--formula-bg); color: #c8e8ff;
+  border-radius: 8px; padding: 13px 15px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.77rem; line-height: 1.65;
+  white-space: pre-wrap; max-height: 230px; overflow-y: auto; margin-bottom: 12px;
+}
+.ai-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.ai-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 13px; border: 1.5px solid var(--border); border-radius: 6px;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; text-decoration: none; background: white; color: var(--text);
+  transition: all .14s;
+}
+.ai-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.ai-btn.copy { background: var(--accent); color: white; border-color: var(--accent); }
+.ai-btn.copy:hover { background: #1e3d74; }
+
+/* Footer */
+footer {
+  text-align: center; color: var(--text-muted); font-size: 0.73rem;
+  padding: 18px; border-top: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.05em;
+}
+
+@media(max-width:500px) {
+  main { padding: 18px 14px 40px; }
+  .comp-btn { padding: 0 9px; font-size: 0.7rem; }
+}
+
+/* --- Tabellen in Aufgaben/Loesungen --- */
+.ltbl { width:100%; border-collapse:collapse; margin:8px 0; font-size:0.86rem; }
+.ltbl th, .ltbl td { border:1px solid var(--line, #d4d4d8); padding:4px 7px; text-align:center; }
+.ltbl th { background:#f4f4f5; font-weight:600; }
+.ltbl td.lh { text-align:left; font-weight:600; background:#fafafa; }
+.cas { font-family:'IBM Plex Mono', ui-monospace, monospace; font-size:0.85em; background:#f4f4f5; padding:1px 5px; border-radius:4px; }
+
+/* --- lange Formeln und Tabellen auf schmalen Displays --- */
+.sol-step > div:last-child, .task-box, .subtask-body, .hint-box, .result { overflow-x: auto; overflow-y: hidden; }
+mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding-bottom: 2px; }
+@media (max-width: 600px){
+  .ltbl { display: block; overflow-x: auto; white-space: nowrap; font-size: 0.8rem; }
+  .ltbl th, .ltbl td { padding: 3px 5px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="header-school">Lore-Lorentz-Schule &nbsp;&middot;&nbsp; Mathematik 13NP</div>
+    <div class="header-title">Lernliste: Stochastik</div>
+    <div class="header-sub">Klausurvorbereitung Q1 &nbsp;&middot;&nbsp; Bedingte Wahrscheinlichkeit, Binomialverteilung &amp; Kennzahlen &nbsp;&middot;&nbsp; AFB I&ndash;III</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Ihr Fortschritt</span>
+      <span id="prog-text">0 von 0 Kompetenzen</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+</header>
+
+<!-- AFB LEGENDE -->
+<div class="afb-legend">
+  <div class="afb-legend-inner">
+    <span class="afb-legend-label">Anforderungsbereiche:</span>
+    <span class="afb-pill afb1">AFB I &nbsp;Reproduktion</span>
+    <span class="afb-pill afb2">AFB II &nbsp;Transfer</span>
+    <span class="afb-pill afb3">AFB III &nbsp;Reflexion</span>
+    <span class="afb-pill star-pill">&#9733; Knobelaufgabe</span>
+  </div>
+</div>
+
+<!-- FORMELLEISTE -->
+<div class="formula-strip">
+  <div class="formula-strip-inner">
+    <span class="formula-strip-label">Formeln</span>
+    <span class="fchip">\(P(A\mid B)=\dfrac{P(A\cap B)}{P(B)}\)</span>
+    <span class="fchip">\(P(B\cap A)=P(B)\cdot P(A\mid B)\)</span>
+    <span class="fchip">\(P(X=k)=\binom{n}{k}p^{k}(1-p)^{n-k}\)</span>
+    <span class="fchip">\(P(X\ge k)=1-P(X\le k-1)\)</span>
+    <span class="fchip">\(\mu=n\cdot p\)</span>
+    <span class="fchip">\(\sigma=\sqrt{n\,p\,(1-p)}\)</span>
+    <span class="fchip">\(E(X)=\sum_k x_k\cdot P(X=x_k)\)</span>
+  </div>
+</div>
+
+<main>
+
+<!-- 1. SPRACHE UND NOTATION -->
+<div class="section s-notation">
+  <div class="section-header">
+    <div class="section-icon">&#x1F524;</div>
+    <div class="section-title">Sprache und Notation</div>
+    <div class="section-count" id="cnt-notation"></div>
+  </div>
+  <div class="card-list" id="sec-notation">
+
+    <div class="comp-card" data-id="n1" data-sec="notation">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(P(A)\), \(P(A\cap B)\) und \(P(A\mid B)\) in Worte &uuml;bersetzen und umgekehrt einen Text in Symbole fassen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('n1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="n2" data-sec="notation">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann eine Vierfeldertafel aus Prozent- oder St&uuml;ckzahlangaben vollst&auml;ndig ausf&uuml;llen (Randsummen pr&uuml;fen!).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('n2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="n3" data-sec="notation">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann aus einer Vierfeldertafel \(P(A\cap B)\) und \(P(A\mid B)\) ablesen und wei&szlig;, dass bei \(P(A\mid B)\) nur noch die Zeile/Spalte von \(B\) die Grundgesamtheit ist.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('n3')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="n4" data-sec="notation">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann erkl&auml;ren, warum \(P(A\mid B)\) und \(P(B\mid A)\) zwei verschiedene Dinge beschreiben, und beide an einem Beispiel unterscheiden.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('n4')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 2. BAUMDIAGRAMM UND PFADREGELN -->
+<div class="section s-baum">
+  <div class="section-header">
+    <div class="section-icon">&#x1F333;</div>
+    <div class="section-title">Baumdiagramm und Pfadregeln</div>
+    <div class="section-count" id="cnt-baum"></div>
+  </div>
+  <div class="card-list" id="sec-baum">
+
+    <div class="comp-card" data-id="t1" data-sec="baum">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann ein zweistufiges Baumdiagramm aufstellen und wei&szlig;, dass an den Ast&auml;sten der zweiten Stufe <strong>bedingte</strong> Wahrscheinlichkeiten stehen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('t1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="t2" data-sec="baum">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die 1. Pfadregel (Pfad entlang <strong>multiplizieren</strong>) und die 2. Pfadregel (Pfade <strong>addieren</strong>) anwenden.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('t2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="t3" data-sec="baum">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann ein Baumdiagramm <strong>umdrehen</strong>: die Stufen tauschen und die neuen bedingten Wahrscheinlichkeiten berechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('t3')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="t4" data-sec="baum">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann zwischen Vierfeldertafel und Baumdiagramm wechseln und begr&uuml;nden, welches Werkzeug zu welcher Aufgabe passt.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('t4')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="t5" data-sec="baum">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann in mehrstufigen Baumdiagrammen &bdquo;mindestens&ldquo; und &bdquo;h&ouml;chstens&ldquo; &uuml;ber Pfadsummen bzw. das Gegenereignis berechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('t5')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 3. BEDINGTE WAHRSCHEINLICHKEIT RECHNEN -->
+<div class="section s-bedingt">
+  <div class="section-header">
+    <div class="section-icon">&#x1F50D;</div>
+    <div class="section-title">Bedingte Wahrscheinlichkeit rechnen</div>
+    <div class="section-count" id="cnt-bedingt"></div>
+  </div>
+  <div class="card-list" id="sec-bedingt">
+
+    <div class="comp-card" data-id="c1" data-sec="bedingt">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Formel \(P(A\mid B)=\frac{P(A\cap B)}{P(B)}\) anwenden und sie aus der 2. Pfadregel herleiten.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('c1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="c2" data-sec="bedingt">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann bei einem Pr&uuml;fverfahren die Sensitivit&auml;t \(P(T\mid D)\) von der eigentlich interessanten Gr&ouml;&szlig;e \(P(D\mid T)\) unterscheiden und letztere berechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('c2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="c3" data-sec="bedingt">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann erkl&auml;ren, warum ein Test mit hoher Trefferquote trotzdem viele falsche Alarme liefert, und das Ergebnis im Sachzusammenhang beurteilen.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('c3')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 4. BERNOULLI UND BINOMIALVERTEILUNG -->
+<div class="section s-bernoulli">
+  <div class="section-header">
+    <div class="section-icon">&#x1F3AF;</div>
+    <div class="section-title">Bernoulli-Kette und Binomialverteilung</div>
+    <div class="section-count" id="cnt-bernoulli"></div>
+  </div>
+  <div class="card-list" id="sec-bernoulli">
+
+    <div class="comp-card" data-id="d1" data-sec="bernoulli">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann pr&uuml;fen, ob eine Situation eine Bernoulli-Kette ist (zwei Ausg&auml;nge, festes \(n\), konstantes \(p\), unabh&auml;ngige Versuche) und \(n\), \(p\) und \(X\) benennen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="d2" data-sec="bernoulli">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Binomialkoeffizienten \(\binom{n}{k}\) berechnen und erkl&auml;ren, dass er die Anzahl der Pfade mit \(k\) Treffern z&auml;hlt.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="d3" data-sec="bernoulli">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(P(X=k)=\binom{n}{k}p^{k}(1-p)^{n-k}\) von Hand ausrechnen und jeden Faktor der Formel deuten.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d3')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="d4" data-sec="bernoulli">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich erkenne den typischen Fehler \(P(X=k)=p^{k}(1-p)^{n-k}\) (Binomialkoeffizient vergessen) und kann erkl&auml;ren, was dabei untergeht.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d4')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="d5" data-sec="bernoulli">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann ein Histogramm der Binomialverteilung zeichnen und seine Form beschreiben (eingipflig, Lage des Gipfels bei \(\mu\)).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d5')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 5. MINDESTENS, HOECHSTENS, RECHNERBEFEHLE -->
+<div class="section s-cas">
+  <div class="section-header">
+    <div class="section-icon">&#x1F5A9;</div>
+    <div class="section-title">Mindestens, h&ouml;chstens &amp; die Rechnerbefehle</div>
+    <div class="section-count" id="cnt-cas"></div>
+  </div>
+  <div class="card-list" id="sec-cas">
+
+    <div class="comp-card" data-id="e1" data-sec="cas">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Sprache in Ungleichungen &uuml;bersetzen: genau, h&ouml;chstens, mindestens, weniger als, mehr als, zwischen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="e2" data-sec="cas">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann zwischen <code>binomPdf</code> (genau ein Balken) und <code>binomCdf</code> (aufsummierte Balken) sicher w&auml;hlen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="e3" data-sec="cas">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(P(X\ge k)\) &uuml;ber das Gegenereignis \(1-P(X\le k-1)\) berechnen und vermeide die \(k-1\)-Falle.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e3')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="e4" data-sec="cas">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(P(a\le X\le b)\) als Differenz zweier kumulierter Werte berechnen und achte auf die R&auml;nder.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e4')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="e5" data-sec="cas">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann eine Pr&uuml;f- oder Annahmeregel beurteilen: Wie wahrscheinlich entdeckt sie einen Fehler &mdash; und wie wahrscheinlich schl&auml;gt sie falschen Alarm?</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e5')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 6. ERWARTUNGSWERT UND STANDARDABWEICHUNG -->
+<div class="section s-kennzahlen">
+  <div class="section-header">
+    <div class="section-icon">&#x2696;</div>
+    <div class="section-title">Erwartungswert und Standardabweichung</div>
+    <div class="section-count" id="cnt-kennzahlen"></div>
+  </div>
+  <div class="card-list" id="sec-kennzahlen">
+
+    <div class="comp-card" data-id="f1" data-sec="kennzahlen">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Erwartungswert \(E(X)=\mu=\sum_k x_k\cdot P(X=x_k)\) berechnen, auch bei Gewinn-/Verlustwerten.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('f1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="f2" data-sec="kennzahlen">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann bei einer Binomialverteilung \(\mu=n\cdot p\) und \(\sigma=\sqrt{n\,p\,(1-p)}\) berechnen und vergesse die Wurzel nicht.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('f2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="f3" data-sec="kennzahlen">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann erkl&auml;ren, warum \(\mu\) allein eine Verteilung nicht beschreibt: \(\mu\) sagt <em>wo</em>, \(\sigma\) sagt <em>wie breit</em>.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('f3')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="f4" data-sec="kennzahlen">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(\mu\) im Sachzusammenhang deuten (langfristiger Durchschnitt, Fairness eines Spiels) und wei&szlig;, dass \(\mu\) kein m&ouml;glicher Einzelwert sein muss.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('f4')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 7. MESSREIHE UND MODELL -->
+<div class="section s-messreihe">
+  <div class="section-header">
+    <div class="section-icon">&#x1F4CA;</div>
+    <div class="section-title">Messreihe und Modell</div>
+    <div class="section-count" id="cnt-messreihe"></div>
+  </div>
+  <div class="card-list" id="sec-messreihe">
+
+    <div class="comp-card" data-id="g1" data-sec="messreihe">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann aus einer Messreihe absolute und relative H&auml;ufigkeiten bestimmen, ein Histogramm zeichnen und seine Form beschreiben.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('g1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="g2" data-sec="messreihe">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(\bar{x}\) und \(s\) (aus Daten) von \(\mu\) und \(\sigma\) (aus dem Modell) unterscheiden und beide richtig benennen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('g2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="g3" data-sec="messreihe">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Wahrscheinlichkeit der \(1\sigma\)- und \(2\sigma\)-Umgebung berechnen und mit den Faustwerten rund 68&nbsp;% und 95&nbsp;% vergleichen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('g3')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="g4" data-sec="messreihe">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann begr&uuml;nden, warum \(\bar{x}\) und \(\mu\) nie genau gleich sind, und \(\bar{x}\), \(s\) als Sch&auml;tzung f&uuml;r \(\mu\), \(\sigma\) einordnen.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('g4')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 8. KNOBELAUFGABEN -->
+<div class="section s-knobel">
+  <div class="section-header">
+    <div class="section-icon">&#9733;</div>
+    <div class="section-title">Knobelaufgaben</div>
+    <div class="section-count" id="cnt-knobel"></div>
+  </div>
+  <div class="card-list" id="sec-knobel">
+
+    <div class="comp-card" data-id="k1" data-sec="knobel">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den n&ouml;tigen Stichprobenumfang \(n\) aus einer Bedingung wie \(P(X\ge 1)\ge 0{,}95\) bestimmen.</span>
+        <span class="afb-pill star-pill card-afb">&#9733; Knobel</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('k1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="k2" data-sec="knobel">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann eine bedingte Wahrscheinlichkeit mit einem <strong>unbekannten Parameter</strong> aufstellen und die entstehende Gleichung l&ouml;sen.</span>
+        <span class="afb-pill star-pill card-afb">&#9733; Knobel</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('k2')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+</main>
+<footer>Lore-Lorentz-Schule &nbsp;&middot;&nbsp; Mathematik 13NP &nbsp;&middot;&nbsp; Q1 Stochastik<!-- legal-links --><div style="margin-top:0.8rem;font-size:0.8rem"><a href="impressum.html">Impressum</a> &nbsp;·&nbsp; <a href="datenschutz.html">Datenschutz</a></div>
+</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="m-title">&Uuml;bungsaufgabe</h3>
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" onclick="switchTab(0)">&#x1F4DD; Aufgabe</button>
+      <button class="mtab" onclick="switchTab(1)">&#x2705; L&ouml;sung</button>
+      <button class="mtab" onclick="switchTab(2)">&#x1F916; KI-Prompt</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-panel active" id="tp0"></div>
+      <div class="tab-panel" id="tp1"></div>
+      <div class="tab-panel" id="tp2"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// -----------------------------------------
+// TASK DATA
+// -----------------------------------------
+const T = {
+
+// ===== 1. SPRACHE UND NOTATION =====
+n1:{title:"Symbole lesen und schreiben (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>In einem Betrieb werden Bauteile gepr&uuml;ft. Es sei<br>
+  \\(A\\): &bdquo;Das Bauteil ist defekt&ldquo; &nbsp;&nbsp; \\(B\\): &bdquo;Das Bauteil kommt von Linie 1&ldquo;</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Beschreiben Sie in Worten: \\(P(A\\cap B)\\), \\(P(A\\mid B)\\), \\(P(B\\mid A)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Schreiben Sie als Symbol: &bdquo;5&nbsp;% aller Bauteile sind defekte Teile von Linie&nbsp;1.&ldquo;</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Schreiben Sie als Symbol: &bdquo;Von den Teilen der Linie&nbsp;1 sind 10&nbsp;% defekt.&ldquo;</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Schreiben Sie als Symbol: &bdquo;75&nbsp;% der defekten Teile stammen von Linie&nbsp;1.&ldquo;</span></div>
+  </div>
+  <div class="hint-box">Fragen Sie sich immer: Welche Gruppe ist die Grundgesamtheit, also die 100&nbsp;%?</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(P(A\\cap B)\\): Anteil der Teile, die defekt <em>und</em> von Linie&nbsp;1 sind (bezogen auf <strong>alle</strong> Teile).<br>
+  \\(P(A\\mid B)\\): Anteil der defekten Teile <strong>unter den Teilen von Linie&nbsp;1</strong>.<br>
+  \\(P(B\\mid A)\\): Anteil der Teile von Linie&nbsp;1 <strong>unter den defekten Teilen</strong>.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>&bdquo;aller Bauteile&ldquo; &rarr; Grundgesamtheit alle: \\(P(A\\cap B)=0{,}05\\)</div></div>
+<div class="sol-step"><div class="snum">c</div><div>&bdquo;Von den Teilen der Linie 1&ldquo; &rarr; Bedingung \\(B\\): \\(P(A\\mid B)=0{,}10\\)</div></div>
+<div class="sol-step"><div class="snum">d</div><div>&bdquo;der defekten Teile&ldquo; &rarr; Bedingung \\(A\\): \\(P(B\\mid A)=0{,}75\\)</div></div>
+<div class="result">Der Satzteil nach &bdquo;von den &hellip;&ldquo; ist die Bedingung &mdash; er steht hinter dem Strich.</div>`,
+prompt:`Ich lerne Stochastik (Mathe Klasse 13, Grundkurs) und uebe die Notation P(A), P(A geschnitten B) und P(A|B). Erstelle 5 kurze Saetze aus einem Sachkontext (Qualitaetskontrolle, Schule oder Medizin), die ich in Symbole uebersetzen soll, und 3 Symbole, die ich in Worte fassen soll. Danach vollstaendige Loesungen mit Begruendung, welche Gruppe jeweils die Grundgesamtheit ist. Keine Baumdiagramme, nur Notation.`},
+
+n2:{title:"Vierfeldertafel ausf&uuml;llen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Werk pr&uuml;ft 500 Bauteile. 300 Teile kommen von Linie&nbsp;1 (\\(L_1\\)), die &uuml;brigen von Linie&nbsp;2 (\\(L_2\\)). Insgesamt sind 40 Teile defekt (\\(D\\)), davon 30 von Linie&nbsp;1.</p>
+  <table class="ltbl">
+    <tr><th></th><th>\\(D\\)</th><th>\\(\\overline{D}\\)</th><th>Summe</th></tr>
+    <tr><td class="lh">\\(L_1\\)</td><td>30</td><td></td><td>300</td></tr>
+    <tr><td class="lh">\\(L_2\\)</td><td></td><td></td><td></td></tr>
+    <tr><td class="lh">Summe</td><td>40</td><td></td><td>500</td></tr>
+  </table>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Vervollst&auml;ndigen Sie die Tafel.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Geben Sie dieselbe Tafel mit relativen H&auml;ufigkeiten an.</span></div>
+  </div>
+  <div class="hint-box">Jede Zeile und jede Spalte muss sich zur Randsumme addieren &mdash; das ist Ihre Kontrolle.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+<table class="ltbl">
+  <tr><th></th><th>\\(D\\)</th><th>\\(\\overline{D}\\)</th><th>Summe</th></tr>
+  <tr><td class="lh">\\(L_1\\)</td><td>30</td><td>270</td><td>300</td></tr>
+  <tr><td class="lh">\\(L_2\\)</td><td>10</td><td>190</td><td>200</td></tr>
+  <tr><td class="lh">Summe</td><td>40</td><td>460</td><td>500</td></tr>
+</table>
+\\(500-300=200\\); \\(40-30=10\\); \\(300-30=270\\); \\(200-10=190\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>Alle Werte durch 500 teilen:
+<table class="ltbl">
+  <tr><th></th><th>\\(D\\)</th><th>\\(\\overline{D}\\)</th><th>Summe</th></tr>
+  <tr><td class="lh">\\(L_1\\)</td><td>0,06</td><td>0,54</td><td>0,60</td></tr>
+  <tr><td class="lh">\\(L_2\\)</td><td>0,02</td><td>0,38</td><td>0,40</td></tr>
+  <tr><td class="lh">Summe</td><td>0,08</td><td>0,92</td><td>1,00</td></tr>
+</table>
+</div></div>
+<div class="result">In der Mitte stehen immer die &bdquo;und&ldquo;-Wahrscheinlichkeiten \\(P(L_i\\cap D)\\), am Rand die einzelnen \\(P(L_i)\\) bzw. \\(P(D)\\).</div>`,
+prompt:`Ich uebe Vierfeldertafeln (Mathe Klasse 13, Grundkurs). Erstelle 3 Aufgaben: einmal mit absoluten Zahlen, einmal mit Prozentangaben, einmal mit nur drei gegebenen Werten, sodass ich erst ueberlegen muss, wo ich anfange. Gib die unvollstaendigen Tafeln an. Danach vollstaendige Loesungen mit den Rechenschritten und der Randsummen-Kontrolle.`},
+
+n3:{title:"Aus der Tafel ablesen: und-Wahrscheinlichkeit oder bedingte? (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Gegeben ist die relative Vierfeldertafel aus der vorigen Aufgabe:</p>
+  <table class="ltbl">
+    <tr><th></th><th>\\(D\\)</th><th>\\(\\overline{D}\\)</th><th>Summe</th></tr>
+    <tr><td class="lh">\\(L_1\\)</td><td>0,06</td><td>0,54</td><td>0,60</td></tr>
+    <tr><td class="lh">\\(L_2\\)</td><td>0,02</td><td>0,38</td><td>0,40</td></tr>
+    <tr><td class="lh">Summe</td><td>0,08</td><td>0,92</td><td>1,00</td></tr>
+  </table>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Lesen Sie \\(P(D)\\) und \\(P(L_1\\cap D)\\) direkt ab.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(P(D\\mid L_1)\\) und \\(P(D\\mid L_2)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \\(P(L_1\\mid D)\\) und deuten Sie den Wert.</span></div>
+  </div>
+  <div class="hint-box">Bedingte Wahrscheinlichkeit = Feld in der Mitte geteilt durch die Randsumme der Bedingung.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(P(D)=0{,}08\\) (Randsumme) &nbsp;&nbsp; \\(P(L_1\\cap D)=0{,}06\\) (Mittelfeld)</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(P(D\\mid L_1)=\\dfrac{P(D\\cap L_1)}{P(L_1)}=\\dfrac{0{,}06}{0{,}60}=0{,}10\\) &nbsp;&rarr;&nbsp; 10&nbsp;% der Teile von Linie&nbsp;1 sind defekt.<br>
+\\(P(D\\mid L_2)=\\dfrac{0{,}02}{0{,}40}=0{,}05\\) &nbsp;&rarr;&nbsp; Linie&nbsp;2 arbeitet sauberer.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+\\(P(L_1\\mid D)=\\dfrac{P(L_1\\cap D)}{P(D)}=\\dfrac{0{,}06}{0{,}08}=0{,}75\\)<br>
+Von den defekten Teilen stammen 75&nbsp;% aus Linie&nbsp;1 &mdash; nicht, weil Linie&nbsp;1 besonders schlecht ist, sondern weil sie viel mehr Teile produziert.
+</div></div>
+<div class="result">\\(P(D\\mid L_1)=0{,}10\\), aber \\(P(L_1\\mid D)=0{,}75\\) &mdash; dieselben Teile, zwei ganz verschiedene Aussagen.</div>`,
+prompt:`Ich uebe das Ablesen und Berechnen bedingter Wahrscheinlichkeiten aus einer Vierfeldertafel (Mathe Klasse 13, Grundkurs). Gib mir eine vollstaendig ausgefuellte Vierfeldertafel und 6 Fragen gemischt: manche sind direkt ablesbar (P(A), P(A geschnitten B)), manche muss ich mit der Formel berechnen (P(A|B), P(B|A)). Danach die Loesungen mit Angabe, welche Zahl die Grundgesamtheit war, und einem Satz zur Deutung.`},
+
+n4:{title:"\\(P(A\\mid B)\\) oder \\(P(B\\mid A)\\)? (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Beurteilen Sie die folgende Aussage einer Zeitung:</p>
+  <p><em>&bdquo;90&nbsp;% aller Unfallfahrer hatten getrunken. Also verursachen 90&nbsp;% der Leute, die trinken, einen Unfall.&ldquo;</em></p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Schreiben Sie beide Aussagen in Symbolen auf (\\(U\\): Unfall, \\(G\\): getrunken).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erkl&auml;ren Sie, worin der Denkfehler besteht.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Konstruieren Sie eine Vierfeldertafel mit 1000 Personen, in der \\(P(G\\mid U)=0{,}9\\) gilt, \\(P(U\\mid G)\\) aber sehr klein ist.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+Aussage 1: \\(P(G\\mid U)=0{,}9\\) (Bedingung: Unfall).<br>
+Aussage 2: \\(P(U\\mid G)=0{,}9\\) (Bedingung: getrunken).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+Die Bedingung wurde vertauscht. \\(P(G\\mid U)\\) und \\(P(U\\mid G)\\) haben denselben Z&auml;hler \\(P(G\\cap U)\\), aber verschiedene Nenner: einmal \\(P(U)\\), einmal \\(P(G)\\). Weil es sehr viel mehr Trinker als Unf&auml;lle gibt, ist \\(P(U)\\ll P(G)\\) und damit \\(P(U\\mid G)\\) viel kleiner.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+Beispiel: 10 Unf&auml;lle, davon 9 mit Alkohol; insgesamt 300 Personen mit Alkohol.
+<table class="ltbl">
+  <tr><th></th><th>\\(U\\)</th><th>\\(\\overline{U}\\)</th><th>Summe</th></tr>
+  <tr><td class="lh">\\(G\\)</td><td>9</td><td>291</td><td>300</td></tr>
+  <tr><td class="lh">\\(\\overline{G}\\)</td><td>1</td><td>699</td><td>700</td></tr>
+  <tr><td class="lh">Summe</td><td>10</td><td>990</td><td>1000</td></tr>
+</table>
+\\(P(G\\mid U)=\\frac{9}{10}=0{,}9\\), aber \\(P(U\\mid G)=\\frac{9}{300}=0{,}03\\).
+</div></div>
+<div class="result">\\(P(G\\mid U)=0{,}9\\) und \\(P(U\\mid G)=0{,}03\\) &mdash; aus einer Richtung folgt nie die andere.</div>`,
+prompt:`Ich uebe den Unterschied zwischen P(A|B) und P(B|A) (Mathe Klasse 13, Grundkurs). Gib mir 4 Zeitungs- oder Alltagsaussagen, in denen die beiden bedingten Wahrscheinlichkeiten verwechselt werden. Ich soll jeweils in Symbolen aufschreiben, was behauptet wird, was tatsaechlich gilt, und den Fehler erklaeren. Erstelle zu einer Aussage ein konkretes Zahlenbeispiel mit Vierfeldertafel ueber 1000 Personen. Danach vollstaendige Loesungen.`},
+
+// ===== 2. BAUMDIAGRAMM UND PFADREGELN =====
+t1:{title:"Baumdiagramm aufstellen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Betrieb bezieht Schrauben von zwei Werken. Werk&nbsp;1 liefert 60&nbsp;% der Schrauben, Werk&nbsp;2 die restlichen 40&nbsp;%. Aus Werk&nbsp;1 sind 3&nbsp;% der Schrauben defekt, aus Werk&nbsp;2 sind es 8&nbsp;%.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Zeichnen Sie ein zweistufiges Baumdiagramm (1. Stufe Werk, 2. Stufe defekt/intakt) und beschriften Sie alle &Auml;ste.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Geben Sie zu drei &Auml;sten an, welche Wahrscheinlichkeit in Symbolschreibweise dort steht.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Pr&uuml;fen Sie: Was ergibt die Summe der &Auml;ste, die von einem Knoten abgehen?</span></div>
+  </div>
+  <div class="hint-box">An der 1. Stufe stehen gew&ouml;hnliche Wahrscheinlichkeiten, an der 2. Stufe immer <strong>bedingte</strong>.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+1. Stufe: \\(W_1\\) mit 0,6 &nbsp;|&nbsp; \\(W_2\\) mit 0,4<br>
+2. Stufe unter \\(W_1\\): \\(D\\) mit 0,03 &nbsp;|&nbsp; \\(\\overline{D}\\) mit 0,97<br>
+2. Stufe unter \\(W_2\\): \\(D\\) mit 0,08 &nbsp;|&nbsp; \\(\\overline{D}\\) mit 0,92
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+1. Ast: \\(P(W_1)=0{,}6\\)<br>
+Ast darunter: \\(P(D\\mid W_1)=0{,}03\\) &mdash; &bdquo;defekt, <em>wenn</em> aus Werk&nbsp;1&ldquo;<br>
+rechter Zweig unten: \\(P(\\overline{D}\\mid W_2)=0{,}92\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+Jede Astgruppe summiert sich zu 1: \\(0{,}6+0{,}4=1\\); \\(0{,}03+0{,}97=1\\); \\(0{,}08+0{,}92=1\\). Das ist die Standardkontrolle.
+</div></div>
+<div class="result">2. Stufe = bedingte Wahrscheinlichkeiten; Astgruppen summieren sich stets zu 1.</div>`,
+prompt:`Ich uebe das Aufstellen zweistufiger Baumdiagramme (Mathe Klasse 13, Grundkurs). Gib mir 3 Sachtexte (Lieferanten, Schulweg, Krankheitstest) mit Prozentangaben, zu denen ich ein Baumdiagramm aufstellen soll. Beschreibe in der Loesung die Baumstruktur in Textform (Stufe, Ast, Wahrscheinlichkeit, Symbolschreibweise) und erklaere, warum an der zweiten Stufe bedingte Wahrscheinlichkeiten stehen.`},
+
+t2:{title:"Die beiden Pfadregeln (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Es gilt weiter: \\(P(W_1)=0{,}6\\), \\(P(D\\mid W_1)=0{,}03\\), \\(P(W_2)=0{,}4\\), \\(P(D\\mid W_2)=0{,}08\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(P(W_1\\cap D)\\) und \\(P(W_2\\cap D)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(P(D)\\), also den Anteil defekter Schrauben insgesamt.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \\(P(\\overline{D})\\) auf zwei verschiedenen Wegen.</span></div>
+  </div>
+  <div class="hint-box">Pfadregel 1: entlang eines Pfades <strong>multiplizieren</strong>. Pfadregel 2: Pfade mit gleichem Ergebnis <strong>addieren</strong>.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+\\(P(W_1\\cap D)=P(W_1)\\cdot P(D\\mid W_1)=0{,}6\\cdot 0{,}03=0{,}018\\)<br>
+\\(P(W_2\\cap D)=0{,}4\\cdot 0{,}08=0{,}032\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(P(D)=0{,}018+0{,}032=0{,}05\\) &nbsp;&rarr;&nbsp; 5&nbsp;% aller Schrauben sind defekt.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+Weg 1 (Gegenereignis): \\(P(\\overline{D})=1-0{,}05=0{,}95\\)<br>
+Weg 2 (Pfade addieren): \\(0{,}6\\cdot 0{,}97+0{,}4\\cdot 0{,}92=0{,}582+0{,}368=0{,}95\\) &#10003;
+</div></div>
+<div class="result">\\(P(D)=0{,}05\\); das Gegenereignis ist meist der k&uuml;rzere Weg.</div>`,
+prompt:`Ich uebe die beiden Pfadregeln im Baumdiagramm (Mathe Klasse 13, Grundkurs). Erstelle 3 Aufgaben mit zweistufigen Baeumen, in denen ich erst die und-Wahrscheinlichkeiten entlang der Pfade berechne (Pfadregel 1) und dann eine Gesamtwahrscheinlichkeit durch Addieren aller passenden Pfade (Pfadregel 2). Baue in eine Aufgabe ein, dass der Weg ueber das Gegenereignis kuerzer ist. Vollstaendige Loesungen mit Zwischenergebnissen.`},
+
+t3:{title:"Den Baum umdrehen (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Gegeben ist weiter der Lieferanten-Baum mit \\(P(W_1)=0{,}6\\), \\(P(D\\mid W_1)=0{,}03\\), \\(P(W_2)=0{,}4\\), \\(P(D\\mid W_2)=0{,}08\\) und \\(P(D)=0{,}05\\).</p>
+  <p>Eine defekte Schraube wird gefunden. Die Qualit&auml;tsabteilung will wissen, aus welchem Werk sie wahrscheinlich kommt.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Zeichnen Sie den umgedrehten Baum (1. Stufe defekt/intakt, 2. Stufe Werk).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(P(W_1\\mid D)\\) und \\(P(W_2\\mid D)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erkl&auml;ren Sie, warum \\(P(W_2\\mid D)\\) gr&ouml;&szlig;er ist als \\(P(W_2)\\).</span></div>
+  </div>
+  <div class="hint-box">Die Werte in der Mitte (\\(P(W_i\\cap D)\\)) &auml;ndern sich beim Umdrehen <strong>nicht</strong> &mdash; nur die Bedingung wechselt.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+1. Stufe: \\(D\\) mit 0,05 &nbsp;|&nbsp; \\(\\overline{D}\\) mit 0,95.<br>
+2. Stufe unter \\(D\\): \\(W_1\\) und \\(W_2\\) mit den noch zu berechnenden Werten.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(P(W_1\\mid D)=\\dfrac{P(W_1\\cap D)}{P(D)}=\\dfrac{0{,}018}{0{,}05}=0{,}36\\)<br>
+\\(P(W_2\\mid D)=\\dfrac{0{,}032}{0{,}05}=0{,}64\\)<br>
+Kontrolle: \\(0{,}36+0{,}64=1\\) &#10003;
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+Werk&nbsp;2 liefert nur 40&nbsp;% der Schrauben, produziert aber mit 8&nbsp;% mehr als doppelt so viele Ausf&auml;lle wie Werk&nbsp;1. Unter den defekten Teilen ist Werk&nbsp;2 daher &uuml;berrepr&auml;sentiert: \\(0{,}64 > 0{,}40\\).
+</div></div>
+<div class="result">\\(P(W_1\\mid D)=0{,}36\\), \\(P(W_2\\mid D)=0{,}64\\) &mdash; die defekte Schraube kommt eher aus Werk&nbsp;2.</div>`,
+prompt:`Ich uebe das Umdrehen von Baumdiagrammen (Mathe Klasse 13, Grundkurs): gegeben sind P(A), P(B|A), P(B|nicht A), gesucht ist P(A|B). Erstelle 3 Aufgaben aus verschiedenen Kontexten. Loese schrittweise: erst die und-Wahrscheinlichkeiten (Pfadregel 1), dann P(B) (Pfadregel 2), dann die Formel P(A|B)=P(A geschnitten B)/P(B), zum Schluss die Kontrolle, dass sich die neuen bedingten Wahrscheinlichkeiten zu 1 addieren. Kein Bayes-Formelgeschiebe, sondern den Weg ueber den Baum.`},
+
+t4:{title:"Welches Werkzeug? Tafel oder Baum (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Entscheiden Sie bei jeder Situation, ob Sie zuerst eine <strong>Vierfeldertafel</strong> oder ein <strong>Baumdiagramm</strong> anlegen, und begr&uuml;nden Sie.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Gegeben sind absolute Anzahlen aus einer Umfrage (200 Personen, nach Geschlecht und Antwort aufgeteilt).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Gegeben sind \\(P(A)=0{,}7\\), \\(P(B\\mid A)=0{,}2\\) und \\(P(B\\mid\\overline{A})=0{,}5\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Es wird dreimal hintereinander gezogen und nach &bdquo;mindestens einmal Treffer&ldquo; gefragt.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Gegeben sind \\(P(A)=0{,}4\\), \\(P(B)=0{,}3\\) und \\(P(A\\cap B)=0{,}1\\); gesucht ist \\(P(A\\mid\\overline{B})\\).</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div><strong>Tafel.</strong> Absolute Anzahlen lassen sich direkt eintragen, Randsummen liefern sofort alle Wahrscheinlichkeiten.</div></div>
+<div class="sol-step"><div class="snum">b</div><div><strong>Baum.</strong> Es sind genau die Gr&ouml;&szlig;en gegeben, die an den &Auml;sten stehen: eine Startwahrscheinlichkeit und zwei bedingte. Die Tafel entsteht daraus anschlie&szlig;end durch Pfadregel&nbsp;1.</div></div>
+<div class="sol-step"><div class="snum">c</div><div><strong>Baum</strong> (bzw. direkt das Gegenereignis). Bei mehr als zwei Stufen versagt die Vierfeldertafel &mdash; sie kennt nur zwei Merkmale mit je zwei Ausg&auml;ngen.</div></div>
+<div class="sol-step"><div class="snum">d</div><div><strong>Tafel.</strong> Mit \\(P(A)\\), \\(P(B)\\) und \\(P(A\\cap B)\\) sind drei Felder bekannt, alles Weitere folgt aus den Randsummen: \\(P(A\\cap\\overline{B})=0{,}4-0{,}1=0{,}3\\), \\(P(\\overline{B})=0{,}7\\), also \\(P(A\\mid\\overline{B})=\\frac{0{,}3}{0{,}7}\\approx 0{,}43\\).</div></div>
+<div class="result">Bedingte Werte gegeben &rarr; Baum. Und-Werte oder Anzahlen gegeben &rarr; Tafel. Mehr als zwei Stufen &rarr; immer Baum.</div>`,
+prompt:`Ich uebe die Werkzeugwahl in der Stochastik (Mathe Klasse 13, Grundkurs): Vierfeldertafel oder Baumdiagramm? Gib mir 6 kurze Situationen mit unterschiedlichen gegebenen Groessen (absolute Zahlen, bedingte Wahrscheinlichkeiten, Schnittwahrscheinlichkeiten, mehrstufige Versuche). Ich soll entscheiden und begruenden. Loese dann eine der Aufgaben mit beiden Werkzeugen, damit ich den Aufwand vergleichen kann.`},
+
+t5:{title:"Mindestens und h&ouml;chstens im Baum (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Aus der Produktion mit 5&nbsp;% Ausschuss werden drei Teile unabh&auml;ngig voneinander gezogen.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Wahrscheinlichkeit, dass <strong>kein</strong> Teil defekt ist.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die Wahrscheinlichkeit f&uuml;r <strong>mindestens ein</strong> defektes Teil.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie die Wahrscheinlichkeit f&uuml;r <strong>genau ein</strong> defektes Teil &mdash; z&auml;hlen Sie dazu die Pfade.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Berechnen Sie die Wahrscheinlichkeit f&uuml;r <strong>h&ouml;chstens ein</strong> defektes Teil.</span></div>
+  </div>
+  <div class="hint-box">&bdquo;Mindestens eins&ldquo; ist das Gegenereignis von &bdquo;keins&ldquo;.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(P(X=0)=0{,}95^3=0{,}857375\\approx 0{,}8574\\)</div></div>
+<div class="sol-step"><div class="snum">b</div><div>\\(P(X\\ge 1)=1-P(X=0)=1-0{,}8574=0{,}1426\\)</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+Drei Pfade (defekt an 1., 2. oder 3. Stelle), jeder mit \\(0{,}05\\cdot 0{,}95\\cdot 0{,}95\\):<br>
+\\(P(X=1)=3\\cdot 0{,}05\\cdot 0{,}95^2=3\\cdot 0{,}0451=0{,}1354\\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>\\(P(X\\le 1)=P(X=0)+P(X=1)=0{,}8574+0{,}1354=0{,}9928\\)</div></div>
+<div class="result">Die drei Pfade bei &bdquo;genau eins&ldquo; sind genau der Binomialkoeffizient \\(\\binom{3}{1}=3\\) &mdash; hier beginnt die Binomialverteilung.</div>`,
+prompt:`Ich uebe mindestens/hoechstens in mehrstufigen Baumdiagrammen (Mathe Klasse 13, Grundkurs), noch ohne Binomialformel. Erstelle 3 Aufgaben mit 3 oder 4 Stufen, in denen ich kein, genau ein, mindestens ein und hoechstens ein Treffer berechnen soll. Zaehle in der Loesung die Pfade explizit auf und zeige, dass mindestens eins ueber das Gegenereignis am schnellsten geht. Zeige am Ende, dass die Pfadanzahl dem Binomialkoeffizienten entspricht.`},
+
+// ===== 3. BEDINGTE WAHRSCHEINLICHKEIT RECHNEN =====
+c1:{title:"Formel anwenden und herleiten (AFB I)",
+aufgabe:`<div class="task-box">
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Es gilt \\(P(A\\cap B)=0{,}12\\) und \\(P(B)=0{,}30\\). Berechnen Sie \\(P(A\\mid B)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Es gilt \\(P(B)=0{,}4\\) und \\(P(A\\mid B)=0{,}25\\). Berechnen Sie \\(P(A\\cap B)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Es gilt \\(P(A\\cap B)=0{,}09\\) und \\(P(A\\mid B)=0{,}45\\). Berechnen Sie \\(P(B)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Leiten Sie die Formel \\(P(A\\mid B)=\\frac{P(A\\cap B)}{P(B)}\\) aus der 1. Pfadregel her.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(P(A\\mid B)=\\dfrac{0{,}12}{0{,}30}=0{,}40\\)</div></div>
+<div class="sol-step"><div class="snum">b</div><div>Formel umstellen: \\(P(A\\cap B)=P(B)\\cdot P(A\\mid B)=0{,}4\\cdot 0{,}25=0{,}10\\)</div></div>
+<div class="sol-step"><div class="snum">c</div><div>\\(P(B)=\\dfrac{P(A\\cap B)}{P(A\\mid B)}=\\dfrac{0{,}09}{0{,}45}=0{,}20\\)</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+1. Pfadregel: \\(P(B\\cap A)=P(B)\\cdot P(A\\mid B)\\).<br>
+Beide Seiten durch \\(P(B)\\) teilen (zul&auml;ssig, da \\(P(B)>0\\)):<br>
+\\(\\dfrac{P(B\\cap A)}{P(B)}=P(A\\mid B)\\) &nbsp;&mdash; das ist die Formel, nur umgestellt.
+</div></div>
+<div class="result">Eine Formel, drei Fragerichtungen: \\(P(A\\cap B)=P(B)\\cdot P(A\\mid B)\\).</div>`,
+prompt:`Ich uebe die Formel fuer bedingte Wahrscheinlichkeit (Mathe Klasse 13, Grundkurs). Gib mir 8 kurze Rechenaufgaben, in denen jeweils zwei der drei Groessen P(A geschnitten B), P(B) und P(A|B) gegeben sind und die dritte gesucht ist - gemischte Reihenfolge, auch mit Prozentangaben. Danach die Loesungen mit der jeweils umgestellten Formel. Zum Schluss die Herleitung der Formel aus der Pfadregel.`},
+
+c2:{title:"Pr&uuml;fverfahren: Sensitivit&auml;t ist nicht alles (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Schnelltest erkennt ein Materialproblem mit einer Trefferquote von 92&nbsp;%: \\(P(T\\mid D)=0{,}92\\). Bei einwandfreiem Material schl&auml;gt er in 8&nbsp;% der F&auml;lle falschen Alarm: \\(P(T\\mid\\overline{D})=0{,}08\\). Tats&auml;chlich sind 5&nbsp;% aller Chargen betroffen: \\(P(D)=0{,}05\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Erstellen Sie ein Baumdiagramm und berechnen Sie \\(P(T)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Der Test schl&auml;gt an. Berechnen Sie \\(P(D\\mid T)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie auch \\(P(\\overline{D}\\mid\\overline{T})\\) und deuten Sie den Wert.</span></div>
+  </div>
+  <div class="hint-box">Rechnen Sie zur Kontrolle mit 10000 Chargen in einer Vierfeldertafel nach.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+\\(P(D\\cap T)=0{,}05\\cdot 0{,}92=0{,}046\\)<br>
+\\(P(\\overline{D}\\cap T)=0{,}95\\cdot 0{,}08=0{,}076\\)<br>
+\\(P(T)=0{,}046+0{,}076=0{,}122\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(P(D\\mid T)=\\dfrac{0{,}046}{0{,}122}=0{,}3770\\approx 37{,}7\\,\\%\\)<br>
+Kontrolle mit 10000 Chargen: 500 betroffen, davon 460 erkannt; 9500 einwandfrei, davon 760 falscher Alarm. Von 1220 Alarmen sind 460 echt: \\(460/1220=0{,}377\\) &#10003;
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+\\(P(\\overline{T})=1-0{,}122=0{,}878\\); \\(P(\\overline{D}\\cap\\overline{T})=0{,}95\\cdot 0{,}92=0{,}874\\)<br>
+\\(P(\\overline{D}\\mid\\overline{T})=\\dfrac{0{,}874}{0{,}878}=0{,}9954\\)<br>
+Ein negativer Test ist sehr verl&auml;sslich: dann ist das Material mit 99,5&nbsp;% Wahrscheinlichkeit in Ordnung.
+</div></div>
+<div class="result">\\(P(D\\mid T)\\approx 37{,}7\\,\\%\\) &mdash; trotz 92&nbsp;% Trefferquote ist nicht einmal jeder zweite Alarm echt.</div>`,
+prompt:`Ich uebe Aufgaben zu Pruefverfahren und falsch positiven Ergebnissen (Mathe Klasse 13, Grundkurs). Erstelle 2 Aufgaben mit gegebener Sensitivitaet P(T|D), Falsch-Positiv-Rate P(T|nicht D) und Grundrate P(D). Gesucht sind P(T), P(D|T) und P(nicht D|nicht T). Loese einmal ueber das Baumdiagramm und rechne zur Kontrolle mit 10000 Faellen in einer Vierfeldertafel nach. Deute die Ergebnisse in Worten.`},
+
+c3:{title:"Warum der gute Test so viele Fehlalarme liefert (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Ein Kollege sagt: &bdquo;Der Test erkennt 92&nbsp;% der Problemf&auml;lle. Wenn er anschl&auml;gt, liegt also mit 92&nbsp;% Wahrscheinlichkeit ein Problem vor.&ldquo;</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Nehmen Sie Stellung und begr&uuml;nden Sie mit Zahlen aus der vorigen Aufgabe.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Untersuchen Sie, wie sich \\(P(D\\mid T)\\) &auml;ndert, wenn die Grundrate auf \\(P(D)=0{,}30\\) steigt (Testdaten sonst gleich).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erl&auml;utern Sie, welche der drei Gr&ouml;&szlig;en &mdash; Trefferquote, Falsch-Positiv-Rate, Grundrate &mdash; den Wert \\(P(D\\mid T)\\) am st&auml;rksten bestimmt.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+Der Kollege verwechselt \\(P(T\\mid D)\\) mit \\(P(D\\mid T)\\). Tats&auml;chlich ist \\(P(D\\mid T)=37{,}7\\,\\%\\). Ursache: es gibt 19-mal mehr einwandfreie als betroffene Chargen; 8&nbsp;% Fehlalarm von 9500 Chargen (760) &uuml;bersteigen die 460 echten Treffer deutlich.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(P(D\\cap T)=0{,}30\\cdot 0{,}92=0{,}276\\); \\(P(\\overline{D}\\cap T)=0{,}70\\cdot 0{,}08=0{,}056\\)<br>
+\\(P(T)=0{,}332\\), also \\(P(D\\mid T)=\\dfrac{0{,}276}{0{,}332}=0{,}831\\approx 83{,}1\\,\\%\\)<br>
+Derselbe Test ist bei h&auml;ufigem Problem viel aussagekr&auml;ftiger.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+Bei seltenen Ereignissen dominiert die <strong>Grundrate</strong>: je kleiner \\(P(D)\\), desto mehr Fehlalarme kommen auf jeden echten Treffer. Ein Test ist deshalb keine feste Eigenschaft, sondern nur im Zusammenspiel mit der H&auml;ufigkeit des Gesuchten zu beurteilen. Praktische Folge: Screening breiter Massen braucht eine sehr kleine Falsch-Positiv-Rate oder einen zweiten, genaueren Nachtest.
+</div></div>
+<div class="result">Gleicher Test, \\(P(D)=0{,}05\\) &rarr; 37,7&nbsp;%; \\(P(D)=0{,}30\\) &rarr; 83,1&nbsp;%. Die Grundrate entscheidet.</div>`,
+prompt:`Ich bereite eine AFB-III-Aufgabe zu Pruefverfahren vor (Mathe Klasse 13, Grundkurs). Gib mir 3 Aussagen von Laien, in denen Trefferquote und Aussagekraft eines Tests verwechselt werden, und lass mich dazu Stellung nehmen. Rechne in der Loesung vor, wie sich P(D|T) aendert, wenn die Grundrate P(D) variiert (zum Beispiel 1 Prozent, 5 Prozent, 30 Prozent), und formuliere einen Beurteilungstext in vollstaendigen Saetzen, wie er in einer Klausur erwartet wird.`},
+
+// ===== 4. BERNOULLI UND BINOMIALVERTEILUNG =====
+d1:{title:"Ist das eine Bernoulli-Kette? (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Pr&uuml;fen Sie f&uuml;r jede Situation die vier Bedingungen einer Bernoulli-Kette und geben Sie, wenn m&ouml;glich, \\(n\\), \\(p\\) und die Bedeutung von \\(X\\) an.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Ein W&uuml;rfel wird 30-mal geworfen, gez&auml;hlt werden die Sechsen.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Aus einer Urne mit 5 roten und 5 blauen Kugeln wird 4-mal <strong>ohne</strong> Zur&uuml;cklegen gezogen.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Aus der Tagesproduktion von 50000 Teilen mit 3&nbsp;% Ausschuss werden 20 Teile ohne Zur&uuml;cklegen gepr&uuml;ft.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Ein Sch&uuml;tze trifft anfangs mit 60&nbsp;%, wird aber mit jedem Schuss nerv&ouml;ser.</span></div>
+  </div>
+  <div class="hint-box">Vier Bedingungen: zwei Ausg&auml;nge &mdash; festes \\(n\\) &mdash; konstantes \\(p\\) &mdash; unabh&auml;ngige Versuche.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div><strong>Ja.</strong> Treffer &bdquo;Sechs&ldquo;, \\(n=30\\), \\(p=\\frac{1}{6}\\), \\(X\\) = Anzahl der Sechsen. \\(X\\) ist binomialverteilt.</div></div>
+<div class="sol-step"><div class="snum">b</div><div><strong>Nein.</strong> Ohne Zur&uuml;cklegen &auml;ndert sich \\(p\\) von Zug zu Zug (erst \\(\\frac{5}{10}\\), dann \\(\\frac{4}{9}\\) oder \\(\\frac{5}{9}\\)). Keine Unabh&auml;ngigkeit, kein konstantes \\(p\\).</div></div>
+<div class="sol-step"><div class="snum">c</div><div><strong>Praktisch ja.</strong> Formal &auml;ndert sich \\(p\\), aber bei 20 von 50000 Teilen ist die &Auml;nderung verschwindend; man rechnet mit \\(n=20\\), \\(p=0{,}03\\). Diese N&auml;herung muss in der Klausur <em>begr&uuml;ndet</em> werden (Stichprobe sehr klein gegen&uuml;ber Grundgesamtheit).</div></div>
+<div class="sol-step"><div class="snum">d</div><div><strong>Nein.</strong> \\(p\\) ist nicht konstant, sondern sinkt von Schuss zu Schuss.</div></div>
+<div class="result">Entscheidend sind konstantes \\(p\\) und Unabh&auml;ngigkeit &mdash; &bdquo;ohne Zur&uuml;cklegen&ldquo; ist nur bei sehr gro&szlig;er Grundgesamtheit n&auml;herungsweise erlaubt.</div>`,
+prompt:`Ich uebe das Erkennen von Bernoulli-Ketten (Mathe Klasse 13, Grundkurs). Gib mir 8 kurze Situationen, von denen etwa die Haelfte keine Bernoulli-Kette ist (ohne Zuruecklegen, veraenderliches p, abhaengige Versuche, mehr als zwei Ausgaenge). Ich soll jeweils die vier Bedingungen pruefen und n, p und X angeben. Erklaere in der Loesung bei den Grenzfaellen, wann die Binomialverteilung trotzdem als Naeherung zulaessig ist.`},
+
+d2:{title:"Binomialkoeffizient berechnen und deuten (AFB I)",
+aufgabe:`<div class="task-box">
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie ohne Rechner: \\(\\binom{5}{2}\\), \\(\\binom{8}{3}\\), \\(\\binom{10}{1}\\), \\(\\binom{7}{0}\\), \\(\\binom{6}{6}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Begr&uuml;nden Sie, warum \\(\\binom{8}{3}=\\binom{8}{5}\\) gilt.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Eine M&uuml;nze wird 8-mal geworfen. Erkl&auml;ren Sie, was \\(\\binom{8}{3}\\) in diesem Versuch z&auml;hlt.</span></div>
+  </div>
+  <div class="hint-box">\\(\\binom{n}{k}=\\dfrac{n!}{k!\\,(n-k)!}\\) &mdash; k&uuml;rzen Sie vor dem Ausmultiplizieren.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+\\(\\binom{5}{2}=\\frac{5\\cdot 4}{2\\cdot 1}=10\\) &nbsp;&nbsp; \\(\\binom{8}{3}=\\frac{8\\cdot 7\\cdot 6}{3\\cdot 2\\cdot 1}=56\\) &nbsp;&nbsp; \\(\\binom{10}{1}=10\\)<br>
+\\(\\binom{7}{0}=1\\) &nbsp;&nbsp; \\(\\binom{6}{6}=1\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>Wer 3 der 8 Pl&auml;tze f&uuml;r Treffer ausw&auml;hlt, legt gleichzeitig fest, welche 5 Pl&auml;tze Nichttreffer sind. Jede Auswahl von 3 entspricht also genau einer Auswahl von 5: \\(\\binom{8}{3}=\\binom{8}{5}=56\\).</div></div>
+<div class="sol-step"><div class="snum">c</div><div>\\(\\binom{8}{3}=56\\) ist die Anzahl der Pfade im Baumdiagramm (bzw. der Wurffolgen), bei denen genau 3-mal Kopf f&auml;llt &mdash; z.&nbsp;B. KKKZZZZZ, KZKZKZZZ, &hellip;</div></div>
+<div class="result">\\(\\binom{n}{k}\\) z&auml;hlt die Pfade mit \\(k\\) Treffern unter \\(n\\) Versuchen.</div>`,
+prompt:`Ich uebe den Binomialkoeffizienten (Mathe Klasse 13, Grundkurs). Gib mir 10 Werte zum Berechnen von Hand (auch Randfaelle mit k=0 und k=n) und 3 Verstaendnisfragen zur Symmetrie und zur Bedeutung als Pfadanzahl. Zeige in den Loesungen das Kuerzen vor dem Ausmultiplizieren und listet bei einem kleinen Beispiel (n=4, k=2) alle Pfade einzeln auf.`},
+
+d3:{title:"Binomialformel von Hand (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Automat produziert mit einem Ausschussanteil von 10&nbsp;%. Es werden 20 Teile gepr&uuml;ft. \\(X\\) sei die Anzahl der defekten Teile.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Geben Sie \\(n\\) und \\(p\\) an und notieren Sie den Ansatz f&uuml;r \\(P(X=2)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(P(X=2)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erkl&auml;ren Sie die Bedeutung der drei Faktoren \\(\\binom{20}{2}\\), \\(0{,}1^{2}\\) und \\(0{,}9^{18}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Berechnen Sie \\(P(X=0)\\).</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(n=20\\), \\(p=0{,}1\\); \\(P(X=2)=\\binom{20}{2}\\cdot 0{,}1^{2}\\cdot 0{,}9^{18}\\)</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(\\binom{20}{2}=\\frac{20\\cdot 19}{2}=190\\); \\(0{,}1^2=0{,}01\\); \\(0{,}9^{18}=0{,}150095\\)<br>
+\\(P(X=2)=190\\cdot 0{,}01\\cdot 0{,}150095=0{,}2852\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+\\(0{,}1^{2}\\): die beiden Treffer entlang eines Pfades (Pfadregel&nbsp;1).<br>
+\\(0{,}9^{18}\\): die 18 Nichttreffer desselben Pfades.<br>
+\\(\\binom{20}{2}=190\\): so viele solcher Pfade gibt es &mdash; sie werden addiert (Pfadregel&nbsp;2), haben aber alle denselben Wert, also einmal multiplizieren.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>\\(P(X=0)=\\binom{20}{0}\\cdot 0{,}1^{0}\\cdot 0{,}9^{20}=1\\cdot 1\\cdot 0{,}1216=0{,}1216\\)</div></div>
+<div class="result">\\(P(X=2)=0{,}2852\\); die Formel ist nichts anderes als Pfadregel&nbsp;1 mal Pfadanzahl.</div>`,
+prompt:`Ich uebe die Binomialformel von Hand, ohne Rechnerbefehle (Mathe Klasse 13, Grundkurs). Erstelle 4 Aufgaben mit kleinen n (zwischen 5 und 20), in denen ich P(X=k) mit der Formel berechne. Zeige in den Loesungen jeden Faktor getrennt (Binomialkoeffizient, p hoch k, (1-p) hoch n-k) und erklaere seine Bedeutung als Pfadregel. Eine Aufgabe soll den Randfall k=0 enthalten.`},
+
+d4:{title:"Typischer Fehler: Koeffizient vergessen (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Sch&uuml;ler rechnet f&uuml;r \\(n=20\\), \\(p=0{,}1\\):</p>
+  <p>\\(P(X=2)=0{,}1^{2}\\cdot 0{,}9^{18}=0{,}0015\\)</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Finden Sie den Fehler und korrigieren Sie die Rechnung.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erkl&auml;ren Sie, welchen Anteil der Situation der Sch&uuml;ler berechnet hat.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Pr&uuml;fen Sie mit einer Plausibilit&auml;ts&uuml;berlegung (\\(\\mu=n\\cdot p\\)), warum sein Ergebnis nicht stimmen kann.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>Der Binomialkoeffizient fehlt. Richtig: \\(P(X=2)=\\binom{20}{2}\\cdot 0{,}1^2\\cdot 0{,}9^{18}=190\\cdot 0{,}0015=0{,}2852\\).</div></div>
+<div class="sol-step"><div class="snum">b</div><div>Er hat die Wahrscheinlichkeit <strong>eines einzigen</strong> Pfades berechnet, z.&nbsp;B. &bdquo;die ersten zwei Teile defekt, alle weiteren intakt&ldquo;. Gefragt ist aber jede Reihenfolge &mdash; und davon gibt es 190.</div></div>
+<div class="sol-step"><div class="snum">c</div><div>\\(\\mu=n\\cdot p=20\\cdot 0{,}1=2\\): zwei defekte Teile sind der <em>erwartete</em> Fall. Eine Wahrscheinlichkeit von 0,15&nbsp;% f&uuml;r den wahrscheinlichsten Wert ist unm&ouml;glich &mdash; schon diese &Uuml;berlegung h&auml;tte den Fehler gezeigt.</div></div>
+<div class="result">0,0015 ist ein Pfad, 0,2852 sind alle 190 Pfade. \\(\\mu=n\\cdot p\\) ist die schnelle Plausibilit&auml;tskontrolle.</div>`,
+prompt:`Ich uebe Fehlersuche bei der Binomialverteilung (Mathe Klasse 13, Grundkurs). Gib mir 5 fehlerhafte Schuelerrechnungen mit typischen Fehlern: Binomialkoeffizient vergessen, p und 1-p verwechselt, falsche Exponenten, mindestens mit hoechstens verwechselt, k-1 vergessen. Ich soll jeweils den Fehler finden, korrigieren und mit mu = n mal p oder einer anderen Ueberlegung pruefen, dass mein Ergebnis plausibel ist. Danach vollstaendige Loesungen.`},
+
+d5:{title:"Histogramm der Binomialverteilung (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Fertigungsschritt gelingt mit \\(p=0{,}25\\). Es werden \\(n=12\\) Teile bearbeitet.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(P(X=k)\\) f&uuml;r \\(k=0\\) bis \\(k=7\\) und zeichnen Sie das Histogramm.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Beschreiben Sie die Form und bestimmen Sie den wahrscheinlichsten Wert.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \\(\\mu\\) und vergleichen Sie mit der Lage des Gipfels.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Begr&uuml;nden Sie, warum die Verteilung nicht symmetrisch ist.</span></div>
+  </div>
+  <div class="hint-box">Rechnerbefehl f&uuml;r die Wertetabelle: <span class="cas">binomPdf(12;0,25)</span> liefert alle \\(k\\) auf einmal.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+<table class="ltbl">
+  <tr><th>\\(k\\)</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr>
+  <tr><th>\\(P(X=k)\\)</th><td>0,032</td><td>0,127</td><td>0,232</td><td>0,258</td><td>0,194</td><td>0,103</td><td>0,040</td><td>0,011</td></tr>
+</table>
+Balken &uuml;ber den ganzzahligen \\(k\\), H&ouml;he = Wahrscheinlichkeit.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>Eingipflig, nach rechts auslaufend (rechtsschief). H&ouml;chster Balken bei \\(k=3\\) mit 0,258.</div></div>
+<div class="sol-step"><div class="snum">c</div><div>\\(\\mu=n\\cdot p=12\\cdot 0{,}25=3\\) &mdash; der Gipfel liegt genau beim Erwartungswert.</div></div>
+<div class="sol-step"><div class="snum">d</div><div>Wegen \\(p<0{,}5\\) ist nach unten bei \\(k=0\\) wenig Platz, nach oben bis \\(k=12\\) viel. Nur f&uuml;r \\(p=0{,}5\\) wird das Histogramm symmetrisch.</div></div>
+<div class="result">Gipfel bei \\(k=3=\\mu\\); f&uuml;r \\(p<0{,}5\\) rechtsschief, f&uuml;r \\(p=0{,}5\\) symmetrisch.</div>`,
+prompt:`Ich uebe Histogramme der Binomialverteilung (Mathe Klasse 13, Grundkurs). Gib mir drei Parameterpaare (zum Beispiel n=10 p=0,5 / n=12 p=0,25 / n=20 p=0,9), berechne jeweils die Wertetabelle und beschreibe das Histogramm in Textform (Balkenhoehen als Zahlenreihe). Ich soll Form, Gipfellage und Zusammenhang mit mu = n mal p beschreiben. Erklaere, wann die Verteilung symmetrisch und wann sie schief ist.`},
+
+// ===== 5. MINDESTENS, HOECHSTENS, RECHNERBEFEHLE =====
+e1:{title:"Sprache in Ungleichungen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>&Uuml;bersetzen Sie in eine Ungleichung mit \\(X\\) und geben Sie den passenden Rechnerbefehl an (\\(n=25\\), \\(p=0{,}08\\)).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">genau 3 defekte Teile</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">h&ouml;chstens 3 defekte Teile</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">mindestens 3 defekte Teile</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">weniger als 3 defekte Teile</span></div>
+    <div class="subtask"><span class="subtask-label">e)</span><span class="subtask-body">mehr als 3 defekte Teile</span></div>
+    <div class="subtask"><span class="subtask-label">f)</span><span class="subtask-body">zwischen 2 und 5 defekten Teilen (jeweils einschlie&szlig;lich)</span></div>
+  </div>
+  <div class="hint-box">&bdquo;Mindestens&ldquo; hei&szlig;t \\(\\ge\\), &bdquo;h&ouml;chstens&ldquo; hei&szlig;t \\(\\le\\) &mdash; und &bdquo;weniger als 3&ldquo; ist \\(X\\le 2\\), nicht \\(X\\le 3\\).</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(P(X=3)\\) &nbsp;&rarr;&nbsp; <span class="cas">binomPdf(25;0,08;3)</span></div></div>
+<div class="sol-step"><div class="snum">b</div><div>\\(P(X\\le 3)\\) &nbsp;&rarr;&nbsp; <span class="cas">binomCdf(25;0,08;0;3)</span></div></div>
+<div class="sol-step"><div class="snum">c</div><div>\\(P(X\\ge 3)=1-P(X\\le 2)\\) &nbsp;&rarr;&nbsp; <span class="cas">1-binomCdf(25;0,08;0;2)</span></div></div>
+<div class="sol-step"><div class="snum">d</div><div>\\(P(X<3)=P(X\\le 2)\\) &nbsp;&rarr;&nbsp; <span class="cas">binomCdf(25;0,08;0;2)</span></div></div>
+<div class="sol-step"><div class="snum">e</div><div>\\(P(X>3)=P(X\\ge 4)=1-P(X\\le 3)\\) &nbsp;&rarr;&nbsp; <span class="cas">1-binomCdf(25;0,08;0;3)</span></div></div>
+<div class="sol-step"><div class="snum">f</div><div>\\(P(2\\le X\\le 5)\\) &nbsp;&rarr;&nbsp; <span class="cas">binomCdf(25;0,08;2;5)</span> oder <span class="cas">binomCdf(25;0,08;0;5)-binomCdf(25;0,08;0;1)</span></div></div>
+<div class="result">Immer erst die Ungleichung hinschreiben, dann den Befehl &mdash; nie umgekehrt.</div>`,
+prompt:`Ich uebe das Uebersetzen von Sprache in Ungleichungen bei der Binomialverteilung (Mathe Klasse 13, Grundkurs). Gib mir 12 Formulierungen (genau, hoechstens, mindestens, weniger als, mehr als, zwischen, nicht mehr als, wenigstens, maximal, keine, alle, mehr als die Haelfte) zu festem n und p. Ich soll jeweils die Ungleichung mit X und den TI-nspire-Befehl (binomPdf bzw. binomCdf) angeben. Danach die Loesungen mit kurzer Begruendung, besonders bei den Grenzfaellen.`},
+
+e2:{title:"binomPdf oder binomCdf? (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Zulieferer liefert mit 8&nbsp;% Ausschuss. 25 Teile werden gepr&uuml;ft.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(P(X=0)\\) und \\(P(X=2)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(P(X\\le 1)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erkl&auml;ren Sie den Unterschied zwischen den beiden Befehlen anschaulich am Histogramm.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+<span class="cas">binomPdf(25;0,08;0)</span> \\(=0{,}1244\\)<br>
+<span class="cas">binomPdf(25;0,08;2)</span> \\(=0{,}2821\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+<span class="cas">binomCdf(25;0,08;0;1)</span> \\(=0{,}3947\\)<br>
+Kontrolle: \\(P(X=0)+P(X=1)=0{,}1244+0{,}2704=0{,}3948\\) (Rundung auf 4 Stellen) &#10003;
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+<span class="cas">binomPdf</span> gibt die H&ouml;he <strong>eines</strong> Balkens, <span class="cas">binomCdf</span> die <strong>Summe</strong> aller Balken von der unteren bis zur oberen Grenze. &bdquo;Pdf&ldquo; = ein Balken, &bdquo;Cdf&ldquo; = Fl&auml;che/Treppe.
+</div></div>
+<div class="result">Nur bei &bdquo;genau&ldquo; ist binomPdf richtig; sobald mehrere \\(k\\) gemeint sind, binomCdf.</div>`,
+prompt:`Ich uebe die Unterscheidung von binomPdf und binomCdf auf dem TI-nspire (Mathe Klasse 13, Grundkurs). Gib mir 10 gemischte Fragen zu einem Sachkontext mit festem n und p, bei denen ich entscheiden muss, welcher Befehl passt, und das Ergebnis angeben soll. Erklaere in der Loesung bei jeder Aufgabe am Histogramm, ob ein einzelner Balken oder eine Summe von Balken gemeint ist.`},
+
+e3:{title:"Mindestens und die \\(k-1\\)-Falle (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Weiter gilt \\(n=25\\), \\(p=0{,}08\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(P(X\\ge 3)\\) &uuml;ber das Gegenereignis.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Ein Sch&uuml;ler rechnet \\(1-\\)<span class="cas">binomCdf(25;0,08;0;3)</span>. Erkl&auml;ren Sie, was er damit berechnet hat.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \\(P(X\\ge 1)\\) auf zwei Wegen.</span></div>
+  </div>
+  <div class="hint-box">Das Gegenereignis von \\(X\\ge k\\) ist \\(X\\le k-1\\) &mdash; nicht \\(X\\le k\\).</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+\\(P(X\\ge 3)=1-P(X\\le 2)=1-\\)<span class="cas">binomCdf(25;0,08;0;2)</span>\\(=1-0{,}6768=0{,}3232\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+Er hat \\(1-P(X\\le 3)=P(X\\ge 4)=0{,}1351\\) berechnet &mdash; also &bdquo;mindestens <strong>vier</strong>&ldquo;. Der Fall \\(X=3\\) ist bei ihm f&auml;lschlich mit ausgeschlossen, das Ergebnis ist zu klein.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+Weg 1: \\(P(X\\ge 1)=1-P(X=0)=1-0{,}1244=0{,}8756\\)<br>
+Weg 2: \\(1-\\)<span class="cas">binomCdf(25;0,08;0;0)</span>\\(=0{,}8756\\) &#10003;
+</div></div>
+<div class="result">\\(P(X\\ge 3)=0{,}3232\\); wer \\(k\\) statt \\(k-1\\) einsetzt, rechnet systematisch eine Stufe zu hoch.</div>`,
+prompt:`Ich uebe mindestens-Aufgaben bei der Binomialverteilung und die k-1-Falle (Mathe Klasse 13, Grundkurs). Erstelle 5 Aufgaben zu einem festen n und p, in denen ich P(X >= k) ueber das Gegenereignis berechnen soll. Baue in zwei Aufgaben eine falsche Schuelerrechnung ein, in der k statt k-1 eingesetzt wurde, und lass mich erklaeren, was dort tatsaechlich berechnet wurde. Vollstaendige Loesungen mit Zwischenwerten.`},
+
+e4:{title:"Zwischen zwei Grenzen (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Weiter gilt \\(n=25\\), \\(p=0{,}08\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(P(2\\le X\\le 5)\\) als Differenz zweier kumulierter Werte.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(P(2 < X < 5)\\) und erkl&auml;ren Sie den Unterschied zu a).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Formulieren Sie in Worten eine Frage, die auf \\(P(X\\le 4)-P(X\\le 1)\\) f&uuml;hrt.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+\\(P(2\\le X\\le 5)=P(X\\le 5)-P(X\\le 1)=0{,}9877-0{,}3947=0{,}5930\\)<br>
+Die untere Grenze 2 soll <em>mit</em>z&auml;hlen, deshalb wird nur bis 1 abgezogen.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(P(2<X<5)=P(3\\le X\\le 4)=P(X\\le 4)-P(X\\le 2)=0{,}9549-0{,}6768=0{,}2781\\)<br>
+Hier sind beide Randwerte ausgeschlossen; aus den strengen Ungleichungen werden \\(3\\le X\\le 4\\).
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+\\(P(X\\le 4)-P(X\\le 1)=P(2\\le X\\le 4)\\): &bdquo;Wie wahrscheinlich ist es, dass mindestens zwei, aber h&ouml;chstens vier Teile defekt sind?&ldquo;
+</div></div>
+<div class="result">\\(P(a\\le X\\le b)=P(X\\le b)-P(X\\le a-1)\\) &mdash; bei ganzzahligem \\(X\\) immer erst in \\(\\le\\)-Form umschreiben.</div>`,
+prompt:`Ich uebe Intervall-Wahrscheinlichkeiten bei der Binomialverteilung (Mathe Klasse 13, Grundkurs). Gib mir 6 Aufgaben mit zwischen-Formulierungen, teils mit, teils ohne Einschluss der Grenzen, auch mit strengen Ungleichungen. Ich soll jeweils in die Form P(a <= X <= b) umschreiben und als Differenz kumulierter Werte berechnen. Vollstaendige Loesungen mit den Zwischenwerten und einer Bemerkung zu den Randwerten.`},
+
+e5:{title:"Eine Pr&uuml;fregel beurteilen (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Eine Wareneingangskontrolle pr&uuml;ft 25 Teile einer Lieferung und <strong>lehnt sie ab</strong>, wenn mindestens 3 Teile defekt sind.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Die Lieferung ist einwandfrei im Sinne des Vertrags (\\(p=0{,}08\\)). Berechnen Sie die Wahrscheinlichkeit, dass sie trotzdem abgelehnt wird.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Die Lieferung ist schlecht (\\(p=0{,}20\\)). Berechnen Sie die Wahrscheinlichkeit, dass sie erkannt (also abgelehnt) wird.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Beurteilen Sie die Regel. Welche der beiden Fehlentscheidungen w&uuml;rden Sie als Kunde, welche als Lieferant kritisieren?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Schlagen Sie eine &Auml;nderung vor und berechnen Sie deren Wirkung f&uuml;r die Grenze &bdquo;mindestens 4&ldquo;.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(P(X\\ge 3)=1-\\)<span class="cas">binomCdf(25;0,08;0;2)</span>\\(=0{,}3232\\) &mdash; fast jede dritte gute Lieferung wird abgelehnt.</div></div>
+<div class="sol-step"><div class="snum">b</div><div>\\(P(X\\ge 3)=1-\\)<span class="cas">binomCdf(25;0,20;0;2)</span>\\(=0{,}9018\\) &mdash; schlechte Lieferungen werden zu 90&nbsp;% erkannt.</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+Die Regel entdeckt schlechte Ware gut (90&nbsp;%), produziert aber viel Fehlalarm (32&nbsp;%). Der <strong>Lieferant</strong> kritisiert die Ablehnung guter Ware (32&nbsp;%), der <strong>Kunde</strong> kritisiert die &uuml;bersehenen schlechten Lieferungen (knapp 10&nbsp;%). Die Grenze ist also kein Rechenergebnis, sondern eine Abw&auml;gung, wessen Risiko schwerer wiegt.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+Grenze auf \\(X\\ge 4\\) anheben:<br>
+Fehlalarm \\(1-\\)<span class="cas">binomCdf(25;0,08;0;3)</span>\\(=0{,}1351\\) (deutlich besser f&uuml;r den Lieferanten)<br>
+Erkennung \\(1-\\)<span class="cas">binomCdf(25;0,20;0;3)</span>\\(=0{,}7660\\) (schlechter f&uuml;r den Kunden)<br>
+Alternative: Stichprobe vergr&ouml;&szlig;ern &mdash; dann lassen sich beide Fehler gleichzeitig senken.
+</div></div>
+<div class="result">Fehlalarm 32&nbsp;% gegen Erkennung 90&nbsp;%: jede Verschiebung der Grenze verbessert einen Fehler und verschlechtert den anderen. Nur ein gr&ouml;&szlig;eres \\(n\\) hilft beiden.</div>`,
+prompt:`Ich uebe das Beurteilen von Pruef- und Annahmeregeln bei der Binomialverteilung (Mathe Klasse 13, Grundkurs, AFB III). Erstelle 2 Aufgaben mit einer Annahmeregel (Stichprobe n, Ablehnung ab k Treffern). Ich soll berechnen, wie wahrscheinlich gute Ware abgelehnt und schlechte Ware erkannt wird, und die Regel aus Sicht von Kunde und Lieferant beurteilen. Lass mich auch eine Aenderung der Grenze oder des Stichprobenumfangs durchrechnen. Formuliere die Beurteilung in vollstaendigen Saetzen als Musterloesung.`},
+
+// ===== 6. ERWARTUNGSWERT UND STANDARDABWEICHUNG =====
+f1:{title:"Erwartungswert berechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Gl&uuml;cksrad auf dem Schulfest kostet 3,00&nbsp;&euro; pro Spiel. Es zahlt aus:</p>
+  <table class="ltbl">
+    <tr><th>Auszahlung \\(x_k\\)</th><td>10,00&nbsp;&euro;</td><td>5,00&nbsp;&euro;</td><td>1,00&nbsp;&euro;</td><td>0,00&nbsp;&euro;</td></tr>
+    <tr><th>\\(P(X=x_k)\\)</th><td>0,05</td><td>0,15</td><td>0,30</td><td>0,50</td></tr>
+  </table>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Pr&uuml;fen Sie, ob die Wahrscheinlichkeiten eine Verteilung bilden.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie den Erwartungswert der Auszahlung.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie den erwarteten Gewinn eines Spielers und deuten Sie das Ergebnis.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Bestimmen Sie den Einsatz, bei dem das Spiel fair w&auml;re.</span></div>
+  </div>
+  <div class="hint-box">\\(E(X)=\\sum_k x_k\\cdot P(X=x_k)\\) &mdash; jeden Wert mit seiner Wahrscheinlichkeit gewichten.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(0{,}05+0{,}15+0{,}30+0{,}50=1{,}00\\) &#10003; &mdash; alle Werte liegen zwischen 0 und 1.</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(E(X)=10\\cdot 0{,}05+5\\cdot 0{,}15+1\\cdot 0{,}30+0\\cdot 0{,}50\\)<br>
+\\(E(X)=0{,}50+0{,}75+0{,}30+0=1{,}55\\) &nbsp;&rarr;&nbsp; 1,55&nbsp;&euro; pro Spiel.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+Erwarteter Gewinn des Spielers: \\(1{,}55\\,\\text{€}-3{,}00\\,\\text{€}=-1{,}45\\,\\text{€}\\).<br>
+Auf lange Sicht verliert ein Spieler im Durchschnitt 1,45&nbsp;&euro; pro Spiel; bei 200 Spielen nimmt das Schulfest etwa 290&nbsp;&euro; ein.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>Fair hei&szlig;t erwarteter Gewinn 0, also Einsatz \\(=E(X)=1{,}55\\,\\text{€}\\).</div></div>
+<div class="result">\\(E(X)=1{,}55\\,\\text{€}\\); bei 3,00&nbsp;&euro; Einsatz ist der erwartete Gewinn \\(-1{,}45\\,\\text{€}\\) &mdash; das Spiel ist nicht fair.</div>`,
+prompt:`Ich uebe den Erwartungswert (Mathe Klasse 13, Grundkurs). Erstelle 4 Aufgaben mit Wahrscheinlichkeitsverteilungen in Tabellenform: ein Gluecksspiel mit Einsatz, eine Versicherung, ein Wuerfelspiel mit Gewinn- und Verlustwerten und eine Verteilung, bei der eine fehlende Wahrscheinlichkeit erst ergaenzt werden muss. Gesucht sind jeweils E(X), der erwartete Gewinn und der faire Einsatz. Vollstaendige Loesungen mit Deutung in Worten.`},
+
+f2:{title:"\\(\\mu\\) und \\(\\sigma\\) bei der Binomialverteilung (AFB I)",
+aufgabe:`<div class="task-box">
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(\\mu\\) und \\(\\sigma\\) f&uuml;r \\(n=50\\), \\(p=0{,}2\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(\\mu\\) und \\(\\sigma\\) f&uuml;r \\(n=200\\), \\(p=0{,}03\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ein Sch&uuml;ler gibt f&uuml;r a) an: \\(\\sigma=8\\). Finden Sie den Fehler.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Bei einer Binomialverteilung ist \\(\\mu=12\\) und \\(p=0{,}3\\). Bestimmen Sie \\(n\\) und \\(\\sigma\\).</span></div>
+  </div>
+  <div class="hint-box">\\(\\mu=n\\cdot p\\), \\(\\sigma=\\sqrt{n\\,p\\,(1-p)}\\) &mdash; die Wurzel nicht vergessen.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(\\mu=50\\cdot 0{,}2=10\\); \\(\\sigma=\\sqrt{50\\cdot 0{,}2\\cdot 0{,}8}=\\sqrt{8}=2{,}83\\)</div></div>
+<div class="sol-step"><div class="snum">b</div><div>\\(\\mu=200\\cdot 0{,}03=6\\); \\(\\sigma=\\sqrt{200\\cdot 0{,}03\\cdot 0{,}97}=\\sqrt{5{,}82}=2{,}41\\)</div></div>
+<div class="sol-step"><div class="snum">c</div><div>Er hat die Varianz \\(\\sigma^2=n\\,p\\,(1-p)=8\\) angegeben und die Wurzel vergessen. Richtig ist \\(\\sigma=\\sqrt{8}=2{,}83\\).</div></div>
+<div class="sol-step"><div class="snum">d</div><div>Aus \\(n\\cdot 0{,}3=12\\) folgt \\(n=40\\); damit \\(\\sigma=\\sqrt{40\\cdot 0{,}3\\cdot 0{,}7}=\\sqrt{8{,}4}=2{,}90\\)</div></div>
+<div class="result">\\(\\sigma\\) ist immer die <strong>Wurzel</strong> aus \\(n\\,p\\,(1-p)\\); \\(n\\,p\\,(1-p)\\) selbst ist die Varianz \\(\\sigma^2\\).</div>`,
+prompt:`Ich uebe mu und sigma bei der Binomialverteilung (Mathe Klasse 13, Grundkurs). Gib mir 8 Aufgaben: teils sind n und p gegeben und mu, sigma gesucht, teils ist mu oder sigma gegeben und n oder p gesucht. Baue zwei fehlerhafte Schuelerrechnungen ein, in denen die Wurzel vergessen oder p mit 1-p verwechselt wurde. Vollstaendige Loesungen mit Rechenschritten.`},
+
+f3:{title:"Gleiches \\(\\mu\\) &mdash; anderes \\(\\sigma\\) (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Zwei Fertigungslinien werden kontrolliert:</p>
+  <p>Linie&nbsp;A: \\(n=100\\), \\(p=0{,}5\\) &nbsp;&nbsp;&nbsp; Linie&nbsp;B: \\(n=1000\\), \\(p=0{,}05\\)</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie jeweils \\(\\mu\\) und \\(\\sigma\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erl&auml;utern Sie, was an den beiden Verteilungen gleich und was verschieden ist.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erkl&auml;ren Sie, warum die Angabe von \\(\\mu\\) allein eine Verteilung nicht beschreibt.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+Linie&nbsp;A: \\(\\mu=50\\); \\(\\sigma=\\sqrt{100\\cdot 0{,}5\\cdot 0{,}5}=\\sqrt{25}=5{,}00\\)<br>
+Linie&nbsp;B: \\(\\mu=50\\); \\(\\sigma=\\sqrt{1000\\cdot 0{,}05\\cdot 0{,}95}=\\sqrt{47{,}5}=6{,}89\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+Gleich ist die <strong>Lage</strong>: beide Histogramme haben ihren Gipfel bei 50. Verschieden ist die <strong>Breite</strong>: bei B streuen die Werte st&auml;rker um 50 ( \\(\\sigma=6{,}89\\) gegen \\(5{,}00\\) ), das Histogramm ist niedriger und breiter. Zudem ist A symmetrisch (\\(p=0{,}5\\)), B leicht rechtsschief.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+\\(\\mu\\) sagt nur, <em>wo</em> der Schwerpunkt liegt, nicht, wie weit die Einzelwerte davon abweichen. Zwei Linien mit demselben Erwartungswert k&ouml;nnen sich in der Planung ganz verschieden verhalten: bei B muss man gr&ouml;&szlig;ere Ausschl&auml;ge einkalkulieren. Erst \\(\\mu\\) <em>und</em> \\(\\sigma\\) beschreiben die Verteilung brauchbar.
+</div></div>
+<div class="result">Beide \\(\\mu=50\\), aber \\(\\sigma_A=5{,}00\\) und \\(\\sigma_B=6{,}89\\): \\(\\mu\\) sagt <em>wo</em>, \\(\\sigma\\) sagt <em>wie breit</em>.</div>`,
+prompt:`Ich uebe die Bedeutung von mu und sigma (Mathe Klasse 13, Grundkurs). Gib mir drei Paare von Binomialverteilungen mit gleichem mu, aber verschiedenem sigma. Ich soll jeweils mu und sigma berechnen und in Worten beschreiben, was an den Histogrammen gleich und was verschieden ist. Erklaere in der Loesung, welche praktische Konsequenz eine groessere Streuung bei gleicher Lage hat, zum Beispiel fuer eine Lagerplanung.`},
+
+f4:{title:"\\(\\mu\\) im Sachzusammenhang deuten (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine Werkstatt bearbeitet t&auml;glich 80 Werkst&uuml;cke; jedes muss mit Wahrscheinlichkeit 4&nbsp;% nachgearbeitet werden.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(\\mu\\) und \\(\\sigma\\) der Anzahl der Nacharbeiten pro Tag.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Deuten Sie \\(\\mu\\) im Sachzusammenhang. Kann an einem Tag genau \\(\\mu\\) Nacharbeiten auftreten?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Die Werkstatt plant Kapazit&auml;t f&uuml;r 6 Nacharbeiten pro Tag ein. Berechnen Sie die Wahrscheinlichkeit, dass das an einem Tag nicht reicht.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Wie viele Nacharbeiten sind in einem Monat mit 20 Arbeitstagen zu erwarten?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(\\mu=80\\cdot 0{,}04=3{,}2\\); \\(\\sigma=\\sqrt{80\\cdot 0{,}04\\cdot 0{,}96}=\\sqrt{3{,}072}=1{,}75\\)</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+Im langj&auml;hrigen Mittel fallen 3,2 Nacharbeiten pro Tag an. Als Einzelergebnis ist 3,2 <strong>unm&ouml;glich</strong> &mdash; \\(X\\) nimmt nur ganzzahlige Werte an. \\(\\mu\\) ist ein Durchschnittswert, kein m&ouml;glicher Tageswert.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+&bdquo;Reicht nicht&ldquo; bedeutet \\(X\\ge 7\\):<br>
+\\(P(X\\ge 7)=1-P(X\\le 6)=1-\\)<span class="cas">binomCdf(80;0,04;0;6)</span>\\(=1-0{,}9437=0{,}0563\\)<br>
+An etwa 6&nbsp;% der Tage (also rund einem Tag im Monat) reicht die Kapazit&auml;t nicht.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>\\(20\\cdot 3{,}2=64\\) Nacharbeiten. (Gleichwertig: \\(n=1600\\), \\(p=0{,}04\\) &rarr; \\(\\mu=64\\).)</div></div>
+<div class="result">\\(\\mu=3{,}2\\) ist ein Mittelwert, kein m&ouml;gliches Tagesergebnis; \\(\\mu\\) ist proportional zu \\(n\\).</div>`,
+prompt:`Ich uebe die Deutung des Erwartungswerts im Sachzusammenhang (Mathe Klasse 13, Grundkurs). Erstelle 3 Aufgaben aus dem Betriebsalltag (Nacharbeit, Reklamationen, Ausfaelle), in denen ich mu und sigma berechne, mu in Worten deute und eine Kapazitaetsfrage mit binomCdf beantworte. Lass mich auch erklaeren, warum mu kein moeglicher Einzelwert sein muss. Vollstaendige Loesungen mit ausformulierten Deutungssaetzen.`},
+
+// ===== 7. MESSREIHE UND MODELL =====
+g1:{title:"Messreihe auswerten und darstellen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Kurs f&uuml;hrt 40 Durchg&auml;nge eines Versuchs mit je 10 W&uuml;rfen durch und z&auml;hlt pro Durchgang die Treffer \\(k\\):</p>
+  <table class="ltbl">
+    <tr><th>\\(k\\)</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td></tr>
+    <tr><th>Anzahl</th><td>1</td><td>4</td><td>7</td><td>11</td><td>9</td><td>5</td><td>3</td></tr>
+  </table>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die relativen H&auml;ufigkeiten und zeichnen Sie das Histogramm.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie den Mittelwert \\(\\bar{x}\\) der Messreihe.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Beschreiben Sie die Form der Verteilung.</span></div>
+  </div>
+  <div class="hint-box">Relative H&auml;ufigkeit = Anzahl geteilt durch 40. Die Summe muss 1 ergeben.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+<table class="ltbl">
+  <tr><th>\\(k\\)</th><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td></tr>
+  <tr><th>rel. H.</th><td>0,025</td><td>0,100</td><td>0,175</td><td>0,275</td><td>0,225</td><td>0,125</td><td>0,075</td></tr>
+</table>
+Summe: 1,000 &#10003;
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+Summe aller Treffer:<br>\\(2\\cdot 1+3\\cdot 4+4\\cdot 7+5\\cdot 11\\)<br>\\(+\\,6\\cdot 9+7\\cdot 5+8\\cdot 3=210\\)<br>\\(\\bar{x}=\\dfrac{210}{40}=5{,}25\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+Eingipflig mit Maximum bei \\(k=5\\), nach beiden Seiten abfallend, ann&auml;hernd symmetrisch. Die Form erinnert an eine Binomialverteilung mit \\(n=10\\) und \\(p\\approx 0{,}5\\).
+</div></div>
+<div class="result">\\(\\bar{x}=5{,}25\\); das Histogramm ist eingipflig und nahezu symmetrisch.</div>`,
+prompt:`Ich uebe das Auswerten von Messreihen (Mathe Klasse 13, Grundkurs). Gib mir zwei Haeufigkeitstabellen aus Klassenversuchen (etwa 40 Durchgaenge mit je 10 Wuerfen). Ich soll relative Haeufigkeiten, Mittelwert und Standardabweichung der Messreihe berechnen und die Form des Histogramms beschreiben. Zeige in der Loesung die Rechenschritte fuer den gewichteten Mittelwert und beschreibe das Histogramm in Textform.`},
+
+g2:{title:"\\(\\bar{x},s\\) oder \\(\\mu,\\sigma\\)? (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Zur Messreihe aus der vorigen Aufgabe wird das Modell \\(X\\) binomialverteilt mit \\(n=10\\), \\(p=0{,}5\\) angenommen.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(\\mu\\) und \\(\\sigma\\) des Modells.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Ordnen Sie zu: Welche Kennzahl kommt aus den Daten, welche aus dem Modell? (\\(\\bar{x}=5{,}25\\); \\(s=1{,}48\\))</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Stellen Sie Daten und Modell in einer Tabelle gegen&uuml;ber.</span></div>
+  </div>
+  <div class="hint-box">Lateinische Buchstaben (\\(\\bar{x}\\), \\(s\\)) geh&ouml;ren zu den Daten, griechische (\\(\\mu\\), \\(\\sigma\\)) zum Modell.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(\\mu=10\\cdot 0{,}5=5{,}00\\); \\(\\sigma=\\sqrt{10\\cdot 0{,}5\\cdot 0{,}5}=\\sqrt{2{,}5}=1{,}58\\)</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(\\bar{x}\\) und \\(s\\): aus der <strong>Messreihe</strong> berechnet, sie h&auml;ngen von den 40 Durchg&auml;ngen ab und w&uuml;rden beim n&auml;chsten Versuch anders ausfallen.<br>
+\\(\\mu\\) und \\(\\sigma\\): aus dem <strong>Modell</strong> berechnet, sie folgen aus \\(n\\) und \\(p\\) und &auml;ndern sich nie.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+<table class="ltbl">
+  <tr><th></th><th>Messreihe (Daten)</th><th>Modell (Theorie)</th></tr>
+  <tr><td class="lh">Mitte</td><td>\\(\\bar{x}=5{,}25\\)</td><td>\\(\\mu=5{,}00\\)</td></tr>
+  <tr><td class="lh">Streuung</td><td>\\(s=1{,}48\\)</td><td>\\(\\sigma=1{,}58\\)</td></tr>
+  <tr><td class="lh">Herkunft</td><td>ausgez&auml;hlt</td><td>aus \\(n\\) und \\(p\\) berechnet</td></tr>
+</table>
+Die Werte liegen nah beieinander &mdash; das Modell passt gut.
+</div></div>
+<div class="result">\\(\\bar{x}=5{,}25\\) gegen \\(\\mu=5{,}00\\), \\(s=1{,}48\\) gegen \\(\\sigma=1{,}58\\): dieselbe Rolle, aber verschiedene Herkunft.</div>`,
+prompt:`Ich uebe die Unterscheidung von Messreihen-Kennzahlen (x-Strich, s) und Modell-Kennzahlen (mu, sigma) in der Stochastik (Mathe Klasse 13, Grundkurs). Gib mir 8 Aussagen oder Rechnungen, bei denen ich entscheiden soll, ob es sich um eine Kennzahl der Daten oder des Modells handelt, und begruenden soll. Erstelle dazu eine Gegenueberstellungstabelle als Musterloesung und erklaere, warum man unterschiedliche Buchstaben verwendet.`},
+
+g3:{title:"Streubereiche \\(\\mu\\pm\\sigma\\) und \\(\\mu\\pm 2\\sigma\\) (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine M&uuml;nze wird \\(n=100\\)-mal geworfen, \\(X\\) sei die Anzahl der Kopfw&uuml;rfe (\\(p=0{,}5\\)).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(\\mu\\) und \\(\\sigma\\) und geben Sie die Intervalle \\(\\mu\\pm\\sigma\\) und \\(\\mu\\pm 2\\sigma\\) an.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(P(45\\le X\\le 55)\\) und \\(P(40\\le X\\le 60)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Vergleichen Sie mit den Faustwerten 68&nbsp;% und 95&nbsp;%.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Beurteilen Sie: Ein Durchgang ergibt 63-mal Kopf. Spricht das gegen eine faire M&uuml;nze?</span></div>
+  </div>
+  <div class="hint-box">\\(P(a\\le X\\le b)=\\)<span class="cas">binomCdf(100;0,5;a;b)</span></div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+\\(\\mu=50\\); \\(\\sigma=\\sqrt{100\\cdot 0{,}5\\cdot 0{,}5}=5\\)<br>
+\\(\\mu\\pm\\sigma=[45;\\,55]\\) &nbsp;&nbsp; \\(\\mu\\pm 2\\sigma=[40;\\,60]\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(P(45\\le X\\le 55)=\\)<span class="cas">binomCdf(100;0,5;45;55)</span>\\(=0{,}7287\\)<br>
+\\(P(40\\le X\\le 60)=\\)<span class="cas">binomCdf(100;0,5;40;60)</span>\\(=0{,}9648\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+72,9&nbsp;% gegen&uuml;ber der Faustregel 68&nbsp;%, 96,5&nbsp;% gegen&uuml;ber 95&nbsp;%. Die Faustwerte gelten f&uuml;r die stetige Normalverteilung; bei ganzzahligem \\(X\\) werden die Randwerte 45 und 55 ganz mitgez&auml;hlt, deshalb liegt der Wert etwas h&ouml;her. Als Orientierung sind 68&nbsp;% und 95&nbsp;% dennoch brauchbar.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+63 liegt au&szlig;erhalb von \\([40;\\,60]\\), also mehr als \\(2\\sigma\\) von \\(\\mu\\) entfernt. Solche Ergebnisse treten bei einer fairen M&uuml;nze in weniger als 4&nbsp;% der F&auml;lle auf. Das ist ein deutliches Indiz gegen die Fairness &mdash; ein Beweis ist es nicht, denn auch seltene Ergebnisse kommen vor.
+</div></div>
+<div class="result">1\\(\\sigma\\)-Bereich 72,9&nbsp;%, 2\\(\\sigma\\)-Bereich 96,5&nbsp;%; Werte au&szlig;erhalb \\(\\mu\\pm 2\\sigma\\) sind auffallend, aber nicht unm&ouml;glich.</div>`,
+prompt:`Ich uebe Streubereiche mu plus minus sigma und mu plus minus 2 sigma bei der Binomialverteilung (Mathe Klasse 13, Grundkurs). Erstelle 3 Aufgaben mit verschiedenen n und p, in denen ich die Intervalle bestimme, die Wahrscheinlichkeiten mit binomCdf berechne und mit den Faustwerten 68 Prozent und 95 Prozent vergleiche. Lass mich jeweils beurteilen, ob ein gegebenes Messergebnis auffaellig ist. Erklaere in der Loesung, warum die berechneten Werte von den Faustwerten abweichen.`},
+
+g4:{title:"Warum \\(\\bar{x}\\) und \\(\\mu\\) nie genau gleich sind (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Die Messreihe ergab \\(\\bar{x}=5{,}25\\) und \\(s=1{,}48\\), das Modell liefert \\(\\mu=5{,}00\\) und \\(\\sigma=1{,}58\\). Ein Sch&uuml;ler schreibt: &bdquo;Die Abweichung zeigt, dass das Modell falsch ist.&ldquo;</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Nehmen Sie Stellung zu dieser Aussage.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erl&auml;utern Sie, was mit \\(\\bar{x}\\) und \\(s\\) passiert, wenn die Zahl der Durchg&auml;nge von 40 auf 4000 erh&ouml;ht wird.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erkl&auml;ren Sie, woran man ein tats&auml;chlich unpassendes Modell erkennen w&uuml;rde.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+Die Aussage ist nicht haltbar. \\(\\bar{x}\\) ist eine <strong>Sch&auml;tzung</strong> f&uuml;r \\(\\mu\\) aus endlich vielen Durchg&auml;ngen und schwankt von Versuchsreihe zu Versuchsreihe. Eine Abweichung von 0,25 bei \\(\\sigma=1{,}58\\) ist unauff&auml;llig klein. Exakte &Uuml;bereinstimmung w&auml;re sogar verd&auml;chtig &mdash; gleich sind \\(\\bar{x}\\) und \\(\\mu\\) praktisch nie.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+Mit wachsender Anzahl von Durchg&auml;ngen schwanken \\(\\bar{x}\\) und \\(s\\) weniger und liegen im Mittel immer n&auml;her an \\(\\mu\\) und \\(\\sigma\\) (empirisches Gesetz der gro&szlig;en Zahlen). Die <em>Streuung der Einzelwerte</em> \\(\\sigma\\) &auml;ndert sich dabei nicht &mdash; nur die Sch&auml;tzung wird zuverl&auml;ssiger.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+An einer <strong>systematischen</strong> Abweichung: wenn \\(\\bar{x}\\) deutlich und reproduzierbar neben \\(\\mu\\) liegt (mehrere Sigma, auch bei vielen Durchg&auml;ngen), wenn die Form des Histogramms nicht passt (zwei Gipfel, falsche Schiefe) oder wenn eine Modellannahme verletzt ist (ver&auml;nderliches \\(p\\), abh&auml;ngige Versuche). Einzelne kleine Abweichungen sind dagegen normale Zufallsstreuung.
+</div></div>
+<div class="result">\\(\\bar{x}\\), \\(s\\) sind Sch&auml;tzungen aus Daten, \\(\\mu\\), \\(\\sigma\\) Eigenschaften des Modells &mdash; gleich sind sie nie. Nur systematische Abweichungen widerlegen ein Modell.</div>`,
+prompt:`Ich bereite eine AFB-III-Aufgabe zum Vergleich von Messreihe und Modell vor (Mathe Klasse 13, Grundkurs). Gib mir 3 Schuelerbehauptungen zum Verhaeltnis von x-Strich und mu beziehungsweise s und sigma, teils richtig, teils falsch, zu denen ich Stellung nehmen soll. Erklaere in der Musterloesung den Schaetzcharakter von x-Strich und s, das Verhalten bei wachsendem Stichprobenumfang und die Kriterien, an denen man ein wirklich unpassendes Modell erkennt. Formuliere die Antworten in vollstaendigen Saetzen wie in einer Klausur.`},
+
+// ===== 8. KNOBELAUFGABEN =====
+k1:{title:"Wie gro&szlig; muss die Stichprobe sein? (Knobel)",
+aufgabe:`<div class="task-box">
+  <p>In einer Lieferung sind 5&nbsp;% der Teile defekt. Es soll eine Stichprobe genommen werden, in der mit einer Wahrscheinlichkeit von mindestens 95&nbsp;% wenigstens ein defektes Teil enthalten ist.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Stellen Sie die Bedingung als Ungleichung mit \\(n\\) auf.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">L&ouml;sen Sie die Ungleichung rechnerisch nach \\(n\\) auf.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Geben Sie das Ergebnis an und pr&uuml;fen Sie es mit \\(n\\) und \\(n-1\\) nach.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Erkl&auml;ren Sie, warum man \\(n\\) hier aufrunden muss.</span></div>
+  </div>
+  <div class="hint-box">Erst &uuml;ber das Gegenereignis umformen &mdash; dann steht \\(n\\) nur noch im Exponenten, und der Logarithmus hilft.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(P(X\\ge 1)\\ge 0{,}95\\), also \\(1-0{,}95^{\\,n}\\ge 0{,}95\\)</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(1-0{,}95^{\\,n}\\ge 0{,}95 \;\\Longleftrightarrow\; 0{,}95^{\\,n}\\le 0{,}05\\)<br>
+Logarithmieren: \\(n\\cdot\\ln(0{,}95)\\le \\ln(0{,}05)\\)<br>
+Division durch \\(\\ln(0{,}95)<0\\) &mdash; das Ungleichheitszeichen <strong>dreht sich</strong>:<br>
+\\(n\\ge \\dfrac{\\ln(0{,}05)}{\\ln(0{,}95)}=\\dfrac{-2{,}9957}{-0{,}05129}=58{,}4\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+\\(n=59\\): \\(1-0{,}95^{59}=0{,}9515\\ge 0{,}95\\) &#10003;<br>
+\\(n=58\\): \\(1-0{,}95^{58}=0{,}9489<0{,}95\\) &#10007;<br>
+Es m&uuml;ssen also mindestens 59 Teile gepr&uuml;ft werden.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+\\(n\\) ist eine Anzahl, also ganzzahlig, und die Bedingung lautet \\(n\\ge 58{,}4\\). Abrunden w&uuml;rde die Forderung verletzen; die kleinste zul&auml;ssige ganze Zahl ist 59. (Bei einer Bedingung der Form \\(n\\le\\ldots\\) w&uuml;rde man entsprechend abrunden.)
+</div></div>
+<div class="result">\\(n=59\\) Teile. Falle: beim Teilen durch \\(\\ln(0{,}95)<0\\) dreht sich das Ungleichheitszeichen.</div>`,
+prompt:`Ich uebe Aufgaben zum noetigen Stichprobenumfang bei der Binomialverteilung (Mathe Klasse 13, Grundkurs, Knobelniveau). Erstelle 3 Aufgaben vom Typ: Wie gross muss n sein, damit P(X >= 1) mindestens einen vorgegebenen Wert erreicht - mit verschiedenen p und Schwellen. Loese jeweils ueber das Gegenereignis, logarithmiere und achte in der Loesung ausdruecklich darauf, dass sich das Ungleichheitszeichen beim Teilen durch einen negativen Logarithmus dreht. Zeige die Kontrolle mit n und n-1 und begruende das Aufrunden.`},
+
+k2:{title:"Wie gut muss der Test werden? (Knobel)",
+aufgabe:`<div class="task-box">
+  <p>F&uuml;r das Pr&uuml;fverfahren gilt weiter \\(P(D)=0{,}05\\) und die Trefferquote \\(P(T\\mid D)=0{,}92\\). Die Falsch-Positiv-Rate \\(f=P(T\\mid\\overline{D})\\) soll nun verbessert werden.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Stellen Sie \\(P(D\\mid T)\\) als Formel mit dem unbekannten \\(f\\) auf.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Bestimmen Sie, wie klein \\(f\\) sein muss, damit ein Alarm mit mindestens 50&nbsp;% Wahrscheinlichkeit echt ist.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Beurteilen Sie das Ergebnis: Wie realistisch ist diese Forderung?</span></div>
+  </div>
+  <div class="hint-box">Bruchgleichung: mit dem Nenner multiplizieren, dann nach \\(f\\) aufl&ouml;sen.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+\\(P(D\\mid T)=\\dfrac{P(D)\\cdot P(T\\mid D)}{P(D)\\cdot P(T\\mid D)+P(\\overline{D})\\cdot f}\\)<br>\\(\\phantom{P(D\\mid T)}=\\dfrac{0{,}05\\cdot 0{,}92}{0{,}05\\cdot 0{,}92+0{,}95\\cdot f}=\\dfrac{0{,}046}{0{,}046+0{,}95f}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+\\(\\dfrac{0{,}046}{0{,}046+0{,}95f}\\ge 0{,}5\\)<br>
+Nenner ist positiv, also: \\(0{,}046\\ge 0{,}5\\cdot(0{,}046+0{,}95f)=0{,}023+0{,}475f\\)<br>
+\\(0{,}023\\ge 0{,}475f \;\\Longrightarrow\; f\\le \\dfrac{0{,}023}{0{,}475}=0{,}0484\\)<br>
+Die Falsch-Positiv-Rate muss also von 8&nbsp;% auf h&ouml;chstens 4,84&nbsp;% sinken.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+Die Forderung ist moderat: eine Halbierung der Fehlalarmrate gen&uuml;gt, um die Aussagekraft eines Alarms von 37,7&nbsp;% auf 50&nbsp;% zu heben. Will man dagegen 90&nbsp;% erreichen, ergibt die gleiche Rechnung \\(f\\le (0{,}046/0{,}9-0{,}046)/0{,}95=0{,}00538\\), also 0,54&nbsp;% &mdash; eine mehr als 14-fache Verbesserung. Bei seltenen Ereignissen wird jede weitere Steigerung der Aussagekraft also sehr teuer; in der Praxis arbeitet man deshalb mit einem zweiten, genaueren Nachtest.
+</div></div>
+<div class="result">\\(f\\le 4{,}84\\,\\%\\) f&uuml;r \\(P(D\\mid T)\\ge 50\\,\\%\\); f&uuml;r 90&nbsp;% w&auml;ren sogar \\(f\\le 0{,}54\\,\\%\\) n&ouml;tig.</div>`,
+prompt:`Ich uebe Knobelaufgaben zur bedingten Wahrscheinlichkeit mit unbekanntem Parameter (Mathe Klasse 13, Grundkurs). Erstelle 3 Aufgaben, in denen eine der Groessen (Grundrate, Trefferquote oder Falsch-Positiv-Rate) unbekannt ist und aus einer Bedingung an P(D|T) bestimmt werden soll. Loese jeweils die entstehende Bruchgleichung oder Ungleichung schrittweise und beurteile am Ende, wie realistisch die Forderung ist. Rechne zur Kontrolle mit dem gefundenen Wert zurueck.`}
+
+};
+
+// -----------------------------------------
+// STATE
+// -----------------------------------------
+const state = {};
+let curId = null;
+
+function loadState(){
+  try{ Object.assign(state, JSON.parse(sessionStorage.getItem('q1-stochastik-13np')||'{}')); }catch(e){}
+}
+function saveState(){
+  try{ sessionStorage.setItem('q1-stochastik-13np', JSON.stringify(state)); }catch(e){}
+}
+
+// -----------------------------------------
+// TOGGLE
+// -----------------------------------------
+function toggle(checkArea){
+  const card = checkArea.closest('.comp-card');
+  card.classList.toggle('done');
+  state[card.dataset.id] = card.classList.contains('done');
+  saveState();
+  updateProgress();
+  updateCnt(card.dataset.sec);
+}
+
+// -----------------------------------------
+// PROGRESS
+// -----------------------------------------
+function updateProgress(){
+  const all = document.querySelectorAll('.comp-card').length;
+  const done = document.querySelectorAll('.comp-card.done').length;
+  const pct = all ? done/all*100 : 0;
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-text').textContent = done+' von '+all+' Kompetenzen';
+}
+function updateCnt(sec){
+  const all  = document.querySelectorAll(`[data-sec="${sec}"]`).length;
+  const done = document.querySelectorAll(`[data-sec="${sec}"].done`).length;
+  const el   = document.getElementById('cnt-'+sec);
+  if(el) el.textContent = done+'/'+all;
+}
+function initState(){
+  loadState();
+  document.querySelectorAll('.comp-card').forEach(c=>{
+    if(state[c.dataset.id]) c.classList.add('done');
+  });
+  updateProgress();
+  ['notation','baum','bedingt','bernoulli','cas','kennzahlen','messreihe','knobel'].forEach(s=>updateCnt(s));
+}
+
+// -----------------------------------------
+// MODAL
+// -----------------------------------------
+function openModal(id){
+  curId = id;
+  const d = T[id];
+  if(!d) return;
+
+  document.getElementById('m-title').textContent = d.title;
+
+  // Tab 0: Aufgabe + ausklappbare Loesung
+  document.getElementById('tp0').innerHTML =
+    d.aufgabe +
+    `<button class="sol-toggle" onclick="toggleSol()">💡 L\u00f6sung anzeigen</button>
+     <div class="sol-box" id="sol-box">${d.loesung}</div>`;
+
+  // Tab 1: Loesung direkt
+  document.getElementById('tp1').innerHTML =
+    `<div class="sol-box open">${d.loesung}</div>`;
+
+  // Tab 2: KI-Prompt
+  document.getElementById('tp2').innerHTML =
+    `<p style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">Prompt f\u00fcr weitere \u00dcbungsaufgaben:</p>
+     <div class="prompt-box">${d.prompt}</div>
+     <div class="ai-btns">
+       <button class="ai-btn copy" onclick="copyPrompt()">📋 Kopieren</button>
+       <a class="ai-btn" href="https://gemini.google.com" target="_blank">🚀 Google AI</a>
+       <a class="ai-btn" href="https://chatgpt.com" target="_blank">💬 ChatGPT</a>
+     </div>`;
+
+  // Reset tabs
+  document.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Re-render MathJax
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('overlay')]).catch(e=>console.log(e));
+  }
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClick(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
+
+function switchTab(i){
+  document.querySelectorAll('.mtab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.tab-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('tp'+i)]).catch(e=>console.log(e));
+  }
+}
+
+function toggleSol(){
+  const b = document.getElementById('sol-box');
+  const btn = b.previousElementSibling;
+  b.classList.toggle('open');
+  btn.textContent = b.classList.contains('open') ? '🙈 L\u00f6sung ausblenden' : '💡 L\u00f6sung anzeigen';
+  if(b.classList.contains('open') && window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([b]).catch(e=>console.log(e));
+  }
+}
+
+function copyPrompt(){
+  if(!T[curId]) return;
+  navigator.clipboard.writeText(T[curId].prompt).then(()=>{
+    const btn = document.querySelector('.copy');
+    btn.textContent = '✅ Kopiert!';
+    setTimeout(()=>btn.textContent='📋 Kopieren', 2000);
+  });
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+// -----------------------------------------
+// INIT
+// -----------------------------------------
+window.addEventListener('DOMContentLoaded', ()=>{
+  initState();
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise().catch(e=>console.log(e));
+  }
+});
+</script>
+
+</body>
+</html>

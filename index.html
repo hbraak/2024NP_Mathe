@@ -385,6 +385,8 @@
             <div class="nav-block">
                 <div class="schnellzugriff-titel">Nach Datum &ndash; aktuelles Halbjahr (Stochastik)</div>
                 <div class="chips" id="datum-chips">
+                    <a class="chip" href="#d20261102">02.11.</a>
+                    <a class="chip" href="#d20261008">08.10.</a>
                     <a class="chip" href="#d20261001">01.10.</a>
                     <a class="chip" href="#d20260930">30.09.</a>
                     <a class="chip" href="#d20260924">24.09.</a>
@@ -433,9 +435,38 @@
         <div class="leer-hinweis" id="leer-hinweis" hidden>
             Zu dieser Auswahl gibt es (noch) kein Material. Tippe auf &bdquo;Alles zeigen&ldquo;.
         </div>
+        <section class="datum-gruppe" id="d20261102">
+            <div class="datum-kopf">
+                <div class="datum">Mo, 02.11.2026 <span class="neu">neu</span></div>
+                <div class="thema">Klausurvorbereitung Q1 &ndash; interaktive Lernliste Stochastik</div>
+            </div>
+            <div class="material-grid">
+            <a href="lernliste-stochastik-q1.html" class="material-card" data-url="lernliste-stochastik-q1.html" data-thema="vierfeldertafel baumdiagramm gegenereignis bernoulli binomialkoeffizient kumuliert erwartungswert" data-art="hilfen">
+                <div class="card-header">
+                    <div class="card-icon blue">&#9989;</div>
+                    <div class="card-title">Lernliste: Q1 &mdash; Stochastik</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Interaktive Lernliste f&uuml;r die Q1-Klausur: 32 Kompetenzen in acht Abschnitten &ndash; Sprache und Notation, Baumdiagramm und Pfadregeln, bedingte Wahrscheinlichkeit, Bernoulli-Kette und Binomialverteilung, mindestens/h&ouml;chstens mit dem CAS, Erwartungswert und Standardabweichung, Messreihe gegen Modell sowie zwei Knobelaufgaben. Jede Zeile l&auml;sst sich abhaken (Fortschrittsbalken), ist mit AFB&nbsp;I&ndash;III gekennzeichnet und bietet &uuml;ber &bdquo;&Uuml;ben&ldquo; eine passende Aufgabe mit vollst&auml;ndiger L&ouml;sung sowie einen fertigen KI-Prompt f&uuml;r weitere &Uuml;bungsaufgaben.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Lernliste</span>
+                            <span class="tag">Interaktiv</span>
+                            <span class="tag">Stochastik</span>
+                            <span class="tag">Klausurvorbereitung</span>
+                            <span class="tag">Q1</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-ls-q1"></div>
+                </div>
+            </a>
+            </div>
+        </section>
         <section class="datum-gruppe" id="d20261008">
             <div class="datum-kopf">
-                <div class="datum">Do, 08.10.2026 <span class="neu">neu</span></div>
+                <div class="datum">Do, 08.10.2026</div>
                 <div class="thema">Erwartungswert und Standardabweichung &ndash; &micro; und &sigma; der Binomialverteilung</div>
             </div>
             <div class="material-grid">
@@ -1336,6 +1367,7 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-ls-q1', 'ls/');
             generateQR('qr-ew-ab', 'arbeitsblatt-erwartungswert-standardabweichung.pdf');
             generateQR('qr-ew-lsg', 'loesung-erwartungswert-standardabweichung.pdf');
             generateQR('qr-mv-ab', 'arbeitsblatt-messreihe-verteilung.pdf');
