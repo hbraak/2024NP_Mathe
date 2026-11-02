@@ -336,6 +336,22 @@ mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding-bo
   .ltbl { display: block; overflow-x: auto; white-space: nowrap; font-size: 0.8rem; }
   .ltbl th, .ltbl td { padding: 3px 5px; }
 }
+
+/* -- Materialleiste je Abschnitt -- */
+.matbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: -2px 0 10px 42px; }
+.matbar-label { font-size: 0.66rem; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-right: 2px; flex-shrink: 0; }
+.matchip {
+  display: inline-flex; align-items: center; gap: 5px; text-decoration: none;
+  font-size: 0.74rem; line-height: 1.25; border: 1px solid var(--border); border-radius: 4px;
+  padding: 3px 9px; background: var(--surface); color: var(--text); transition: background .15s, border-color .15s;
+}
+.matchip:hover { border-color: #8aa8c8; background: #f2f7fc; }
+.matchip.lsg { color: #2b7a4f; border-color: #c3e2d0; }
+.matchip.lsg:hover { background: #eef8f2; border-color: #7fc49b; }
+.matchip.sim { color: #2b6ea8; border-color: #c2d9ec; }
+.matchip.sim:hover { background: #eef5fb; border-color: #7fb0d8; }
+@media (max-width: 600px) { .matbar { margin-left: 0; } }
+
 </style>
 </head>
 <body>
@@ -390,6 +406,12 @@ mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding-bo
     <div class="section-title">Sprache und Notation</div>
     <div class="section-count" id="cnt-notation"></div>
   </div>
+  <div class="matbar">
+    <span class="matbar-label">Material</span>
+      <a class="matchip" href="grundlagen-bedingte-wahrscheinlichkeit.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>Arbeitsblatt</a>
+      <a class="matchip lsg" href="loesung-grundlagen-bedingte-wahrscheinlichkeit.pdf" target="_blank" rel="noopener"><span class="mi">&#9989;</span>L&ouml;sung</a>
+      <a class="matchip" href="partnerpuzzle-vierfeldertafel-a.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>Partnerpuzzle A: Vierfeldertafel</a>
+  </div>
   <div class="card-list" id="sec-notation">
 
     <div class="comp-card" data-id="n1" data-sec="notation">
@@ -437,6 +459,16 @@ mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding-bo
     <div class="section-icon">&#x1F333;</div>
     <div class="section-title">Baumdiagramm und Pfadregeln</div>
     <div class="section-count" id="cnt-baum"></div>
+  </div>
+  <div class="matbar">
+    <span class="matbar-label">Material</span>
+      <a class="matchip" href="arbeitsblatt-baumdiagramm-einstieg.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>Arbeitsblatt Einstieg</a>
+      <a class="matchip lsg" href="loesung-baumdiagramm-einstieg.pdf" target="_blank" rel="noopener"><span class="mi">&#9989;</span>L&ouml;sung</a>
+      <a class="matchip" href="partnerpuzzle-baumdiagramm-b.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>Partnerpuzzle B: Baumdiagramm</a>
+      <a class="matchip lsg" href="loesung-partnerpuzzle.pdf" target="_blank" rel="noopener"><span class="mi">&#9989;</span>L&ouml;sung Partnerpuzzle</a>
+      <a class="matchip sim" href="baumdiagramm.html" target="_blank" rel="noopener"><span class="mi">&#128202;</span>Simulation Pfadregeln</a>
+      <a class="matchip" href="vorlage-baumdiagramm-4stufig.pdf" target="_blank" rel="noopener"><span class="mi">&#128207;</span>Vorlage 4-stufig</a>
+      <a class="matchip" href="vorlage-baumdiagramm-5stufig-a4.pdf" target="_blank" rel="noopener"><span class="mi">&#128207;</span>Vorlage 5-stufig</a>
   </div>
   <div class="card-list" id="sec-baum">
 
@@ -495,6 +527,15 @@ mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding-bo
     <div class="section-title">Bedingte Wahrscheinlichkeit rechnen</div>
     <div class="section-count" id="cnt-bedingt"></div>
   </div>
+  <div class="matbar">
+    <span class="matbar-label">Material</span>
+      <a class="matchip" href="grundlagen-bedingte-wahrscheinlichkeit.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>Arbeitsblatt Grundlagen</a>
+      <a class="matchip lsg" href="loesung-grundlagen-bedingte-wahrscheinlichkeit.pdf" target="_blank" rel="noopener"><span class="mi">&#9989;</span>L&ouml;sung</a>
+      <a class="matchip" href="arbeitsblatt-qualitaetskontrolle.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>Arbeitsblatt Pr&uuml;fverfahren</a>
+      <a class="matchip lsg" href="loesung-qualitaetskontrolle.pdf" target="_blank" rel="noopener"><span class="mi">&#9989;</span>L&ouml;sung</a>
+      <a class="matchip sim" href="hinweise-qk.html" target="_blank" rel="noopener"><span class="mi">&#128161;</span>Hilfen zum Pr&uuml;fverfahren</a>
+      <a class="matchip sim" href="comic-pruefverfahren.html" target="_blank" rel="noopener"><span class="mi">&#128202;</span>Comic: Die Naht, die keiner sieht</a>
+  </div>
   <div class="card-list" id="sec-bedingt">
 
     <div class="comp-card" data-id="c1" data-sec="bedingt">
@@ -533,6 +574,14 @@ mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding-bo
     <div class="section-icon">&#x1F3AF;</div>
     <div class="section-title">Bernoulli-Kette und Binomialverteilung</div>
     <div class="section-count" id="cnt-bernoulli"></div>
+  </div>
+  <div class="matbar">
+    <span class="matbar-label">Material</span>
+      <a class="matchip" href="arbeitsblatt-binomialkoeffizient.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>Arbeitsblatt Binomialkoeffizient</a>
+      <a class="matchip lsg" href="loesung-binomialkoeffizient.pdf" target="_blank" rel="noopener"><span class="mi">&#9989;</span>L&ouml;sung</a>
+      <a class="matchip" href="arbeitsblatt-binomialverteilung.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>Arbeitsblatt Binomialverteilung</a>
+      <a class="matchip sim" href="hinweise-bino.html" target="_blank" rel="noopener"><span class="mi">&#128161;</span>Hilfen dazu</a>
+      <a class="matchip sim" href="binomialverteilung.html" target="_blank" rel="noopener"><span class="mi">&#128202;</span>Simulation B(n;p)</a>
   </div>
   <div class="card-list" id="sec-bernoulli">
 
@@ -591,6 +640,13 @@ mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding-bo
     <div class="section-title">Mindestens, h&ouml;chstens &amp; die Rechnerbefehle</div>
     <div class="section-count" id="cnt-cas"></div>
   </div>
+  <div class="matbar">
+    <span class="matbar-label">Material</span>
+      <a class="matchip" href="cas-anleitung-binomialverteilung.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>CAS-Anleitung TI-nspire</a>
+      <a class="matchip" href="arbeitsblatt-mindestens-hoechstens.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>Arbeitsblatt mindestens/h&ouml;chstens</a>
+      <a class="matchip lsg" href="loesung-mindestens-hoechstens.pdf" target="_blank" rel="noopener"><span class="mi">&#9989;</span>L&ouml;sung</a>
+      <a class="matchip sim" href="quiz-mindestens-hoechstens.html" target="_blank" rel="noopener"><span class="mi">&#129513;</span>Quiz: mindestens oder h&ouml;chstens?</a>
+  </div>
   <div class="card-list" id="sec-cas">
 
     <div class="comp-card" data-id="e1" data-sec="cas">
@@ -648,6 +704,12 @@ mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding-bo
     <div class="section-title">Erwartungswert und Standardabweichung</div>
     <div class="section-count" id="cnt-kennzahlen"></div>
   </div>
+  <div class="matbar">
+    <span class="matbar-label">Material</span>
+      <a class="matchip" href="arbeitsblatt-erwartungswert-standardabweichung.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>Arbeitsblatt Erwartungswert &amp; Standardabweichung</a>
+      <a class="matchip lsg" href="loesung-erwartungswert-standardabweichung.pdf" target="_blank" rel="noopener"><span class="mi">&#9989;</span>L&ouml;sung</a>
+      <a class="matchip sim" href="binomialverteilung.html" target="_blank" rel="noopener"><span class="mi">&#128202;</span>Simulation B(n;p) mit μ-Marke</a>
+  </div>
   <div class="card-list" id="sec-kennzahlen">
 
     <div class="comp-card" data-id="f1" data-sec="kennzahlen">
@@ -671,7 +733,7 @@ mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding-bo
     <div class="comp-card" data-id="f3" data-sec="kennzahlen">
       <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
       <div class="comp-body">
-        <span class="comp-text">Ich kann erkl&auml;ren, warum \(\mu\) allein eine Verteilung nicht beschreibt: \(\mu\) sagt <em>wo</em>, \(\sigma\) sagt <em>wie breit</em>.</span>
+        <span class="comp-text">Ich kann die \(1\sigma\)- und \(2\sigma\)-Umgebung ausrechnen und als <strong>ganzzahligen Bereich</strong> angeben (Grenzen nach innen runden).</span>
         <span class="afb-pill afb2 card-afb">AFB II</span>
       </div>
       <button class="comp-btn" onclick="openModal('f3')">&#220;ben</button>
@@ -680,8 +742,8 @@ mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding-bo
     <div class="comp-card" data-id="f4" data-sec="kennzahlen">
       <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
       <div class="comp-body">
-        <span class="comp-text">Ich kann \(\mu\) im Sachzusammenhang deuten (langfristiger Durchschnitt, Fairness eines Spiels) und wei&szlig;, dass \(\mu\) kein m&ouml;glicher Einzelwert sein muss.</span>
-        <span class="afb-pill afb2 card-afb">AFB II</span>
+        <span class="comp-text">Ich kann <strong>r&uuml;ckw&auml;rts</strong> rechnen: eine fehlende Auszahlung so bestimmen, dass ein Spiel fair ist, oder aus \(\mu\) und \(\sigma\) die Parameter \(n\) und \(p\) berechnen.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
       </div>
       <button class="comp-btn" onclick="openModal('f4')">&#220;ben</button>
     </div>
@@ -695,6 +757,12 @@ mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding-bo
     <div class="section-icon">&#x1F4CA;</div>
     <div class="section-title">Messreihe und Modell</div>
     <div class="section-count" id="cnt-messreihe"></div>
+  </div>
+  <div class="matbar">
+    <span class="matbar-label">Material</span>
+      <a class="matchip" href="arbeitsblatt-messreihe-verteilung.pdf" target="_blank" rel="noopener"><span class="mi">&#128196;</span>Arbeitsblatt Messreihe</a>
+      <a class="matchip lsg" href="loesung-messreihe-verteilung.pdf" target="_blank" rel="noopener"><span class="mi">&#9989;</span>L&ouml;sung</a>
+      <a class="matchip sim" href="messreihe-verteilung.html" target="_blank" rel="noopener"><span class="mi">&#128202;</span>Simulation Messreihe &rarr; Verteilung</a>
   </div>
   <div class="card-list" id="sec-messreihe">
 
@@ -1363,53 +1431,34 @@ loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(\\mu=50\\cdot 0{
 <div class="result">\\(\\sigma\\) ist immer die <strong>Wurzel</strong> aus \\(n\\,p\\,(1-p)\\); \\(n\\,p\\,(1-p)\\) selbst ist die Varianz \\(\\sigma^2\\).</div>`,
 prompt:`Ich uebe mu und sigma bei der Binomialverteilung (Mathe Klasse 13, Grundkurs). Gib mir 8 Aufgaben: teils sind n und p gegeben und mu, sigma gesucht, teils ist mu oder sigma gegeben und n oder p gesucht. Baue zwei fehlerhafte Schuelerrechnungen ein, in denen die Wurzel vergessen oder p mit 1-p verwechselt wurde. Vollstaendige Loesungen mit Rechenschritten.`},
 
-f3:{title:"Gleiches \\(\\mu\\) &mdash; anderes \\(\\sigma\\) (AFB II)",
-aufgabe:`<div class="task-box">
-  <p>Zwei Fertigungslinien werden kontrolliert:</p>
-  <p>Linie&nbsp;A: \\(n=100\\), \\(p=0{,}5\\) &nbsp;&nbsp;&nbsp; Linie&nbsp;B: \\(n=1000\\), \\(p=0{,}05\\)</p>
-  <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie jeweils \\(\\mu\\) und \\(\\sigma\\).</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erl&auml;utern Sie, was an den beiden Verteilungen gleich und was verschieden ist.</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erkl&auml;ren Sie, warum die Angabe von \\(\\mu\\) allein eine Verteilung nicht beschreibt.</span></div>
-  </div>
-</div>`,
-loesung:`<div class="sol-step"><div class="snum">a</div><div>
-Linie&nbsp;A: \\(\\mu=50\\); \\(\\sigma=\\sqrt{100\\cdot 0{,}5\\cdot 0{,}5}=\\sqrt{25}=5{,}00\\)<br>
-Linie&nbsp;B: \\(\\mu=50\\); \\(\\sigma=\\sqrt{1000\\cdot 0{,}05\\cdot 0{,}95}=\\sqrt{47{,}5}=6{,}89\\)
-</div></div>
-<div class="sol-step"><div class="snum">b</div><div>
-Gleich ist die <strong>Lage</strong>: beide Histogramme haben ihren Gipfel bei 50. Verschieden ist die <strong>Breite</strong>: bei B streuen die Werte st&auml;rker um 50 ( \\(\\sigma=6{,}89\\) gegen \\(5{,}00\\) ), das Histogramm ist niedriger und breiter. Zudem ist A symmetrisch (\\(p=0{,}5\\)), B leicht rechtsschief.
-</div></div>
-<div class="sol-step"><div class="snum">c</div><div>
-\\(\\mu\\) sagt nur, <em>wo</em> der Schwerpunkt liegt, nicht, wie weit die Einzelwerte davon abweichen. Zwei Linien mit demselben Erwartungswert k&ouml;nnen sich in der Planung ganz verschieden verhalten: bei B muss man gr&ouml;&szlig;ere Ausschl&auml;ge einkalkulieren. Erst \\(\\mu\\) <em>und</em> \\(\\sigma\\) beschreiben die Verteilung brauchbar.
-</div></div>
-<div class="result">Beide \\(\\mu=50\\), aber \\(\\sigma_A=5{,}00\\) und \\(\\sigma_B=6{,}89\\): \\(\\mu\\) sagt <em>wo</em>, \\(\\sigma\\) sagt <em>wie breit</em>.</div>`,
-prompt:`Ich uebe die Bedeutung von mu und sigma (Mathe Klasse 13, Grundkurs). Gib mir drei Paare von Binomialverteilungen mit gleichem mu, aber verschiedenem sigma. Ich soll jeweils mu und sigma berechnen und in Worten beschreiben, was an den Histogrammen gleich und was verschieden ist. Erklaere in der Loesung, welche praktische Konsequenz eine groessere Streuung bei gleicher Lage hat, zum Beispiel fuer eine Lagerplanung.`},
+f3:{title:"\\(1\\sigma\\)- und \\(2\\sigma\\)-Umgebung als Bereich (AFB II)",
+aufgabe:`<div class="task-box">Ein Zulieferer liefert Schrauben mit einem Ausschussanteil von \\(p=0{,}06\\). Der Wareneingang pr&uuml;ft eine Stichprobe von \\(n=400\\) Schrauben. \\(X\\) sei die Anzahl der Ausschussteile.
+  <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(\\mu\\) und \\(\\sigma\\).</span></div>
+  <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Geben Sie die \\(1\\sigma\\)-Umgebung als ganzzahligen Bereich an. Runden Sie die Grenzen nach innen.</span></div>
+  <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Geben Sie die \\(2\\sigma\\)-Umgebung als ganzzahligen Bereich an und formulieren Sie einen Antwortsatz.</span></div>
+  <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Pr&uuml;fen Sie, ob die Faustregel hier &uuml;berhaupt angewendet werden darf.</span></div>
+</div>
+  <div class="hint-box">\\(\\mu-2\\sigma \\le X \\le \\mu+2\\sigma\\) &mdash; nach innen runden hei&szlig;t: untere Grenze auf&shy;runden, obere Grenze ab&shy;runden. Die Faustregel ist brauchbar, solange \\(\\sigma>3\\) ist.</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(\\mu=400\\cdot 0{,}06=24\\); \\(\\sigma=\\sqrt{400\\cdot 0{,}06\\cdot 0{,}94}=\\sqrt{22{,}56}=4{,}75\\)</div></div>
+<div class="sol-step"><div class="snum">b</div><div>\\(24-4{,}75=19{,}25\\) und \\(24+4{,}75=28{,}75\\)<br>nach innen gerundet: <strong>20 bis 28</strong> Ausschussteile</div></div>
+<div class="sol-step"><div class="snum">c</div><div>\\(24-2\\cdot 4{,}75=14{,}50\\) und \\(24+2\\cdot 4{,}75=33{,}50\\)<br>nach innen gerundet: <strong>15 bis 33</strong> Ausschussteile.<br>Antwortsatz: In rund 95&nbsp;% der Stichproben von 400 Schrauben liegt die Anzahl der Ausschussteile zwischen 15 und 33.</div></div>
+<div class="sol-step"><div class="snum">d</div><div>\\(\\sigma=4{,}75>3\\) &mdash; die Faustregel darf angewendet werden.</div></div>
+<div class="result">\\(1\\sigma\\): 20 bis 28 (rund 68&nbsp;%) &middot; \\(2\\sigma\\): 15 bis 33 (rund 95&nbsp;%)</div>`,
+prompt:`Ich uebe die Sigma-Umgebungen bei der Binomialverteilung (Mathe Klasse 13, Grundkurs). Gib mir 6 Aufgaben mit verschiedenen n und p aus Sachkontexten (Ausschuss, Reklamationen, Umfragen). Ich soll jeweils mu und sigma berechnen, die 1-Sigma- und 2-Sigma-Umgebung als ganzzahligen Bereich angeben (Grenzen nach innen gerundet) und einen Antwortsatz formulieren. Baue eine Aufgabe ein, in der sigma kleiner als 3 ist, so dass die Faustregel nicht gilt. Vollstaendige Loesungen mit Rechenschritten.`},
 
-f4:{title:"\\(\\mu\\) im Sachzusammenhang deuten (AFB II)",
+f4:{title:"R&uuml;ckw&auml;rts rechnen mit \\(\\mu\\) und \\(\\sigma\\) (AFB III)",
 aufgabe:`<div class="task-box">
-  <p>Eine Werkstatt bearbeitet t&auml;glich 80 Werkst&uuml;cke; jedes muss mit Wahrscheinlichkeit 4&nbsp;% nachgearbeitet werden.</p>
-  <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(\\mu\\) und \\(\\sigma\\) der Anzahl der Nacharbeiten pro Tag.</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Deuten Sie \\(\\mu\\) im Sachzusammenhang. Kann an einem Tag genau \\(\\mu\\) Nacharbeiten auftreten?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Die Werkstatt plant Kapazit&auml;t f&uuml;r 6 Nacharbeiten pro Tag ein. Berechnen Sie die Wahrscheinlichkeit, dass das an einem Tag nicht reicht.</span></div>
-    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Wie viele Nacharbeiten sind in einem Monat mit 20 Arbeitstagen zu erwarten?</span></div>
-  </div>
-</div>`,
-loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(\\mu=80\\cdot 0{,}04=3{,}2\\); \\(\\sigma=\\sqrt{80\\cdot 0{,}04\\cdot 0{,}96}=\\sqrt{3{,}072}=1{,}75\\)</div></div>
-<div class="sol-step"><div class="snum">b</div><div>
-Im langj&auml;hrigen Mittel fallen 3,2 Nacharbeiten pro Tag an. Als Einzelergebnis ist 3,2 <strong>unm&ouml;glich</strong> &mdash; \\(X\\) nimmt nur ganzzahlige Werte an. \\(\\mu\\) ist ein Durchschnittswert, kein m&ouml;glicher Tageswert.
-</div></div>
-<div class="sol-step"><div class="snum">c</div><div>
-&bdquo;Reicht nicht&ldquo; bedeutet \\(X\\ge 7\\):<br>
-\\(P(X\\ge 7)=1-P(X\\le 6)=1-\\)<span class="cas">binomCdf(80;0,04;0;6)</span>\\(=1-0{,}9437=0{,}0563\\)<br>
-An etwa 6&nbsp;% der Tage (also rund einem Tag im Monat) reicht die Kapazit&auml;t nicht.
-</div></div>
-<div class="sol-step"><div class="snum">d</div><div>\\(20\\cdot 3{,}2=64\\) Nacharbeiten. (Gleichwertig: \\(n=1600\\), \\(p=0{,}04\\) &rarr; \\(\\mu=64\\).)</div></div>
-<div class="result">\\(\\mu=3{,}2\\) ist ein Mittelwert, kein m&ouml;gliches Tagesergebnis; \\(\\mu\\) ist proportional zu \\(n\\).</div>`,
-prompt:`Ich uebe die Deutung des Erwartungswerts im Sachzusammenhang (Mathe Klasse 13, Grundkurs). Erstelle 3 Aufgaben aus dem Betriebsalltag (Nacharbeit, Reklamationen, Ausfaelle), in denen ich mu und sigma berechne, mu in Worten deute und eine Kapazitaetsfrage mit binomCdf beantworte. Lass mich auch erklaeren, warum mu kein moeglicher Einzelwert sein muss. Vollstaendige Loesungen mit ausformulierten Deutungssaetzen.`},
+  <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Bei einem Glücksrad betr&auml;gt der Gewinn \\(X\\) des Spielers \\(-2\\,\\text{€}\\) mit \\(P=0{,}7\\), \\(+1\\,\\text{€}\\) mit \\(P=0{,}2\\) und \\(a\\,\\text{€}\\) mit \\(P=0{,}1\\). Bestimmen Sie \\(a\\) so, dass das Spiel fair ist.</span></div>
+  <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Von einer Binomialverteilung ist \\(\\mu=48\\) und \\(\\sigma=6\\) bekannt. Bestimmen Sie \\(n\\) und \\(p\\) und machen Sie die Probe.</span></div>
+  <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begr&uuml;nden Sie rechnerisch, warum \\(\\sigma^{2}\\) bei einer Binomialverteilung immer kleiner als \\(\\mu\\) ist.</span></div>
+</div>
+  <div class="hint-box">Fair hei&szlig;t \\(E(X)=0\\). Bei b) hilft es, \\(\\sigma^{2}=n\\,p\\,(1-p)\\) durch \\(\\mu=n\\cdot p\\) zu teilen.</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\(E(X)=-2\\cdot 0{,}7+1\\cdot 0{,}2+a\\cdot 0{,}1=-1{,}4+0{,}2+0{,}1a=-1{,}2+0{,}1a\\)<br>Fair: \\(-1{,}2+0{,}1a=0 \\Rightarrow a=12\\). Die dritte Auszahlung muss <strong>12&nbsp;€</strong> betragen.</div></div>
+<div class="sol-step"><div class="snum">b</div><div>\\(\\sigma^{2}=36\\) und \\(\\mu=48\\). Teilen:<br>\\(\\dfrac{\\sigma^{2}}{\\mu}=\\dfrac{n\\,p\\,(1-p)}{n\\,p}=1-p=\\dfrac{36}{48}=0{,}75\\)<br>also \\(p=0{,}25\\) und aus \\(n\\cdot 0{,}25=48\\) folgt \\(n=192\\).<br>Probe: \\(\\mu=192\\cdot 0{,}25=48\\) &#10003;, \\(\\sigma=\\sqrt{192\\cdot 0{,}25\\cdot 0{,}75}=\\sqrt{36}=6\\) &#10003;</div></div>
+<div class="sol-step"><div class="snum">c</div><div>\\(\\sigma^{2}=n\\,p\\,(1-p)=\\mu\\cdot(1-p)\\). Da \\(0<p\\le 1\\) ist, gilt \\(1-p<1\\), also \\(\\sigma^{2}<\\mu\\).</div></div>
+<div class="result">a) \\(a=12\\,\\text{€}\\) &middot; b) \\(n=192\\), \\(p=0{,}25\\) &middot; c) \\(\\sigma^{2}=\\mu\\cdot(1-p)<\\mu\\)</div>`,
+prompt:`Ich uebe das Rueckwaertsrechnen mit Erwartungswert und Standardabweichung (Mathe Klasse 13, Grundkurs). Gib mir 6 Aufgaben: (1) zwei Spiele, bei denen eine fehlende Auszahlung oder der Einsatz so zu bestimmen ist, dass E(X) = 0 bzw. ein vorgegebener Gewinn fuer den Veranstalter herauskommt; (2) zwei Aufgaben, in denen aus gegebenem mu und sigma die Parameter n und p einer Binomialverteilung zu berechnen sind, jeweils mit Probe; (3) zwei Aufgaben, in denen nur mu und p oder nur sigma und p gegeben sind und n gesucht ist. Vollstaendige Loesungen mit allen Umformungsschritten.`},
 
-// ===== 7. MESSREIHE UND MODELL =====
 g1:{title:"Messreihe auswerten und darstellen (AFB I)",
 aufgabe:`<div class="task-box">
   <p>Ein Kurs f&uuml;hrt 40 Durchg&auml;nge eines Versuchs mit je 10 W&uuml;rfen durch und z&auml;hlt pro Durchgang die Treffer \\(k\\):</p>
